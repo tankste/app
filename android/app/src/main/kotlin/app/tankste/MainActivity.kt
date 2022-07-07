@@ -1,4 +1,4 @@
-package app.bertho.bertho
+package app.tankste
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,5 @@
-Bertho
-======
+tankste!
+========
 
 Your open source gas station mobile app. We love the minimalistic of the Bertha app from Mercedes and want to keep them alive! So we create this project.
 
@@ -14,7 +14,7 @@ our work to the following todos.
 
 - [ ] Station detail page
 - [ ] Onboarding (filter preselection, terms)
-- [ ] Refactore code (yes, it is very ugly at the moment!!) with architecture: BLoC pattern / use case / repositories / flavors
+- [ ] Refactore code (yes, it is very ugly at the moment!!, we know that!) with architecture: BLoC pattern / use case / repositories / flavors
 - [ ] Design improvements (rounded corners for markers, fonts, colors)
 - [ ] Station companies filters
 - [ ] Station card filters

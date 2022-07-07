@@ -1,4 +1,4 @@
-import 'package:bertho/version_item.dart';
+import 'package:tankste/version_item.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,35 +26,35 @@ class SettingsPage extends StatelessWidget {
       _buildCard(context, "Kontakt", [
         ListTile(
             onTap: () {
-              _openUrl("https://bertho.app/");
+              _openUrl("https://tankste.app/");
             },
             minLeadingWidth: 10,
             leading: const Icon(Icons.public),
             title: const Text("Webseite")),
         ListTile(
             onTap: () {
-              _openUrl("mailto:hello@bertho.app");
+              _openUrl("mailto:hello@tankste.app");
             },
             minLeadingWidth: 10,
             leading: const Icon(Icons.mail),
             title: const Text("E-Mail")),
         ListTile(
             onTap: () {
-              _openUrl("https://www.instagram.com/bertho.app");
+              _openUrl("https://www.instagram.com/tankste.app");
             },
             minLeadingWidth: 10,
             leading: const Icon(FontAwesomeIcons.instagram),
             title: const Text("Instagram")),
         ListTile(
             onTap: () {
-              _openUrl("https://twitter.com/bertho_app");
+              _openUrl("https://twitter.com/tankste_app");
             },
             minLeadingWidth: 10,
             leading: const Icon(FontAwesomeIcons.twitter),
             title: const Text("Twitter")),
         // ListTile(
         //     onTap: () {
-        //       _openUrl("https://github.com/bertho.app/app");
+        //       _openUrl("https://github.com/tankste.app/app");
         //     },
         //     minLeadingWidth: 10,
         //     leading: const Icon(FontAwesomeIcons.github),
@@ -63,14 +63,14 @@ class SettingsPage extends StatelessWidget {
       _buildCard(context, "Rechtliches", [
         ListTile(
             onTap: () {
-              _openUrl("https://bertho.app/terms");
+              _openUrl("https://tankste.app/terms");
             },
             minLeadingWidth: 10,
             leading: const Icon(Icons.account_balance),
             title: const Text("Nutzungsbedingungen")),
         ListTile(
             onTap: () {
-              _openUrl("https://bertho.app/privacy");
+              _openUrl("https://tankste.app/privacy");
             },
             minLeadingWidth: 10,
             leading: const Icon(Icons.local_police),
@@ -79,7 +79,7 @@ class SettingsPage extends StatelessWidget {
       _buildCard(context, "About", [
         // ListTile(
         //     onTap: () {
-        //       _openUrl("https://status.bertho.app/");
+        //       _openUrl("https://status.tankste.app/");
         //     },
         //     minLeadingWidth: 10,
         //     leading: const Icon(Icons.traffic),

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
-import 'package:bertho/gas_station_model.dart';
-import 'package:bertho/settings_page.dart';
-import 'package:bertho/theme.dart';
+import 'package:tankste/gas_station_model.dart';
+import 'package:tankste/settings_page.dart';
+import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:bertho/filter_dialog.dart';
+import 'package:tankste/filter_dialog.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bertho',
-      theme: berthoTheme,
+      title: 'Tankste',
+      theme: tanksteTheme,
       home: const MyHomePage(),
     );
   }

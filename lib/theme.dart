@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-ThemeData berthoTheme = ThemeData(
+ThemeData tanksteTheme = ThemeData(
   primaryColor: const Color(0xFF9253a4),
   primarySwatch: const MaterialColor(0xFF9253a4, {
     50: Color(0xFF),
