@@ -28,6 +28,8 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Use location for find gas stations in your near.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Use location for find gas stations in your near.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
+import 'package:geolocator/geolocator.dart';
 import 'package:tankste/gas_station_model.dart';
 import 'package:tankste/settings_page.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:tankste/filter_dialog.dart';
 
 void main() {
@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Tankste',
+      debugShowCheckedModeBanner: false,
       theme: tanksteTheme,
       home: const MyHomePage(),
     );
@@ -41,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Filter _filter = Filter("e5");
   bool isFilterVisible = false;
   bool _showLabelMarkers = false;
-  LocationData? _position;
+  Position? _position;
   GoogleMapController? _mapController;
 
   @override
@@ -307,9 +308,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 
-  Future<List<GasStationModel>> _requestStations(LocationData location) async {
-    final double lat = location.latitude ?? 52.510494;
-    final double lng = location.longitude ?? 13.396764;
+  Future<List<GasStationModel>> _requestStations(Position location) async {
+    final double lat = location.latitude;
+    final double lng = location.longitude;
 
     var url = Uri.parse(
         'https://creativecommons.tankerkoenig.de/json/list.php?lat=$lat&lng=$lng&rad=15&sort=price&type=${_filter.gas}&apikey=***REMOVED***');
@@ -320,12 +321,12 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
-  Future<LocationData?> _moveCameraToOwnPosition() async {
-    LocationData? locationData = await _getOwnPosition();
+  Future<Position?> _moveCameraToOwnPosition() async {
+    Position? locationData = await _getOwnPosition();
     LatLng position;
     if (locationData != null) {
-      position = LatLng(locationData.latitude ?? startPosition.latitude,
-          locationData.longitude ?? startPosition.longitude);
+      position = LatLng(locationData.latitude,
+          locationData.longitude);
     } else {
       position = startPosition;
     }
@@ -333,26 +334,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return locationData;
   }
 
-  Future<LocationData?> _getOwnPosition() async {
-    Location location = Location();
-
-    bool serviceEnabled = await location.serviceEnabled();
+  Future<Position?> _getOwnPosition() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
+      return null;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
         return null;
       }
     }
 
-    PermissionStatus permissionStatus = await location.hasPermission();
-    if (permissionStatus == PermissionStatus.denied) {
-      permissionStatus = await location.requestPermission();
-      if (permissionStatus != PermissionStatus.granted) {
-        return null;
-      }
+    if (permission == LocationPermission.deniedForever) {
+      return null;
     }
 
-    return await location.getLocation();
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
   }
 
   void _fetchNearbyStations() {

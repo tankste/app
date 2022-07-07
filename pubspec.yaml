@@ -36,9 +36,6 @@ dependencies:
   # HTTP - https://pub.dev/packages/http
   http: ^0.13.4
 
-  # Location - https://pub.dev/packages/location
-  location: ^4.4.0
-
   # Font Awesome - https://pub:dev/packages/font_awesome_flutter
   font_awesome_flutter: ^10.1.0
 
@@ -47,6 +44,9 @@ dependencies:
 
   # Package Info - https://pub.dev/packages/package_info_plus
   package_info_plus: ^1.4.2
+
+  # Location - https://pub.dev/packages/geolocator
+  geolocator: ^9.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
