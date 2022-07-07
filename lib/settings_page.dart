@@ -52,25 +52,25 @@ class SettingsPage extends StatelessWidget {
             minLeadingWidth: 10,
             leading: const Icon(FontAwesomeIcons.twitter),
             title: const Text("Twitter")),
-        // ListTile(
-        //     onTap: () {
-        //       _openUrl("https://github.com/tankste.app/app");
-        //     },
-        //     minLeadingWidth: 10,
-        //     leading: const Icon(FontAwesomeIcons.github),
-        //     title: const Text("Github")),
+        ListTile(
+            onTap: () {
+              _openUrl("https://github.com/tankste");
+            },
+            minLeadingWidth: 10,
+            leading: const Icon(FontAwesomeIcons.github),
+            title: const Text("Github")),
       ]),
       _buildCard(context, "Rechtliches", [
         ListTile(
             onTap: () {
-              _openUrl("https://tankste.app/terms");
+              _openUrl("https://tankste.app/nutzungsbedingungen");
             },
             minLeadingWidth: 10,
             leading: const Icon(Icons.account_balance),
             title: const Text("Nutzungsbedingungen")),
         ListTile(
             onTap: () {
-              _openUrl("https://tankste.app/privacy");
+              _openUrl("https://tankste.app/datenschutz");
             },
             minLeadingWidth: 10,
             leading: const Icon(Icons.local_police),
