@@ -213,7 +213,7 @@ packages:
     source: hosted
     version: "2.0.0"
   map_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: map_launcher
       url: "https://pub.dartlang.org"

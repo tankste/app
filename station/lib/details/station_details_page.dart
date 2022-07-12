@@ -143,7 +143,7 @@ class StationDetailsPage extends StatelessWidget {
                               Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: Text(
-                                      "\u{002A}Die Öffnungszeiten können gesetzlichen Feiertagen abweichen.",
+                                      "\u{002A}Die Öffnungszeiten können an gesetzlichen Feiertagen abweichen.",
                                       style:
                                           Theme.of(context).textTheme.caption))
                             ])))
