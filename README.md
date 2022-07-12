@@ -14,7 +14,7 @@ our work to the following todos.
 
 - [ ] Station detail page
 - [ ] Onboarding (filter preselection, terms)
-- [ ] Refactore code (yes, it is very ugly at the moment!!, we know that!) with architecture: BLoC pattern / use case / repositories / flavors
+- [ ] Refactore code (yes, the `main.dart` is very ugly at the moment!!, we know that!) with architecture: BLoC pattern / use case / repositories / flavors
 - [ ] Design improvements (rounded corners for markers, fonts, colors)
 - [ ] Station companies filters
 - [ ] Station card filters

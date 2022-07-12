@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tankste/filter_dialog.dart';
+import 'package:station/details/station_details_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -165,7 +166,13 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Marker> markers = await Future.wait(stations.map((s) async => Marker(
         markerId: MarkerId(s.id),
         position: LatLng(s.lat, s.lng),
-        consumeTapEvents: false,
+        consumeTapEvents: true,
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => StationDetailsPage(stationId: s.id, stationName: s.brand)));
+        },
         icon: await _genMarkerBitmap(s, minPrice))));
     return markers.toSet();
   }
@@ -281,12 +288,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Create triangle path
     var trianglePath = Path();
-    trianglePath.moveTo(
-        maxWidth / 2, labelHeight + triangleSize); //TODO: dynamic width
-    trianglePath.lineTo(
-        maxWidth / 2 - triangleSize, labelHeight); //TODO: dynamic width
-    trianglePath.lineTo(
-        maxWidth / 2 + triangleSize, labelHeight); //TODO: dynamic width
+    trianglePath.moveTo(maxWidth / 2, labelHeight + triangleSize);
+    trianglePath.lineTo(maxWidth / 2 - triangleSize, labelHeight);
+    trianglePath.lineTo(maxWidth / 2 + triangleSize, labelHeight);
     trianglePath.close();
 
     // Draw background
@@ -325,12 +329,11 @@ class _MyHomePageState extends State<MyHomePage> {
     Position? locationData = await _getOwnPosition();
     LatLng position;
     if (locationData != null) {
-      position = LatLng(locationData.latitude,
-          locationData.longitude);
+      position = LatLng(locationData.latitude, locationData.longitude);
     } else {
       position = startPosition;
     }
-    _mapController?.animateCamera(CameraUpdate.newLatLngZoom(position, 14));
+    _mapController?.animateCamera(CameraUpdate.newLatLngZoom(position, 12.5));
     return locationData;
   }
 
