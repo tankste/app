@@ -32,6 +32,9 @@ dependencies:
   # Location - https://pub.dev/packages/geolocator
   geolocator: ^9.0.0
 
+  # Shared Preferences - https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.0.15
+
   cupertino_icons: ^1.0.2
 
 dev_dependencies:

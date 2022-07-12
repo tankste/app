@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tankste/gas_station_model.dart';
 import 'package:tankste/settings_page.dart';
 import 'package:tankste/theme.dart';
@@ -140,6 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ? FilterDialog(
               currentFilter: _filter,
               onSubmit: (filter) {
+                _storeFilter(filter);
+
                 setState(() {
                   _filter = filter;
                   isFilterVisible = false;
@@ -158,7 +161,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _fetchNearbyStations();
+
+    _getFilter()
+    .then((filter) {
+      setState(() {
+        _filter = filter;
+      });
+
+      return _fetchNearbyStations();
+    });
   }
 
   Future<Set<Marker>> _genMarkers(
@@ -360,8 +371,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return await Geolocator.getCurrentPosition();
   }
 
+  Future<Filter> _getFilter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String gas = prefs.getString("filter_gas") ?? "e5";
+    print("gas: $gas");
+    return Filter(gas);
+  }
+
+  Future<void> _storeFilter(Filter filter) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("filter_gas", filter.gas);
+  }
+
   void _fetchNearbyStations() {
-    _moveCameraToOwnPosition().then((position) {
+    _moveCameraToOwnPosition()
+        .then((position) {
       if (position == null) {
         return;
       }
