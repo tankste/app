@@ -374,7 +374,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<Filter> _getFilter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gas = prefs.getString("filter_gas") ?? "e5";
-    print("gas: $gas");
     return Filter(gas);
   }
 

@@ -21,8 +21,7 @@ class RoutePreviewCubit extends Cubit<RoutePreviewState> {
     getRoutePreviewUseCase
         .invoke(target)
         .then((route) => emit(RoutePreviewState.success(route)))
-        // .catchError((error) => emit(RoutePreviewState.failure(error)));
-        .catchError((error) => print("error: $error"));
+        .catchError((error) => emit(RoutePreviewState.failure(error)));
   }
 
   void onRetryClicked() {

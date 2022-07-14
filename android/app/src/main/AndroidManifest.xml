@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="app.tankste">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <queries>
         <intent>
@@ -18,7 +19,7 @@
     </queries>
 
     <application
-        android:name="${applicationName}"
+        android:name=".TanksteApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="tankste!">
         <activity
@@ -41,6 +42,38 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data android:name="com.google.android.gms.car.application"
+            android:resource="@xml/car"
+            tools:ignore="MetadataTagInsideApplicationTag" />
+
+<!--        <meta-data-->
+<!--            android:name="androidx.car.app.theme"-->
+<!--            android:resource= "@style/CarAppTheme"-->
+<!--            tools:ignore="MetadataTagInsideApplicationTag" />-->
+
+        <meta-data android:name="androidx.car.app.minCarApiLevel"
+            android:value="1" />
+
+        <service
+            android:name=".car.CarService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.car.app.CarAppService" />
+            </intent-filter>
+        </service>
+
+<!--        &lt;!&ndash; Android Auto &ndash;&gt;-->
+<!--        <service-->
+<!--            android:name=".car.CarService"-->
+<!--            android:exported="true">-->
+
+<!--            <intent-filter>-->
+<!--                <action android:name="androidx.car.app.CarAppService" />-->
+<!--                <category android:name="androidx.car.app.category.POI" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
