@@ -376,19 +376,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _requestReviewIfNeeded() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isTimeSet = prefs.containsKey("first_app_start");
-    if (!isTimeSet) {
+    await prefs.reload();
+    int firstAppStartMilliseconds = prefs.getInt("first_app_start") ?? -1;
+    if (firstAppStartMilliseconds == -1) {
       await prefs.setInt(
           "first_app_start", DateTime.now().millisecondsSinceEpoch);
     } else {
-      int millisecondsTime = prefs.getInt("first_app_start") ?? 0;
       DateTime firstAppStart =
-          DateTime.fromMicrosecondsSinceEpoch(millisecondsTime);
+          DateTime.fromMillisecondsSinceEpoch(firstAppStartMilliseconds);
       DateTime thresholdDate = firstAppStart.add(const Duration(days: 7));
-      if (thresholdDate.isBefore(DateTime.now())) {
+      if (DateTime.now().isAfter(thresholdDate)) {
         InAppReview inAppReview = InAppReview.instance;
         if (await inAppReview.isAvailable()) {
-          inAppReview.requestReview();
+          await inAppReview.requestReview();
         }
       }
     }
