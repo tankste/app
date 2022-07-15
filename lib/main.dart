@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tankste/filter_dialog.dart';
 import 'package:station/details/station_details_page.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 void main() {
   runApp(const MyApp());
@@ -162,8 +163,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    _getFilter()
-    .then((filter) {
+    _requestReviewIfNeeded();
+
+    _getFilter().then((filter) {
       setState(() {
         _filter = filter;
       });
@@ -182,7 +184,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => StationDetailsPage(stationId: s.id, stationName: s.brand)));
+                  builder: (context) => StationDetailsPage(
+                      stationId: s.id, stationName: s.brand)));
         },
         icon: await _genMarkerBitmap(s, minPrice))));
     return markers.toSet();
@@ -371,6 +374,26 @@ class _MyHomePageState extends State<MyHomePage> {
     return await Geolocator.getCurrentPosition();
   }
 
+  Future<void> _requestReviewIfNeeded() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isTimeSet = prefs.containsKey("first_app_start");
+    if (!isTimeSet) {
+      await prefs.setInt(
+          "first_app_start", DateTime.now().millisecondsSinceEpoch);
+    } else {
+      int millisecondsTime = prefs.getInt("first_app_start") ?? 0;
+      DateTime firstAppStart =
+          DateTime.fromMicrosecondsSinceEpoch(millisecondsTime);
+      DateTime thresholdDate = firstAppStart.add(const Duration(days: 7));
+      if (thresholdDate.isBefore(DateTime.now())) {
+        InAppReview inAppReview = InAppReview.instance;
+        if (await inAppReview.isAvailable()) {
+          inAppReview.requestReview();
+        }
+      }
+    }
+  }
+
   Future<Filter> _getFilter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gas = prefs.getString("filter_gas") ?? "e5";
@@ -383,8 +406,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _fetchNearbyStations() {
-    _moveCameraToOwnPosition()
-        .then((position) {
+    _moveCameraToOwnPosition().then((position) {
       if (position == null) {
         return;
       }

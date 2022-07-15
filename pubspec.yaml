@@ -38,6 +38,9 @@ dependencies:
   # Map launcher - https://pub.dev/packages/map_launcher
   map_launcher: ^2.2.3
 
+  # In-App review - https://pub.dev/packages/in_app_review
+  in_app_review: ^2.0.4
+
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
