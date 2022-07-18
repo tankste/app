@@ -14,6 +14,7 @@ class CarService : CarAppService() {
             HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
         } else {
             HostValidator.Builder(applicationContext)
+                .addAllowedHosts(R.array.allowed_car_hosts)
                 .build()
         }
     }
