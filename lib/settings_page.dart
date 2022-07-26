@@ -23,6 +23,22 @@ class SettingsPage extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     return [
+      _buildCard(context, "Unterstütze uns", [
+        ListTile(
+            onTap: () {
+              _openUrl("https://github.com/tankste");
+            },
+            minLeadingWidth: 10,
+            leading: const Icon(FontAwesomeIcons.github),
+            title: const Text("Github")),
+        ListTile(
+            onTap: () {
+              _openUrl("https://buymeacoffee.com/tankste");
+            },
+            minLeadingWidth: 10,
+            leading: const Icon(FontAwesomeIcons.mugSaucer),
+            title: const Text("Buy me a coffee")),
+      ]),
       _buildCard(context, "Kontakt", [
         ListTile(
             onTap: () {
@@ -51,14 +67,7 @@ class SettingsPage extends StatelessWidget {
             },
             minLeadingWidth: 10,
             leading: const Icon(FontAwesomeIcons.twitter),
-            title: const Text("Twitter")),
-        ListTile(
-            onTap: () {
-              _openUrl("https://github.com/tankste");
-            },
-            minLeadingWidth: 10,
-            leading: const Icon(FontAwesomeIcons.github),
-            title: const Text("Github")),
+            title: const Text("Twitter"))
       ]),
       _buildCard(context, "Rechtliches", [
         ListTile(
