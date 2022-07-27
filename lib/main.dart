@@ -39,13 +39,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final LatLng startPosition = LatLng(51.2147194, 10.3634281);
-  Set<Marker> markers = {};
+  final LatLng startPosition = const LatLng(51.2147194, 10.3634281);
+  Set<Marker> _markers = {};
   List<GasStationModel> _stations = [];
   Filter _filter = Filter("e5");
   bool isFilterVisible = false;
   bool _showLabelMarkers = false;
-  Position? _position;
+  bool _showMarkers = false;
+  CameraPosition? _lastRequestPosition;
+  CameraPosition? _position;
   GoogleMapController? _mapController;
 
   @override
@@ -58,24 +60,28 @@ class _MyHomePageState extends State<MyHomePage> {
               _mapController = controller;
             });
           },
+          onCameraIdle: () {
+            _updateStations();
+          },
           onCameraMove: (position) {
-            if (position.zoom >= 12 && !_showLabelMarkers) {
-              setState(() {
+            setState(() {
+                _position = position;
+              if (position.zoom >= 12) {
                 _showLabelMarkers = true;
-              });
-              _updateMarkers();
-            } else if (position.zoom < 12 && _showLabelMarkers) {
-              setState(() {
+                _showMarkers = true;
+              } else if (position.zoom >= 10.5) {
                 _showLabelMarkers = false;
-              });
-              _updateMarkers();
-            }
+                _showMarkers = true;
+              } else {
+                _showMarkers = false;
+              }
+            });
           },
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
           compassEnabled: false,
           mapToolbarEnabled: false,
-          markers: markers,
+          markers: _markers,
           myLocationEnabled: true,
           initialCameraPosition:
               CameraPosition(target: startPosition, zoom: 6.0)),
@@ -99,20 +105,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                     builder: (context) => SettingsPage()));
                           },
                           child: Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               child: Icon(
                                 Icons.settings,
                                 color: Theme.of(context).primaryColor,
                               ))),
-                      Padding(
+                      const Padding(
                           padding: EdgeInsets.only(left: 8, right: 8),
                           child: Divider(height: 1)),
                       InkWell(
                           onTap: () {
-                            _fetchNearbyStations();
+                            _moveCameraToOwnPosition();
                           },
                           child: Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               child: Icon(
                                 Icons.gps_fixed,
                                 color: Theme.of(context).primaryColor,
@@ -133,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             });
                           },
                           child: Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               child: Icon(
                                 Icons.tune,
                                 color: Theme.of(context).primaryColor,
@@ -170,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _filter = filter;
       });
 
-      return _fetchNearbyStations();
+      return _moveCameraToOwnPosition();
     });
   }
 
@@ -215,7 +221,8 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    return await BitmapDescriptor.fromAssetImage(ImageConfiguration(), path);
+    return await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(), path);
   }
 
   Future<BitmapDescriptor> _genLabelMarkerBitmap(
@@ -274,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ..addText(priceText))
             .build();
 
-    final constraints = ui.ParagraphConstraints(width: maxWidth);
+    const constraints = ui.ParagraphConstraints(width: maxWidth);
     brandParagraph.layout(constraints);
     priceParagraph.layout(constraints);
 
@@ -311,10 +318,12 @@ class _MyHomePageState extends State<MyHomePage> {
     canvas.drawRect(rect, backgroundPaint);
 
     // Draw text
+    canvas.drawParagraph(brandParagraph,
+        const Offset(padding + textPadding, padding + textPadding));
     canvas.drawParagraph(
-        brandParagraph, Offset(padding + textPadding, padding + textPadding));
-    canvas.drawParagraph(priceParagraph,
-        Offset(padding + textPadding, padding + textPadding + brandFontSize));
+        priceParagraph,
+        const Offset(
+            padding + textPadding, padding + textPadding + brandFontSize));
 
     // Draw trianglePath path
     canvas.drawPath(trianglePath, backgroundPaint);
@@ -326,13 +335,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 
-  Future<List<GasStationModel>> _requestStations(Position location) async {
-    final double lat = location.latitude;
-    final double lng = location.longitude;
+  Future<List<GasStationModel>> _requestStations(
+      CameraPosition location) async {
+    final double lat = location.target.latitude;
+    final double lng = location.target.longitude;
 
     var url = Uri.parse(
         'https://creativecommons.tankerkoenig.de/json/list.php?lat=$lat&lng=$lng&rad=15&sort=price&type=${_filter.gas}&apikey=***REMOVED***');
     var response = await http.get(url);
+    print("response: $response");
     final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
     return (jsonResponse['stations'] as List)
         .map((i) => GasStationModel.fromJson(i))
@@ -405,32 +416,42 @@ class _MyHomePageState extends State<MyHomePage> {
     await prefs.setString("filter_gas", filter.gas);
   }
 
-  void _fetchNearbyStations() {
-    _moveCameraToOwnPosition().then((position) {
-      if (position == null) {
-        return;
-      }
-
-      setState(() {
-        _position = position;
-      });
-
-      _updateStations();
-    });
-  }
-
   void _updateStations() async {
     if (_position == null) {
+      setState(() {
+        _stations = [];
+        _markers = {};
+      });
+      _updateMarkers();
       return;
+    }
+
+    _updateMarkers();
+
+    if (!_showMarkers) {
+      return;
+    }
+
+    // Fetch new stations only if we move camera by 8 kilometers
+    if (_lastRequestPosition != null) {
+      double movementDistance = Geolocator.distanceBetween(
+          _lastRequestPosition!.target.latitude,
+          _lastRequestPosition!.target.longitude,
+          _position!.target.latitude,
+          _position!.target.longitude);
+      if (movementDistance < 8000) {
+        return;
+      }
     }
 
     _requestStations(_position!).then((stations) {
       setState(() {
+        _lastRequestPosition = _position;
         _stations = stations;
       });
 
       if (stations.isEmpty) {
-        return Future.value(Set<Marker>());
+        return Future.value(<Marker>{});
       }
 
       final double minPrice = stations
@@ -440,18 +461,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
       return _genMarkers(stations, minPrice);
     }).then((m) => setState(() {
-          markers = m;
+          _markers = m;
         }));
   }
 
   void _updateMarkers() {
+    if (_stations.isEmpty) {
+      return;
+    }
+
+    if (!_showMarkers) {
+      setState(() {
+        _markers = {};
+      });
+      return;
+    }
+
     final double minPrice = _stations
         .where((s) => s.price != 0)
         .reduce((curr, next) => curr.price < next.price ? curr : next)
         .price;
 
     _genMarkers(_stations, minPrice).then((m) => setState(() {
-          markers = m;
+          _markers = m;
         }));
   }
 }

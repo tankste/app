@@ -40,7 +40,7 @@ class GetStationsUseCaseImpl(
                     if (stations.isEmpty()) {
                         emit(result)
                     }
-                    Log.d("debug", "result: $result")
+
                     val minE5Price = stations.filter { s -> s.prices != null && s.prices.e5 != 0.0 }
                         .minOfOrNull { s -> s.prices!!.e5 }
                     val minE10Price =
