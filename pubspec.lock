@@ -255,7 +255,7 @@ packages:
     source: hosted
     version: "1.7.0"
   navigation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: navigation
       relative: true

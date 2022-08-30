@@ -13,6 +13,7 @@ We created this project as an MVP (Minimum Viable Product). If it becomes popula
 our work to the following todos:
 
 - [x] Station detail page
+- [ ] Allow ussage without GPS (+ restore last map position)
 - [ ] Refactore code (yes, the `main.dart` is very ugly at the moment!!, we know that!) with architecture: BLoC pattern / use case / repositories / flavors
 - [ ] iOS: Apple Maps
 - [ ] Dark Mode
@@ -34,3 +35,4 @@ our work to the following todos:
 
 ## License ##
 
+Coming soon..

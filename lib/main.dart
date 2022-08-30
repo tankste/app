@@ -1,12 +1,13 @@
-import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tankste/gas_station_model.dart';
+import 'package:station/repository/station_repository.dart';
+import 'package:station/station_model.dart';
+import 'package:station/usecase/get_stations_use_case.dart';
+import 'package:navigation/coordinate_model.dart';
 import 'package:tankste/settings_page.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tankste/filter_dialog.dart';
 import 'package:station/details/station_details_page.dart';
@@ -41,7 +42,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final LatLng startPosition = const LatLng(51.2147194, 10.3634281);
   Set<Marker> _markers = {};
-  List<GasStationModel> _stations = [];
+  List<StationModel> _stations = [];
   Filter _filter = Filter("e5");
   bool isFilterVisible = false;
   bool _showLabelMarkers = false;
@@ -181,52 +182,50 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Set<Marker>> _genMarkers(
-      List<GasStationModel> stations, double minPrice) async {
+      List<StationModel> stations) async {
     List<Marker> markers = await Future.wait(stations.map((s) async => Marker(
         markerId: MarkerId(s.id),
-        position: LatLng(s.lat, s.lng),
+        position: LatLng(s.coordinate.latitude, s.coordinate.longitude),
         consumeTapEvents: true,
         onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => StationDetailsPage(
-                      stationId: s.id, stationName: s.brand)));
+                      stationId: s.id, stationName: s.label)));
         },
-        icon: await _genMarkerBitmap(s, minPrice))));
+        icon: await _genMarkerBitmap(s))));
     return markers.toSet();
   }
 
-  Future<BitmapDescriptor> _genMarkerBitmap(
-      GasStationModel station, double minPrice) {
+  Future<BitmapDescriptor> _genMarkerBitmap(StationModel station) {
     if (_showLabelMarkers) {
-      return _genLabelMarkerBitmap(station, minPrice);
+      return _genLabelMarkerBitmap(station);
     } else {
-      return _genDotMarkerBitmap(station, minPrice);
+      return _genDotMarkerBitmap(station);
     }
   }
 
-  Future<BitmapDescriptor> _genDotMarkerBitmap(
-      GasStationModel station, double minPrice) async {
+  Future<BitmapDescriptor> _genDotMarkerBitmap(StationModel station) async {
     String path;
-    if (!station.isOpen || station.price == 0) {
+
+    if (!station.isOpen) {
       path = 'assets/images/markers/grey.png';
-    } else {
-      if (minPrice + 0.04 >= station.price) {
+    } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
         path = 'assets/images/markers/green.png';
-      } else if (minPrice + 0.10 >= station.price) {
+    } else if (station.prices.getFirstPriceRange() == StationPriceRange.normal) {
         path = 'assets/images/markers/orange.png';
-      } else {
+    } else if (station.prices.getFirstPriceRange() == StationPriceRange.expensive) {
         path = 'assets/images/markers/red.png';
-      }
+    } else {
+      path = 'assets/images/markers/grey.png';
     }
 
     return await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), path);
   }
 
-  Future<BitmapDescriptor> _genLabelMarkerBitmap(
-      GasStationModel station, double minPrice) async {
+  Future<BitmapDescriptor> _genLabelMarkerBitmap(StationModel station) async {
     const double padding = 5.0;
     const double textPadding = 10.0;
     const double triangleSize = 25.0;
@@ -245,17 +244,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white70,
                 fontSize: brandFontSize,
               ))
-              ..addText(station.brand.length > 8
-                  ? "${station.brand.substring(0, 5)}..."
-                  : station.brand))
+              ..addText(station.label.length > 8
+                  ? "${station.label.substring(0, 5)}..."
+                  : station.label))
             .build();
 
     String priceText;
 
-    if (!station.isOpen || station.price == 0) {
+    double price = station.prices.getFirstPrice() ?? 0.0;
+    if (!station.isOpen || price == 0.0) {
       priceText = "-,--\u{207B}";
     } else {
-      priceText = station.price.toString().replaceAll('.', ',');
+      priceText = price.toString().replaceAll('.', ',');
     }
 
     if (priceText.length == 5) {
@@ -287,16 +287,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Create background rect
     final backgroundPaint = Paint();
-    if (!station.isOpen || station.price == 0) {
+    if (!station.isOpen) {
       backgroundPaint.color = Colors.grey;
+    } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
+      backgroundPaint.color = Colors.green;
+    } else if (station.prices.getFirstPriceRange() == StationPriceRange.normal) {
+      backgroundPaint.color = Colors.orange;
+    } else if (station.prices.getFirstPriceRange() == StationPriceRange.expensive) {
+      backgroundPaint.color = Colors.red;
     } else {
-      if (minPrice + 0.04 >= station.price) {
-        backgroundPaint.color = Colors.green;
-      } else if (minPrice + 0.10 >= station.price) {
-        backgroundPaint.color = Colors.orange;
-      } else {
-        backgroundPaint.color = Colors.red;
-      }
+      backgroundPaint.color = Colors.grey;
     }
 
     final labelHeight = padding +
@@ -335,19 +335,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 
-  Future<List<GasStationModel>> _requestStations(
+  Future<List<StationModel>> _requestStations(
       CameraPosition location) async {
-    final double lat = location.target.latitude;
-    final double lng = location.target.longitude;
-
-    var url = Uri.parse(
-        'https://creativecommons.tankerkoenig.de/json/list.php?lat=$lat&lng=$lng&rad=15&sort=price&type=${_filter.gas}&apikey=***REMOVED***');
-    var response = await http.get(url);
-    print("response: $response");
-    final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
-    return (jsonResponse['stations'] as List)
-        .map((i) => GasStationModel.fromJson(i))
-        .toList();
+    GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(TankerkoenigStationRepository());
+    return getStationsUseCase.invoke(_filter.gas, CoordinateModel(location.target.latitude, location.target.longitude));
   }
 
   Future<Position?> _moveCameraToOwnPosition() async {
@@ -454,12 +445,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return Future.value(<Marker>{});
       }
 
-      final double minPrice = stations
-          .where((s) => s.price != 0)
-          .reduce((curr, next) => curr.price < next.price ? curr : next)
-          .price;
-
-      return _genMarkers(stations, minPrice);
+      return _genMarkers(stations);
     }).then((m) => setState(() {
           _markers = m;
         }));
@@ -477,12 +463,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    final double minPrice = _stations
-        .where((s) => s.price != 0)
-        .reduce((curr, next) => curr.price < next.price ? curr : next)
-        .price;
-
-    _genMarkers(_stations, minPrice).then((m) => setState(() {
+    _genMarkers(_stations).then((m) => setState(() {
           _markers = m;
         }));
   }
