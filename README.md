@@ -3,6 +3,15 @@ tankste!
 
 Your open source gas station mobile app. We love the minimalistic of the Bertha app from Mercedes and want to keep them alive! So we create this project.
 
+## Configuration ##
+
+All secrets are needs to be defined in `config.json`. 
+At this moment we maintain an duplicated configuration for every platform. In future this should be auto-generated created by build scripts.
+
+* Flutter: `config.json`
+* Android: `android/app/src/main/res/values/config.xml`
+* iOS: `ios/Config.xcconfig`
+
 ## Data source ##
 
 The gas station data are provided by [Tankerkönig](https://creativecommons.tankerkoenig.de/). Thanks for this API! We will replace this by our own API in future days.
@@ -32,6 +41,8 @@ our work to the following todos:
   - [ ] History data (for charts #1)
   - [ ] Backend calculated price ranges
 - [ ] Payment (?)
+
+**Note: This list will be converted to Github issues soon..**
 
 ## License ##
 

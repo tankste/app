@@ -1,3 +1,4 @@
+import 'package:core/config/config_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:navigation/repository/location_repository.dart';
@@ -8,8 +9,8 @@ import 'package:navigation/usecase/get_route_preview_use_case.dart';
 class RoutePreviewCubit extends Cubit<RoutePreviewState> {
   final CoordinateModel target;
   final GetRoutePreviewUseCase getRoutePreviewUseCase =
-      GetRoutePreviewUseCaseImpl(
-          GpsLocationRepository(), GoogleMapsRouteRepository());
+      GetRoutePreviewUseCaseImpl(GpsLocationRepository(),
+          GoogleMapsRouteRepository(FileConfigRepository()));
 
   RoutePreviewCubit(this.target) : super(RoutePreviewState.loading()) {
     _fetchRoute();

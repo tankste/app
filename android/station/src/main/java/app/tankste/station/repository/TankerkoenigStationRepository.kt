@@ -1,12 +1,15 @@
 package app.tankste.station.repository
 
+import android.content.Context
 import app.tankste.station.api.TankerkoenigApi
 import app.tankste.navigation.model.CoordinateModel
+import app.tankste.core.R
 import app.tankste.station.model.StationModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class TankerkoenigStationRepository(
+    private val context: Context,
     private val tankerkoenigApi: TankerkoenigApi
 ) : StationRepository {
 
@@ -16,7 +19,7 @@ class TankerkoenigStationRepository(
                 coordinate.latitude,
                 coordinate.longitude,
                 type,
-                "***REMOVED***" //TODO: move to config file
+                context.getString(R.string.tankerkoenig_api_key)
             )
             when {
                 response.isSuccessful -> {

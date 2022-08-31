@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:core/config/config_repository.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/repository/station_repository.dart';
@@ -337,7 +338,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<StationModel>> _requestStations(
       CameraPosition location) async {
-    GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(TankerkoenigStationRepository());
+    GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(TankerkoenigStationRepository(FileConfigRepository()));
     return getStationsUseCase.invoke(_filter.gas, CoordinateModel(location.target.latitude, location.target.longitude));
   }
 

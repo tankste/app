@@ -11,6 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  core:
+    path: './core'
+
   station:
     path: './station'
 
@@ -58,3 +61,5 @@ flutter:
 
   assets:
     - assets/images/markers/
+    - config.json
+

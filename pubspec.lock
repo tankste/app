@@ -51,7 +51,7 @@ packages:
     source: hosted
     version: "1.16.0"
   core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: core
       relative: true

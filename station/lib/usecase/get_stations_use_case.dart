@@ -51,9 +51,7 @@ class GetStationsUseCaseImpl extends GetStationsUseCase {
 
       Iterable<double> dieselPrices =
           stations.map((s) => s.prices.diesel).where((p) => p != 0.0);
-      print("e5Prices: $e5Prices");
-      print("e10Prices: $e10Prices");
-      print("dieselPrices: $dieselPrices");
+
       return StationPricesModel(
           e5Prices.isNotEmpty ? e5Prices.reduce(min) : 0,
           StationPriceRange.unknown,

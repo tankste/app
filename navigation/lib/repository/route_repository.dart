@@ -1,3 +1,4 @@
+import 'package:core/config/config_repository.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:navigation/coordinate_model.dart';
@@ -10,11 +11,16 @@ abstract class RouteRepository {
 }
 
 class GoogleMapsRouteRepository extends RouteRepository {
+
+  final ConfigRepository configRepository;
+
+  GoogleMapsRouteRepository(this.configRepository);
+
   @override
   Future<RouteModel> getRoutePreview(
       CoordinateModel from, CoordinateModel to) async {
     final Uri url = Uri.parse(
-        "https://maps.googleapis.com/maps/api/directions/json?key=***REMOVED***&origin=${from.latitude},${from.longitude}&destination=${to.latitude},${to.longitude}");
+        "https://maps.googleapis.com/maps/api/directions/json?key=${await _getMapsKey()}&origin=${from.latitude},${from.longitude}&destination=${to.latitude},${to.longitude}");
     var response = await http.get(url);
     final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
 
@@ -57,5 +63,9 @@ class GoogleMapsRouteRepository extends RouteRepository {
       poly.add(p);
     }
     return poly;
+  }
+
+  Future<String> _getMapsKey() async {
+    return configRepository.get().then((config) => config.googleMapsKey);
   }
 }
