@@ -31,13 +31,6 @@ class SettingsPage extends StatelessWidget {
             minLeadingWidth: 10,
             leading: const Icon(FontAwesomeIcons.github),
             title: const Text("Github")),
-        ListTile(
-            onTap: () {
-              _openUrl("https://buymeacoffee.com/tankste");
-            },
-            minLeadingWidth: 10,
-            leading: const Icon(FontAwesomeIcons.mugSaucer),
-            title: const Text("Buy me a coffee")),
       ]),
       _buildCard(context, "Kontakt", [
         ListTile(
