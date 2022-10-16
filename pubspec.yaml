@@ -33,7 +33,7 @@ dependencies:
   url_launcher: ^6.1.3
 
   # Package Info - https://pub.dev/packages/package_info_plus
-  package_info_plus: ^1.4.2
+  package_info_plus: ^2.0.0
 
   # Location - https://pub.dev/packages/geolocator
   geolocator: ^9.0.0

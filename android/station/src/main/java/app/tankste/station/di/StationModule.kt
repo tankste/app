@@ -19,12 +19,11 @@ val stationModule = module {
     factory<GetStationsUseCase> { GetStationsUseCaseImpl(get(), get(), get()) }
 
     // Repository
-    single<StationRepository> { TankerkoenigStationRepository(get()) }
+    single<StationRepository> { TankerkoenigStationRepository(get(), get()) }
     single<PreferencesRepository> { FlutterPreferencesRepository(get()) }
 
     // API
     factory { get<Retrofit>().create(TankerkoenigApi::class.java) }
-
 
     // Generic retrofit
     //TODO: move to specific API-module if more native Android logic comes up

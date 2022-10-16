@@ -4,13 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    namespace 'app.tankste.car'
+    compileSdk 33
 
     defaultConfig {
         minSdk 23
-        targetSdk 32
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        targetSdk 33
     }
 
     buildTypes {
@@ -26,17 +25,17 @@ dependencies {
     implementation project(':station')
     implementation project(':navigation')
 
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
 
     // Android Auto - https://developer.android.com/jetpack/androidx/releases/car-app
     implementation "androidx.car.app:app:1.1.0"
     implementation "androidx.car.app:app-projected:1.1.0"
 
     // Coroutines - https://github.com/Kotlin/kotlinx.coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
 
     // Koin - https://github.com/InsertKoinIO/koin
-    var koin_version = '3.2.0-beta-1'
+    var koin_version = '3.2.2'
     implementation "io.insert-koin:koin-core:$koin_version"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-android-compat:$koin_version"

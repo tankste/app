@@ -5,13 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    namespace 'app.tankste.station'
+    compileSdk 33
 
     defaultConfig {
         minSdk 16
-        targetSdk 32
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        targetSdk 33
     }
 
     buildTypes {
@@ -20,10 +19,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
