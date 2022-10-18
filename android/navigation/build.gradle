@@ -46,5 +46,7 @@ dependencies {
     implementation "io.insert-koin:koin-android-compat:$koin_version"
 
     // Play Location Service - https://mvnrepository.com/artifact/com.google.android.gms/play-services-location?repo=google
-    implementation 'com.google.android.gms:play-services-location:21.0.0'
+    // Can not upate while flutter dependencies using this version. This will fail with an ClassChangeException
+    //noinspection GradleDependency
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
 }
