@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   CameraPosition? _position;
   GoogleMapController? _mapController;
   bool _isLoading = true;
+  Exception? _error;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,64 @@ class _MyHomePageState extends State<MyHomePage> {
           myLocationEnabled: true,
           initialCameraPosition:
               CameraPosition(target: startPosition, zoom: 6.0)),
-      _isLoading ? const SafeArea(child: LinearProgressIndicator()) : Container(),
+      _isLoading
+          ? const SafeArea(child: LinearProgressIndicator())
+          : Container(),
+      _error != null
+          ? Positioned(
+              top: 8,
+              left: 8,
+              right: 80,
+              child: SafeArea(
+                  child: Card(
+                      child: Padding(
+                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Unerwarteter Fehler",
+                        style: Theme.of(context).textTheme.headline6),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                            "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung und versuche es später erneut.",
+                            style: Theme.of(context).textTheme.bodyText2)),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0),
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          TextButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Fehler Details'),
+                                        content: Text(_error.toString()),
+                                        actions: <Widget>[
+                                          TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                              child: const Text('Ok')),
+                                        ],
+                                      );
+                                    });
+                              },
+                              child: const Text("Fehler anzeigen")),
+                          TextButton(
+                              onPressed: () {
+                                _updateStations();
+                              },
+                              child: const Text("Erneut versuchen"))
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ))))
+          : Container(),
       Positioned(
           top: 8,
           right: 8,
@@ -342,7 +400,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<List<StationModel>> _requestStations(CameraPosition location) async {
-    _isLoading = true;
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
     GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(
         TankerkoenigStationRepository(FileConfigRepository()));
@@ -444,22 +505,32 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    _requestStations(_position!).then((stations) {
-      setState(() {
-        _lastRequestPosition = _position;
-        _stations = stations;
-      });
+    _requestStations(_position!)
+        .then((stations) {
+          setState(() {
+            _lastRequestPosition = _position;
+            _stations = stations;
+          });
 
-      _isLoading = false;
+          setState(() {
+            _isLoading = false;
+          });
 
-      if (stations.isEmpty) {
-        return Future.value(<Marker>{});
-      }
+          if (stations.isEmpty) {
+            return Future.value(<Marker>{});
+          }
 
-      return _genMarkers(stations);
-    }).then((m) => setState(() {
-          _markers = m;
-        }));
+          return _genMarkers(stations);
+        })
+        .then((m) => setState(() {
+              _markers = m;
+            }))
+        .catchError((error) {
+          setState(() {
+            _error = error;
+            _isLoading = false;
+          });
+        });
   }
 
   void _updateMarkers() {
