@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tankste',
+      title: 'tankste!',
       debugShowCheckedModeBanner: false,
       theme: tanksteTheme,
       home: const MyHomePage(),
@@ -51,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   CameraPosition? _lastRequestPosition;
   CameraPosition? _position;
   GoogleMapController? _mapController;
+  bool _isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           onCameraMove: (position) {
             setState(() {
-                _position = position;
+              _position = position;
               if (position.zoom >= 12) {
                 _showLabelMarkers = true;
                 _showMarkers = true;
@@ -87,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
           myLocationEnabled: true,
           initialCameraPosition:
               CameraPosition(target: startPosition, zoom: 6.0)),
+      _isLoading ? const SafeArea(child: LinearProgressIndicator()) : Container(),
       Positioned(
           top: 8,
           right: 8,
@@ -182,8 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<Set<Marker>> _genMarkers(
-      List<StationModel> stations) async {
+  Future<Set<Marker>> _genMarkers(List<StationModel> stations) async {
     List<Marker> markers = await Future.wait(stations.map((s) async => Marker(
         markerId: MarkerId(s.id),
         position: LatLng(s.coordinate.latitude, s.coordinate.longitude),
@@ -213,11 +214,13 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!station.isOpen) {
       path = 'assets/images/markers/grey.png';
     } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
-        path = 'assets/images/markers/green.png';
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.normal) {
-        path = 'assets/images/markers/orange.png';
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.expensive) {
-        path = 'assets/images/markers/red.png';
+      path = 'assets/images/markers/green.png';
+    } else if (station.prices.getFirstPriceRange() ==
+        StationPriceRange.normal) {
+      path = 'assets/images/markers/orange.png';
+    } else if (station.prices.getFirstPriceRange() ==
+        StationPriceRange.expensive) {
+      path = 'assets/images/markers/red.png';
     } else {
       path = 'assets/images/markers/grey.png';
     }
@@ -292,9 +295,11 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundPaint.color = Colors.grey;
     } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
       backgroundPaint.color = Colors.green;
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.normal) {
+    } else if (station.prices.getFirstPriceRange() ==
+        StationPriceRange.normal) {
       backgroundPaint.color = Colors.orange;
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.expensive) {
+    } else if (station.prices.getFirstPriceRange() ==
+        StationPriceRange.expensive) {
       backgroundPaint.color = Colors.red;
     } else {
       backgroundPaint.color = Colors.grey;
@@ -336,10 +341,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 
-  Future<List<StationModel>> _requestStations(
-      CameraPosition location) async {
-    GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(TankerkoenigStationRepository(FileConfigRepository()));
-    return getStationsUseCase.invoke(_filter.gas, CoordinateModel(location.target.latitude, location.target.longitude));
+  Future<List<StationModel>> _requestStations(CameraPosition location) async {
+    _isLoading = true;
+
+    GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(
+        TankerkoenigStationRepository(FileConfigRepository()));
+    return getStationsUseCase.invoke(_filter.gas,
+        CoordinateModel(location.target.latitude, location.target.longitude));
   }
 
   Future<Position?> _moveCameraToOwnPosition() async {
@@ -441,6 +449,8 @@ class _MyHomePageState extends State<MyHomePage> {
         _lastRequestPosition = _position;
         _stations = stations;
       });
+
+      _isLoading = false;
 
       if (stations.isEmpty) {
         return Future.value(<Marker>{});
