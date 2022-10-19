@@ -109,10 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
-                            "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung und versuche es später erneut.",
+                            "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
                             style: Theme.of(context).textTheme.bodyText2)),
                     Padding(
-                      padding: const EdgeInsets.only(top: 0),
+                      padding: const EdgeInsets.only(top: 8),
                       child: Row(
                         children: [
                           const Spacer(),
@@ -135,11 +135,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                     });
                               },
                               child: const Text("Fehler anzeigen")),
-                          TextButton(
-                              onPressed: () {
-                                _updateStations();
-                              },
-                              child: const Text("Erneut versuchen"))
+                          Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    _updateStations();
+                                  },
+                                  child: const Text("Wiederholen")))
                         ],
                       ),
                     )
