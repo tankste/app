@@ -28,10 +28,13 @@ class ThemeItem extends StatelessWidget {
 
   void _showSelectionDialog(BuildContext context, ThemeMode theme) {
     showDialog(
-            context: context,
-            builder: (context) {
-              return ThemeSelectionDialog(selection: theme);
-            })
-        .then((theme) => context.read<ThemeItemCubit>().onThemeChanged(theme));
+        context: context,
+        builder: (context) {
+          return ThemeSelectionDialog(selection: theme);
+        }).then((theme) {
+      if (theme != null) {
+        context.read<ThemeItemCubit>().onThemeChanged(theme);
+      }
+    });
   }
 }

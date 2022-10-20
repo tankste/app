@@ -23,6 +23,9 @@ dependencies:
   settings:
     path: './settings'
 
+  # BLoC - https://pub.dev/packages/flutter_bloc
+  flutter_bloc: ^8.0.1
+
   # Google Maps - https://pub.dev/packages/google_maps_flutter
   google_maps_flutter: ^2.1.8
 

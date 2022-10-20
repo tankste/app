@@ -1,5 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:core/config/config_repository.dart';
+import 'package:core/cubit/base_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:settings/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +9,8 @@ import 'package:station/repository/station_repository.dart';
 import 'package:station/station_model.dart';
 import 'package:station/usecase/get_stations_use_case.dart';
 import 'package:navigation/coordinate_model.dart';
+import 'package:tankste/app/cubit/app_cubit.dart';
+import 'package:tankste/app/cubit/app_state.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,12 +28,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'tankste!',
-      debugShowCheckedModeBanner: false,
-      theme: tanksteTheme,
-      home: const MyHomePage(),
-    );
+    return BlocProvider(
+        create: (context) => AppCubit(),
+        child: BlocConsumer<AppCubit, AppState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              //TODO: show progress bar or splashscreen for this state
+              if (state.status == Status.loading) {
+                return Container();
+              }
+
+              //TODO: show error for this state
+              if (state.status == Status.failure) {
+                return Container();
+              }
+
+              return MaterialApp(
+                title: 'tankste!',
+                debugShowCheckedModeBanner: false,
+                theme: tanksteTheme,
+                darkTheme: tanksteThemeDark,
+                themeMode: state.theme,
+                home: const MyHomePage(),
+              );
+            }));
   }
 }
 
@@ -166,7 +188,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SettingsPage()));
+                                    builder: (context) =>
+                                        const SettingsPage()));
                           },
                           child: Padding(
                               padding: const EdgeInsets.all(16),
