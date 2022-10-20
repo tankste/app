@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:settings/theme/ui/theme_item.dart';
 import 'package:settings/version/ui/version_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,6 +26,7 @@ class SettingsPage extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     return [
+      _buildCard(context, "App", [const ThemeItem()]),
       _buildCard(context, "Unterstütze uns", [
         ListTile(
             onTap: () {
@@ -96,9 +98,10 @@ class SettingsPage extends StatelessWidget {
         const VersionItem()
       ]),
       Padding(
-          padding: EdgeInsets.only(top: 16),
+          padding: const EdgeInsets.only(top: 16),
           child: Center(
-              child: Text(TimeOfDay.now().hour >= 19 // Show a beer after 20:00 :p
+              child: Text(TimeOfDay.now().hour >=
+                      19 // Show a beer after 20:00 :p
                   ? "Made with \u{2665} and \u{1F37A} in \u{1F1E9}\u{1F1EA}."
                   : "Made with \u{2665} and \u{2615} in \u{1F1E9}\u{1F1EA}.")))
     ];
