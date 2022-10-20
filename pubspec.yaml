@@ -20,6 +20,9 @@ dependencies:
   navigation:
     path: './navigation'
 
+  settings:
+    path: './settings'
+
   # Google Maps - https://pub.dev/packages/google_maps_flutter
   google_maps_flutter: ^2.1.8
 

@@ -1,12 +1,12 @@
 import 'dart:ui' as ui;
 import 'package:core/config/config_repository.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:settings/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/repository/station_repository.dart';
 import 'package:station/station_model.dart';
 import 'package:station/usecase/get_stations_use_case.dart';
 import 'package:navigation/coordinate_model.dart';
-import 'package:tankste/settings_page.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SettingsPage()));
+                                    builder: (context) => const SettingsPage()));
                           },
                           child: Padding(
                               padding: const EdgeInsets.all(16),

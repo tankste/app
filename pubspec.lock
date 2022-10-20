@@ -380,6 +380,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.4"
+  settings:
+    dependency: "direct main"
+    description:
+      path: settings
+      relative: true
+    source: path
+    version: "0.0.0"
   shared_preferences:
     dependency: "direct main"
     description:
