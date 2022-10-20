@@ -95,11 +95,12 @@ class SettingsPage extends StatelessWidget {
         //     title: const Text("Status")),
         const VersionItem()
       ]),
-      const Padding(
+      Padding(
           padding: EdgeInsets.only(top: 16),
           child: Center(
-              child: Text(
-                  "Made with \u{2665} and \u{2615} in \u{1F1E9}\u{1F1EA}.")))
+              child: Text(TimeOfDay.now().hour >= 19 // Show a beer after 20:00 :p
+                  ? "Made with \u{2665} and \u{1F37A} in \u{1F1E9}\u{1F1EA}."
+                  : "Made with \u{2665} and \u{2615} in \u{1F1E9}\u{1F1EA}.")))
     ];
   }
 
