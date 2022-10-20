@@ -4,7 +4,6 @@ import 'package:settings/version/ui/version_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
-
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
@@ -31,53 +30,58 @@ class SettingsPage extends StatelessWidget {
             onTap: () {
               _openUrl("https://github.com/tankste");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.github),
-            title: const Text("Github")),
+            title: const Text("Github"),
+            subtitle: const Text("@tankste")),
       ]),
       _buildCard(context, "Kontakt", [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.public),
-            title: const Text("Webseite")),
+            title: const Text("Webseite"),
+            subtitle: const Text("tankste.app")),
         ListTile(
             onTap: () {
-              _openUrl("mailto:hello@tankste.app");
+              _openUrl("mailto:hey@tankste.app");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.mail),
-            title: const Text("E-Mail")),
+            title: const Text("E-Mail"),
+            subtitle: const Text("hey@tankste.app")),
         ListTile(
             onTap: () {
               _openUrl("https://www.instagram.com/tankste.app");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.instagram),
-            title: const Text("Instagram")),
+            title: const Text("Instagram"),
+            subtitle: const Text("@tankste.app")),
         ListTile(
             onTap: () {
               _openUrl("https://twitter.com/tankste_app");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.twitter),
-            title: const Text("Twitter"))
+            title: const Text("Twitter"),
+            subtitle: const Text("@tankste_app"))
       ]),
       _buildCard(context, "Rechtliches", [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/nutzungsbedingungen");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.account_balance),
             title: const Text("Nutzungsbedingungen")),
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/datenschutz");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.local_police),
             title: const Text("Datenschutzbestimmungen"))
       ]),
@@ -86,7 +90,7 @@ class SettingsPage extends StatelessWidget {
         //     onTap: () {
         //       _openUrl("https://status.tankste.app/");
         //     },
-        //     minLeadingWidth: 10,
+        //     minLeadingWidth: 8,
         //     leading: const Icon(Icons.traffic),
         //     title: const Text("Status")),
         const VersionItem()
