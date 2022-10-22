@@ -1,17 +1,42 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ThemeRepository {
-  Future<ThemeMode> get();
+  Stream<ThemeMode> get();
 
   Future<ThemeMode> set(ThemeMode theme);
 }
 
 class LocalThemeRepository extends ThemeRepository {
+  static final LocalThemeRepository _singleton =
+      LocalThemeRepository._internal();
+
+  factory LocalThemeRepository() {
+    return _singleton;
+  }
+
+  LocalThemeRepository._internal();
+
+  final StreamController<ThemeMode> _themeStreamController =
+      StreamController<ThemeMode>.broadcast();
 
   @override
-  Future<ThemeMode> get() {
+  Stream<ThemeMode> get() {
+    _fetchTheme();
+    return _themeStreamController.stream;
+  }
+
+  @override
+  Future<ThemeMode> set(ThemeMode theme) {
     return _getPreferences().then((preferences) {
+      return preferences.setString("design", _getThemeModeKey(theme));
+    }).then((_) => theme);
+  }
+
+  void _fetchTheme() {
+    _getPreferences().then((preferences) {
       if (!preferences.containsKey("design")) {
         return null;
       }
@@ -26,14 +51,9 @@ class LocalThemeRepository extends ThemeRepository {
         default:
           return ThemeMode.system;
       }
+    }).then((theme) {
+      _themeStreamController.add(theme);
     });
-  }
-
-  @override
-  Future<ThemeMode> set(ThemeMode theme) {
-    return _getPreferences().then((preferences) {
-      return preferences.setString("design", _getThemeModeKey(theme));
-    }).then((_) => get());
   }
 
   // TODO: while `getInstance()` is asynchronous, we can't inject this without trouble.

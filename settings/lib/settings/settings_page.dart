@@ -26,7 +26,9 @@ class SettingsPage extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     return [
-      _buildCard(context, "App", [const ThemeItem()]),
+      _buildCard(context, "App", [
+        const ThemeItem()
+      ]),
       _buildCard(context, "Unterstütze uns", [
         ListTile(
             onTap: () {
@@ -98,7 +100,7 @@ class SettingsPage extends StatelessWidget {
         const VersionItem()
       ]),
       Padding(
-          padding: const EdgeInsets.only(top: 16),
+          padding: const EdgeInsets.only(top: 16, bottom: 8),
           child: Center(
               child: Text(TimeOfDay.now().hour >=
                       19 // Show a beer after 20:00 :p

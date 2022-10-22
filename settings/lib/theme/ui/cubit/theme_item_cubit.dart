@@ -19,7 +19,7 @@ class ThemeItemCubit extends Cubit<ThemeItemState> {
   void _fetchTheme() {
     emit(ThemeItemState.loading());
 
-    getThemeUseCase.invoke().then((theme) {
+    getThemeUseCase.invoke().listen((theme) {
       String label;
       if (theme == ThemeMode.light) {
         label = "Hell";
@@ -30,7 +30,7 @@ class ThemeItemCubit extends Cubit<ThemeItemState> {
       }
 
       emit(ThemeItemState.success(theme, label));
-    }).catchError((error) => emit(ThemeItemState.failure(error)));
+    }).onError((error) => emit(ThemeItemState.failure(error)));
   }
 
   void onThemeChanged(ThemeMode theme) {

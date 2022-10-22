@@ -14,8 +14,8 @@ class AppCubit extends Cubit<AppState> {
   void _fetchTheme() {
     emit(AppState.loading());
 
-    getThemeUseCase.invoke().then((theme) {
+    getThemeUseCase.invoke().listen((theme) {
       emit(AppState.success(theme));
-    }).catchError((error) => emit(AppState.failure(error)));
+    }).onError((error) => emit(AppState.failure(error)));
   }
 }
