@@ -15,20 +15,19 @@ class SettingsPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Einstellungen"),
         ),
-        body: ListView.builder(
+        body: SafeArea(
+            child: ListView.builder(
           itemCount: items.length,
           padding: const EdgeInsets.all(8),
           itemBuilder: (BuildContext context, int index) {
             return items[index];
           },
-        ));
+        )));
   }
 
   List<Widget> _buildItems(BuildContext context) {
     return [
-      _buildCard(context, "App", [
-        const ThemeItem()
-      ]),
+      _buildCard(context, "App", [const ThemeItem()]),
       _buildCard(context, "Unterstütze uns", [
         ListTile(
             onTap: () {

@@ -28,7 +28,7 @@ class StationDetailsPage extends StatelessWidget {
                   appBar: AppBar(
                     title: Text(state.station?.label ?? stationName ?? ""),
                   ),
-                  body: _buildBody(context, state));
+                  body: SafeArea(child: _buildBody(context, state)));
             }));
   }
 
@@ -40,48 +40,41 @@ class StationDetailsPage extends StatelessWidget {
     if (state.status == Status.failure) {
       return Center(
           child: Column(children: [
-            Spacer(),
-            Text("Fehler!", style: Theme
-                .of(context)
-                .textTheme
-                .headline5),
-            Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .bodyMedium,
-                  textAlign: TextAlign.center,
-                )),
-            Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: ElevatedButton(
-                    onPressed: () {
-                      context.read<StationDetailsCubit>().onRetryClicked();
-                    },
-                    child: const Text("Wiederholen"))),
-            TextButton(
+        Spacer(),
+        Text("Fehler!", style: Theme.of(context).textTheme.headline5),
+        Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text(
+              "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            )),
+        Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: ElevatedButton(
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Fehler Details'),
-                          content: Text(state.error.toString()),
-                          actions: <Widget>[
-                            TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: const Text('Ok')),
-                          ],
-                        );
-                      });
+                  context.read<StationDetailsCubit>().onRetryClicked();
                 },
-                child: const Text("Fehler anzeigen")),
-            Spacer(),
-          ]));
+                child: const Text("Wiederholen"))),
+        TextButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Fehler Details'),
+                      content: Text(state.error.toString()),
+                      actions: <Widget>[
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: const Text('Ok')),
+                      ],
+                    );
+                  });
+            },
+            child: const Text("Fehler anzeigen")),
+        Spacer(),
+      ]));
     }
 
     if (state.status == Status.success) {
@@ -94,9 +87,7 @@ class StationDetailsPage extends StatelessWidget {
                 RoutePreview(
                     target: station.coordinate,
                     address:
-                    "${station.address.street} ${station.address
-                        .houseNumber}\n${station.address.postCode} ${station
-                        .address.city}",
+                        "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}",
                     label: station.label),
                 Card(
                     child: Padding(
@@ -108,16 +99,13 @@ class StationDetailsPage extends StatelessWidget {
                                 padding: const EdgeInsets.only(bottom: 4),
                                 child: Text("Spritpreise",
                                     style:
-                                    Theme
-                                        .of(context)
-                                        .textTheme
-                                        .headline6),
+                                        Theme.of(context).textTheme.headline6),
                               ),
                               Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Expanded(
                                           flex: 2, child: Text("Super E5")),
@@ -132,7 +120,7 @@ class StationDetailsPage extends StatelessWidget {
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Expanded(
                                           flex: 2, child: Text("Super E10")),
@@ -147,7 +135,7 @@ class StationDetailsPage extends StatelessWidget {
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Expanded(
                                           flex: 2, child: const Text("Diesel")),
@@ -169,18 +157,14 @@ class StationDetailsPage extends StatelessWidget {
                                 padding: const EdgeInsets.only(bottom: 4),
                                 child: Text("Öffnungszeiten\u{002A}",
                                     style:
-                                    Theme
-                                        .of(context)
-                                        .textTheme
-                                        .headline6),
+                                        Theme.of(context).textTheme.headline6),
                               ),
                               ...(station.openTimes
-                                  .map((openTime) =>
-                                  Padding(
+                                  .map((openTime) => Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Row(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                               flex: 2,
@@ -188,9 +172,7 @@ class StationDetailsPage extends StatelessWidget {
                                           Expanded(
                                               flex: 1,
                                               child: Text(
-                                                  "${openTime
-                                                      .start} - ${openTime
-                                                      .end}")),
+                                                  "${openTime.start} - ${openTime.end}")),
                                         ],
                                       )))
                                   .toList()),
@@ -199,10 +181,7 @@ class StationDetailsPage extends StatelessWidget {
                                   child: Text(
                                       "\u{002A}Die Öffnungszeiten können an gesetzlichen Feiertagen abweichen.",
                                       style:
-                                      Theme
-                                          .of(context)
-                                          .textTheme
-                                          .caption))
+                                          Theme.of(context).textTheme.caption))
                             ])))
               ])));
     }
