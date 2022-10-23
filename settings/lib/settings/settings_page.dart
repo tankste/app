@@ -1,9 +1,12 @@
-import 'package:tankste/version_item.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:settings/theme/ui/theme_item.dart';
+import 'package:settings/version/ui/version_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> items = _buildItems(context);
@@ -12,69 +15,76 @@ class SettingsPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Einstellungen"),
         ),
-        body: ListView.builder(
+        body: SafeArea(
+            child: ListView.builder(
           itemCount: items.length,
           padding: const EdgeInsets.all(8),
           itemBuilder: (BuildContext context, int index) {
             return items[index];
           },
-        ));
+        )));
   }
 
   List<Widget> _buildItems(BuildContext context) {
     return [
+      _buildCard(context, "App", [const ThemeItem()]),
       _buildCard(context, "Unterstütze uns", [
         ListTile(
             onTap: () {
               _openUrl("https://github.com/tankste");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.github),
-            title: const Text("Github")),
+            title: const Text("Github"),
+            subtitle: const Text("@tankste")),
       ]),
       _buildCard(context, "Kontakt", [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.public),
-            title: const Text("Webseite")),
+            title: const Text("Webseite"),
+            subtitle: const Text("tankste.app")),
         ListTile(
             onTap: () {
-              _openUrl("mailto:hello@tankste.app");
+              _openUrl("mailto:hey@tankste.app");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.mail),
-            title: const Text("E-Mail")),
+            title: const Text("E-Mail"),
+            subtitle: const Text("hey@tankste.app")),
         ListTile(
             onTap: () {
               _openUrl("https://www.instagram.com/tankste.app");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.instagram),
-            title: const Text("Instagram")),
+            title: const Text("Instagram"),
+            subtitle: const Text("@tankste.app")),
         ListTile(
             onTap: () {
               _openUrl("https://twitter.com/tankste_app");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.twitter),
-            title: const Text("Twitter"))
+            title: const Text("Twitter"),
+            subtitle: const Text("@tankste_app"))
       ]),
       _buildCard(context, "Rechtliches", [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/nutzungsbedingungen");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.account_balance),
             title: const Text("Nutzungsbedingungen")),
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/datenschutz");
             },
-            minLeadingWidth: 10,
+            minLeadingWidth: 8,
             leading: const Icon(Icons.local_police),
             title: const Text("Datenschutzbestimmungen"))
       ]),
@@ -83,16 +93,18 @@ class SettingsPage extends StatelessWidget {
         //     onTap: () {
         //       _openUrl("https://status.tankste.app/");
         //     },
-        //     minLeadingWidth: 10,
+        //     minLeadingWidth: 8,
         //     leading: const Icon(Icons.traffic),
         //     title: const Text("Status")),
         const VersionItem()
       ]),
-      const Padding(
-          padding: EdgeInsets.only(top: 16),
+      Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 8),
           child: Center(
-              child: Text(
-                  "Made with \u{2665} and \u{2615} in \u{1F1E9}\u{1F1EA}.")))
+              child: Text(TimeOfDay.now().hour >=
+                      19 // Show a beer after 20:00 :p
+                  ? "Made with \u{2665} and \u{1F37A} in \u{1F1E9}\u{1F1EA}."
+                  : "Made with \u{2665} and \u{2615} in \u{1F1E9}\u{1F1EA}.")))
     ];
   }
 

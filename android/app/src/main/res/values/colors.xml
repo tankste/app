@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- tankste! colors -->
+    <color name="primary">#9253a4</color>
+
+    <!-- Basic colors -->
+    <color name="white">#FFFFFF</color>
+
+    <!-- Base -->
+    <color name="window">@color/white</color>
+
+    <!-- Launcher icon -->
+    <color name="ic_launcher_background">#9253a4</color>
+
+    <!-- Splash screen -->
+    <color name="splashscreen_background">@color/primary</color>
+
+</resources>
