@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:core/config/config_repository.dart';
 import 'package:core/cubit/base_state.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:settings/settings/settings_page.dart';
@@ -78,7 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: Platform.isIOS ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
+    child:
+
+      Stack(children: <Widget>[
       GoogleMap(
           mapType: MapType.normal,
           onMapCreated: (GoogleMapController controller) {
@@ -249,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               })
           : Container()
-    ]);
+    ]));
   }
 
   @override
