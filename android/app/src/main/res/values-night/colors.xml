@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- tankste! colors -->
+    <color name="primary">#BD97C8</color>
+
+    <!-- Basic colors -->
+    <color name="white">#FFFFFF</color>
+
+    <!-- Base -->
+    <color name="window">@color/dark_0dp</color>
+
+    <!-- Special dark colors -->
+    <color name="dark_0dp" tools:ignore="MissingDefaultResource">#121212</color>
+    <color name="dark_1dp" tools:ignore="MissingDefaultResource">#1F1F1F</color>
+    <color name="dark_2dp" tools:ignore="MissingDefaultResource">#242424</color>
+    <color name="dark_3dp" tools:ignore="MissingDefaultResource">#262626</color>
+    <color name="dark_4dp" tools:ignore="MissingDefaultResource">#292929</color>
+    <color name="dark_8dp" tools:ignore="MissingDefaultResource">#313131</color>
+    <color name="dark_12dp" tools:ignore="MissingDefaultResource">#363636</color>
+    <color name="dark_24dp" tools:ignore="MissingDefaultResource">#3B3B3B</color>
+
+    <!-- Splash screen -->
+    <color name="splashscreen_background">@color/dark_0dp</color>
+</resources>
