@@ -30,9 +30,12 @@ class LocalThemeRepository extends ThemeRepository {
 
   @override
   Future<ThemeMode> update(ThemeMode theme) {
-    return _getPreferences().then((preferences) {
-      return preferences.setString("design", _getThemeModeKey(theme));
-    }).then((_) => theme);
+    return _getPreferences()
+        .then((preferences) {
+          return preferences.setString("design", _getThemeModeKey(theme));
+        })
+        .then((_) => _fetchTheme())
+        .then((_) => theme);
   }
 
   void _fetchTheme() {

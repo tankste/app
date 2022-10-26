@@ -27,11 +27,11 @@ class VersionItemCubit extends Cubit<VersionItemState> {
 
   void onClicked() {
     if (++_clickCount >= 5) {
-      _enableDeveloperModeUseCase
-          .invoke(true)
-          .then((value) =>
-              emit(VersionItemState.success(state.version ?? "", true)))
-          .catchError((error) => emit(VersionItemState.failure(error)));
+      _enableDeveloperModeUseCase.invoke(true).then((value) {
+        _clickCount = 0;
+        emit(VersionItemState.success(state.version ?? "", true));
+        return value;
+      }).catchError((error) => emit(VersionItemState.failure(error)));
     }
   }
 }

@@ -1,9 +1,11 @@
-import 'package:core/app/model/app_info_model.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'dart:async';
+
 import 'package:settings/developer/model/developer_settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class DeveloperSettingsRepository {
+  Stream<DeveloperSettingsModel> get();
+
   Future<DeveloperSettingsModel> update(
       DeveloperSettingsModel developerSettings);
 }
@@ -16,21 +18,56 @@ class LocalDeveloperSettingsRepository extends DeveloperSettingsRepository {
       "developer_feature_percentage_price_ranges";
   final String keyMapProvider = "developer_feature_map_provider";
 
+  static final LocalDeveloperSettingsRepository _singleton =
+      LocalDeveloperSettingsRepository._internal();
+
+  factory LocalDeveloperSettingsRepository() {
+    return _singleton;
+  }
+
+  LocalDeveloperSettingsRepository._internal();
+
+  final StreamController<DeveloperSettingsModel>
+      _developerSettingsStreamController =
+      StreamController<DeveloperSettingsModel>.broadcast();
+
+  @override
+  Stream<DeveloperSettingsModel> get() {
+    _fetchDeveloperSettings();
+    return _developerSettingsStreamController.stream;
+  }
+
   @override
   Future<DeveloperSettingsModel> update(
       DeveloperSettingsModel developerSettings) async {
-    return _getPreferences().then((preferences) {
-      return Future.wait([
-        preferences.setBool(
-            keyDeveloperMode, developerSettings.isDeveloperModeEnabled),
-        preferences.setBool(keyFetchingWithoutLocation,
-            developerSettings.isFetchingWithoutLocationEnabled),
-        preferences.setBool(keyPercentagePriceRanges,
-            developerSettings.isPercentagePriceRangesEnabled),
-        preferences.setString(
-            keyDeveloperMode, _getProviderValueKey(developerSettings.mapProvider)),
-      ]);
-    }).then((_) => developerSettings);
+    return _getPreferences()
+        .then((preferences) {
+          return Future.wait([
+            preferences.setBool(
+                keyDeveloperMode, developerSettings.isDeveloperModeEnabled),
+            preferences.setBool(keyFetchingWithoutLocation,
+                developerSettings.isFetchingWithoutLocationEnabled),
+            preferences.setBool(keyPercentagePriceRanges,
+                developerSettings.isPercentagePriceRangesEnabled),
+            preferences.setString(keyMapProvider,
+                _getProviderValueKey(developerSettings.mapProvider)),
+          ]);
+        })
+        .then((_) => _fetchDeveloperSettings())
+        .then((_) => developerSettings);
+  }
+
+  void _fetchDeveloperSettings() {
+    _getPreferences().then((preferences) {
+      return DeveloperSettingsModel(
+        preferences.getBool(keyDeveloperMode) ?? false,
+        preferences.getBool(keyFetchingWithoutLocation) ?? false,
+        preferences.getBool(keyPercentagePriceRanges) ?? false,
+        _getProviderFromString(preferences.getString(keyMapProvider) ?? ""),
+      );
+    }).then((developerSettings) {
+      _developerSettingsStreamController.add(developerSettings);
+    });
   }
 
   String _getProviderValueKey(DeveloperSettingsMapProvider provider) {
