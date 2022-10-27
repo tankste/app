@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:settings/developer/model/developer_settings_model.dart';
 import 'package:settings/developer/ui/cubit/developer_card_cubit.dart';
 import 'package:settings/developer/ui/cubit/developer_card_state.dart';
+import 'package:settings/developer/ui/map_provider_selection_dialog.dart';
 import 'package:settings/settings/settings_card.dart';
 import 'package:settings/widget/custom_switch_list_tile.dart';
 
@@ -32,7 +35,39 @@ class DeveloperCard extends StatelessWidget {
                   title: const Text("Entwicklermodus"),
                   subtitle: const Text("Deaktiviere den Entwicklermodus"),
                 ),
+                ListTile(
+                  onTap: () {},
+                  minLeadingWidth: 8,
+                  leading: const Icon(FontAwesomeIcons.wandMagicSparkles),
+                  title: const Text("Experimentelle Funktionen"),
+                  subtitle: const Text("Aktiviere experimentelle Funktionen"),
+                ),
+                ListTile(
+                  onTap: () {
+                    _showMapProviderSelectionDialog(
+                        context,
+                        state.mapProvider ??
+                            DeveloperSettingsMapProvider.system);
+                  },
+                  minLeadingWidth: 8,
+                  leading: const Icon(FontAwesomeIcons.mapLocationDot),
+                  title: const Text("Kartenanbieter"),
+                  subtitle: const Text("Ändere den Kartenanbieter"),
+                ),
               ]);
             }));
+  }
+
+  void _showMapProviderSelectionDialog(
+      BuildContext context, DeveloperSettingsMapProvider mapProvider) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return MapProviderSelectionDialog(selection: mapProvider);
+        }).then((mapProvider) {
+      if (mapProvider != null) {
+        context.read<DeveloperCardCubit>().onMapProviderChanged(mapProvider);
+      }
+    });
   }
 }
