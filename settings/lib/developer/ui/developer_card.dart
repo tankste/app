@@ -5,6 +5,7 @@ import 'package:settings/developer/model/developer_settings_model.dart';
 import 'package:settings/developer/ui/cubit/developer_card_cubit.dart';
 import 'package:settings/developer/ui/cubit/developer_card_state.dart';
 import 'package:settings/developer/ui/map_provider_selection_dialog.dart';
+import 'package:settings/feature/feature_settings_page.dart';
 import 'package:settings/settings/settings_card.dart';
 import 'package:settings/widget/custom_switch_list_tile.dart';
 
@@ -36,7 +37,12 @@ class DeveloperCard extends StatelessWidget {
                   subtitle: const Text("Deaktiviere den Entwicklermodus"),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const FeatureSettingsPage()));
+                  },
                   minLeadingWidth: 8,
                   leading: const Icon(FontAwesomeIcons.wandMagicSparkles),
                   title: const Text("Experimentelle Funktionen"),

@@ -1,25 +1,24 @@
 import 'package:settings/developer/model/developer_settings_model.dart';
 import 'package:settings/developer/repository/developer_settings_repository.dart';
 
-abstract class UpdateMapProviderUseCase {
-  Future<DeveloperSettingsModel> invoke(
-      DeveloperSettingsMapProvider mapProvider);
+abstract class UpdatePercentagePriceRangeUseCase {
+  Future<DeveloperSettingsModel> invoke(bool isPercentagePriceRangeEnabled);
 }
 
-class UpdateMapProviderUseCaseImpl extends UpdateMapProviderUseCase {
+class UpdatePercentagePriceRangeUseCaseImpl
+    extends UpdatePercentagePriceRangeUseCase {
   final DeveloperSettingsRepository _developerSettingsRepository;
 
-  UpdateMapProviderUseCaseImpl(this._developerSettingsRepository);
+  UpdatePercentagePriceRangeUseCaseImpl(this._developerSettingsRepository);
 
   @override
-  Future<DeveloperSettingsModel> invoke(
-      DeveloperSettingsMapProvider mapProvider) {
+  Future<DeveloperSettingsModel> invoke(bool isPercentagePriceRangeEnabled) {
     return _developerSettingsRepository.get().first.then((developerSettings) {
       return _developerSettingsRepository.update(DeveloperSettingsModel(
           developerSettings.isDeveloperModeEnabled,
           developerSettings.isFetchingWithoutLocationEnabled,
-          developerSettings.isPercentagePriceRangesEnabled,
-          mapProvider));
+          isPercentagePriceRangeEnabled,
+          developerSettings.mapProvider));
     });
   }
 }
