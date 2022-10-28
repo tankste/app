@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:settings/version/ui/cubit/version_item_cubit.dart';
+import 'package:settings/version/ui/cubit/version_item_state.dart';
+import 'package:settings/version/ui/cubit/version_item_state.dart';
 
-class VersionItem extends StatefulWidget {
+class VersionItem extends StatelessWidget {
   const VersionItem({Key? key}) : super(key: key);
 
   @override
-  VersionItemState createState() => VersionItemState();
-}
-
-class VersionItemState extends State<VersionItem> {
-  PackageInfo? _packageInfo;
-
-  VersionItemState() {
-    _init();
-  }
-
-  Future<void> _init() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = packageInfo;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ListTile(
-        minLeadingWidth: 10,
-        leading: const Icon(Icons.info),
-        title: const Text("Version"),
-        subtitle: Text(
-          _packageInfo != null
-              ? "${_packageInfo!.appName} v${_packageInfo!.version}+${_packageInfo!.buildNumber}"
-              : "",
-        ));
+    return BlocProvider(
+        create: (context) => VersionItemCubit(),
+        child: BlocConsumer<VersionItemCubit, VersionItemState>(
+            listener: (context, state) {
+          if (state.isDeveloperModeEnabledInfoVisible == true) {
+            const snackBar = SnackBar(
+              content: Text('Entwickler Modus aktiviert!'),
+            );
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        }, builder: (context, state) {
+          return ListTile(
+              minLeadingWidth: 10,
+              leading: const Icon(Icons.info),
+              onTap: () {
+                context.read<VersionItemCubit>().onClicked();
+              },
+              title: const Text("Version"),
+              subtitle: Text(state.version ?? "..."));
+        }));
   }
 }

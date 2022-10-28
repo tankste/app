@@ -9,6 +9,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Package Info - https://pub.dev/packages/package_info_plus
+  package_info_plus: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

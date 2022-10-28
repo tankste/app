@@ -21,9 +21,6 @@ dependencies:
   # Font Awesome - https://pub:dev/packages/font_awesome_flutter
   font_awesome_flutter: ^10.1.0
 
-  # Package Info - https://pub.dev/packages/package_info_plus
-  package_info_plus: ^2.0.0
-
   # URL Launcher - https://pub.dev/packages/url_launcher
   url_launcher: ^6.1.3
 

@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class ThemeRepository {
   Stream<ThemeMode> get();
 
-  Future<ThemeMode> set(ThemeMode theme);
+  Future<ThemeMode> update(ThemeMode theme);
 }
 
 class LocalThemeRepository extends ThemeRepository {
@@ -29,10 +29,13 @@ class LocalThemeRepository extends ThemeRepository {
   }
 
   @override
-  Future<ThemeMode> set(ThemeMode theme) {
-    return _getPreferences().then((preferences) {
-      return preferences.setString("design", _getThemeModeKey(theme));
-    }).then((_) => theme);
+  Future<ThemeMode> update(ThemeMode theme) {
+    return _getPreferences()
+        .then((preferences) {
+          return preferences.setString("design", _getThemeModeKey(theme));
+        })
+        .then((_) => _fetchTheme())
+        .then((_) => theme);
   }
 
   void _fetchTheme() {

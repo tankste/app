@@ -12,6 +12,6 @@ class UpdateThemeUseCaseImpl extends UpdateThemeUseCase {
 
   @override
   Future<void> invoke(ThemeMode theme) {
-    return _themeRepository.set(theme);
+    return _themeRepository.update(theme);
   }
 }

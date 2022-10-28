@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:settings/developer/ui/developer_card.dart';
+import 'package:settings/settings/settings_card.dart';
 import 'package:settings/theme/ui/theme_item.dart';
 import 'package:settings/version/ui/version_item.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,8 +29,8 @@ class SettingsPage extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     return [
-      _buildCard(context, "App", [const ThemeItem()]),
-      _buildCard(context, "Unterstütze uns", [
+      const SettingsCard(title: "App", items: [ThemeItem()]),
+      SettingsCard(title: "Unterstütze", items: [
         ListTile(
             onTap: () {
               _openUrl("https://github.com/tankste");
@@ -38,7 +40,7 @@ class SettingsPage extends StatelessWidget {
             title: const Text("Github"),
             subtitle: const Text("@tankste")),
       ]),
-      _buildCard(context, "Kontakt", [
+      SettingsCard(title: "Kontakt", items: [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/");
@@ -72,7 +74,7 @@ class SettingsPage extends StatelessWidget {
             title: const Text("Twitter"),
             subtitle: const Text("@tankste_app"))
       ]),
-      _buildCard(context, "Rechtliches", [
+      SettingsCard(title: "Rechtliches", items: [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/nutzungsbedingungen");
@@ -88,7 +90,8 @@ class SettingsPage extends StatelessWidget {
             leading: const Icon(Icons.local_police),
             title: const Text("Datenschutzbestimmungen"))
       ]),
-      _buildCard(context, "About", [
+      const DeveloperCard(),
+      const SettingsCard(title: "Über", items: [
         // ListTile(
         //     onTap: () {
         //       _openUrl("https://status.tankste.app/");
@@ -96,7 +99,7 @@ class SettingsPage extends StatelessWidget {
         //     minLeadingWidth: 8,
         //     leading: const Icon(Icons.traffic),
         //     title: const Text("Status")),
-        const VersionItem()
+        VersionItem()
       ]),
       Padding(
           padding: const EdgeInsets.only(top: 16, bottom: 8),
@@ -108,25 +111,11 @@ class SettingsPage extends StatelessWidget {
     ];
   }
 
-  Widget _buildCard(BuildContext context, String title, List<Widget> items) {
-    return Card(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(title, style: Theme.of(context).textTheme.headline6)),
-        ...items
-      ],
-    ));
-  }
-
   void _openUrl(String url) async {
     Uri uri = Uri.tryParse(url)!;
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
-      print("Can not launch $url");
       //TODO: handle this case
 //        throw 'Could not launch $url';
     }
