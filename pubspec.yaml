@@ -70,5 +70,6 @@ flutter:
 
   assets:
     - assets/images/markers/
+    - assets/google_maps/styles/
     - config.json
 
