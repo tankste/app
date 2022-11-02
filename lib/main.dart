@@ -33,28 +33,38 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => AppCubit(),
-        child: BlocConsumer<AppCubit, AppState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              //TODO: show progress bar or splashscreen for this state
-              if (state.status == Status.loading) {
-                return Container();
-              }
+        child: BlocConsumer<AppCubit, AppState>(listener: (context, state) {
+          MethodChannel channel =
+              const MethodChannel('app.tankste.settings/theme');
 
-              //TODO: show error for this state
-              if (state.status == Status.failure) {
-                return Container();
-              }
+          String value = "system";
+          if (state.theme == ThemeMode.light) {
+            value = "light";
+          } else if (state.theme == ThemeMode.dark) {
+            value = "dark";
+          }
 
-              return MaterialApp(
-                title: 'tankste!',
-                debugShowCheckedModeBanner: false,
-                theme: tanksteTheme,
-                darkTheme: tanksteThemeDark,
-                themeMode: state.theme,
-                home: const MyHomePage(),
-              );
-            }));
+          channel.invokeMethod('setTheme', {"value": value});
+        }, builder: (context, state) {
+          //TODO: show progress bar or splashscreen for this state
+          if (state.status == Status.loading) {
+            return Container();
+          }
+
+          //TODO: show error for this state
+          if (state.status == Status.failure) {
+            return Container();
+          }
+
+          return MaterialApp(
+            title: 'tankste!',
+            debugShowCheckedModeBanner: false,
+            theme: tanksteTheme,
+            darkTheme: tanksteThemeDark,
+            themeMode: state.theme,
+            home: const MyHomePage(),
+          );
+        }));
   }
 }
 
@@ -84,7 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: Platform.isIOS
-            ? SystemUiOverlayStyle.dark
+            ? (Theme.of(context).brightness == Brightness.dark
+                ? SystemUiOverlayStyle.light
+                : SystemUiOverlayStyle.dark)
             : SystemUiOverlayStyle.light,
         child: Stack(children: <Widget>[
           MapWidget(
