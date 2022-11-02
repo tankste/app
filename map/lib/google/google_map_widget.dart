@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as google_maps;
@@ -18,16 +19,12 @@ class GoogleMapWidget extends ChildMap {
 }
 
 class GoogleMapWidgetState extends State<GoogleMapWidget> {
-  Set<String> _markerIds = <String>{};
   Set<google_maps.Marker> _markers = <google_maps.Marker>{};
   google_maps.GoogleMapController? _mapController;
   bool? _isDark;
 
   @override
   Widget build(BuildContext context) {
-    _convertMarkers();
-    _checkTheme();
-
     return google_maps.GoogleMap(
       initialCameraPosition: google_maps.CameraPosition(
           target: google_maps.LatLng(
@@ -46,6 +43,19 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
       mapToolbarEnabled: false,
       myLocationEnabled: true,
     );
+  }
+
+  @override
+  void didUpdateWidget(GoogleMapWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("UPDATED!!!!");
+    _checkTheme();
+
+    // Convert markers only on changes, to prevent expensive work
+    if (!setEquals(oldWidget.markers.map((m) => m.id).toSet(),
+        widget.markers.map((m) => m.id).toSet())) {
+      _convertMarkers();
+    }
   }
 
   void _mapCreated(google_maps.GoogleMapController mapController) {
@@ -74,15 +84,6 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   Future _convertMarkers() async {
-    Set<String> markerIds = widget.markers.map((m) => m.id).toSet();
-
-    // Update markers only on changes
-    if (_markerIds.difference(markerIds).isEmpty &&
-        markerIds.difference(_markerIds).isEmpty) {
-      return;
-    }
-    _markerIds = markerIds;
-
     Set<google_maps.Marker> markers = widget.markers
         .map((m) => google_maps.Marker(
             markerId: google_maps.MarkerId(m.id),

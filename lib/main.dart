@@ -28,7 +28,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -103,9 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
             initialCameraPosition: initialCameraPosition,
             onMapCreated: (mapController) {
               mapController.moveCamera(_position ?? initialCameraPosition);
-              setState(() {
-                _mapController = mapController;
-              });
+              _mapController = mapController;
             },
             onCameraIdle: () {
               _updateStations(false);
@@ -247,8 +244,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     setState(() {
                       _filter = filter;
                       isFilterVisible = false;
-                      _updateStations(true);
                     });
+                    _updateStations(true);
                   },
                   onCancel: () {
                     setState(() {
@@ -510,16 +507,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _updateStations(bool force) async {
     if (_position == null) {
-      setState(() {
-        _stations = [];
-        _markers = {};
-      });
+      _stations = [];
       _updateMarkers();
       return;
     }
 
-    _updateMarkers();
-
+    // Prevent fetching stations for hidden markers.
+    // This keep API request limits low
     if (!_showMarkers) {
       return;
     }
@@ -538,14 +532,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _requestStations(_position!)
         .then((stations) {
-          setState(() {
-            _lastRequestPosition = _position;
-            _stations = stations;
-          });
-
-          setState(() {
-            _isLoading = false;
-          });
+          _lastRequestPosition = _position;
+          _stations = stations;
 
           if (stations.isEmpty) {
             return Future.value(<Marker>{});
@@ -554,6 +542,7 @@ class _MyHomePageState extends State<MyHomePage> {
           return _genMarkers(stations);
         })
         .then((m) => setState(() {
+              _isLoading = false;
               _markers = m;
             }))
         .catchError((error) {
@@ -566,6 +555,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _updateMarkers() {
     if (_stations.isEmpty) {
+      setState(() {
+        _markers = {};
+      });
       return;
     }
 
@@ -582,17 +574,28 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _handleCameraPositionUpdate(CameraPosition position) {
-    setState(() {
-      _position = position;
-      if (position.zoom >= 12) {
-        _showLabelMarkers = true;
-        _showMarkers = true;
-      } else if (position.zoom >= 10.5) {
-        _showLabelMarkers = false;
-        _showMarkers = true;
-      } else {
-        _showMarkers = false;
+    _position = position;
+
+    if (position.zoom >= 12) {
+      if (!_showLabelMarkers || !_showMarkers) {
+        setState(() {
+          _showLabelMarkers = true;
+          _showMarkers = true;
+        });
       }
-    });
+    } else if (position.zoom >= 10.5) {
+      if (_showLabelMarkers || !_showMarkers) {
+        setState(() {
+          _showLabelMarkers = false;
+          _showMarkers = true;
+        });
+      }
+    } else {
+      if (_showMarkers) {
+        setState(() {
+          _showMarkers = false;
+        });
+      }
+    }
   }
 }

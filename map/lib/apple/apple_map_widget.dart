@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_maps;
 import 'package:map/child_map.dart';
@@ -17,13 +18,10 @@ class AppleMapWidget extends ChildMap {
 }
 
 class AppleMapWidgetState extends State<AppleMapWidget> {
-  Set<String> _markerIds = <String>{};
   Set<apple_maps.Annotation> _annotations = <apple_maps.Annotation>{};
 
   @override
   Widget build(BuildContext context) {
-    _mapMarkers();
-
     return apple_maps.AppleMap(
       initialCameraPosition: apple_maps.CameraPosition(
           target: apple_maps.LatLng(
@@ -44,16 +42,18 @@ class AppleMapWidgetState extends State<AppleMapWidget> {
     );
   }
 
-  Future _mapMarkers() async {
-    Set<String> markerIds = widget.markers.map((m) => m.id).toSet();
-
-    // Update markers only on changes
-    if (_markerIds.difference(markerIds).isEmpty &&
-        markerIds.difference(_markerIds).isEmpty) {
-      return;
+  @override
+  void didUpdateWidget(AppleMapWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Convert markers only on changes, to prevent expensive work
+    if (!setEquals(oldWidget.markers.map((m) => m.id).toSet(),
+        widget.markers.map((m) => m.id).toSet())) {
+      _convertMarkers();
     }
-    _markerIds = markerIds;
+  }
 
+  Future _convertMarkers() async {
     Set<apple_maps.Annotation> annotations = widget.markers
         .map((m) => apple_maps.Annotation(
             annotationId: apple_maps.AnnotationId(m.id),
