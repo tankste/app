@@ -33,17 +33,21 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
         create: (context) => AppCubit(),
         child: BlocConsumer<AppCubit, AppState>(listener: (context, state) {
-          MethodChannel channel =
-              const MethodChannel('app.tankste.settings/theme');
 
-          String value = "system";
-          if (state.theme == ThemeMode.light) {
-            value = "light";
-          } else if (state.theme == ThemeMode.dark) {
-            value = "dark";
+          // iOS specific theme handling for native view elements
+          if (Platform.isIOS) {
+            MethodChannel channel =
+            const MethodChannel('app.tankste.settings/theme');
+
+            String value = "system";
+            if (state.theme == ThemeMode.light) {
+              value = "light";
+            } else if (state.theme == ThemeMode.dark) {
+              value = "dark";
+            }
+
+            channel.invokeMethod('setTheme', {"value": value});
           }
-
-          channel.invokeMethod('setTheme', {"value": value});
         }, builder: (context, state) {
           //TODO: show progress bar or splashscreen for this state
           if (state.status == Status.loading) {
