@@ -1,9 +1,16 @@
 import 'dart:io';
 
+import 'package:core/cubit/base_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map/apple/apple_map_widget.dart';
 import 'package:map/child_map.dart';
+import 'package:map/cubit/map_cubit.dart';
+import 'package:map/cubit/map_state.dart';
 import 'package:map/google/google_map_widget.dart';
+import 'package:map/usecase/get_map_provider_use_case.dart';
+import 'package:settings/developer/model/developer_settings_model.dart';
+
 //
 // //TODO: markers
 // //TODO: taps
@@ -68,7 +75,6 @@ import 'package:map/google/google_map_widget.dart';
 //   }
 // }
 
-
 //TODO: markers
 //TODO: taps
 //TODO: lines
@@ -97,32 +103,60 @@ class MapWidget extends StatelessWidget {
   //TODO: check for open source flag and use OSM if needed
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return GoogleMapWidget(
-        initialCameraPosition: initialCameraPosition,
-        onMapCreated: onMapCreated,
-        onCameraIdle: onCameraIdle,
-        onCameraMove: onCameraMove,
-        markers: markers,
-      );
-    } else if (Platform.isIOS) {
-      return AppleMapWidget(
-        initialCameraPosition: initialCameraPosition,
-        onMapCreated: onMapCreated,
-        onCameraIdle: onCameraIdle,
-        onCameraMove: onCameraMove,
-        markers: markers,
-      );
-    }
+    return BlocProvider(
+        create: (context) => MapCubit(),
+        child: BlocConsumer<MapCubit, MapState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state.status == Status.loading) {
+                return Container();
+              }
 
-    return Container();
+              if (state.status == Status.failure) {
+                return _buildHint(
+                    "Apple Maps is only supported by iOS platforms.");
+              }
+
+              switch (state.mapProvider) {
+                case MapProvider.google:
+                  return _buildGoogleMap();
+                case MapProvider.openStreet:
+                  return _buildHint("OpenStreetMap is not implemented yet!");
+                case MapProvider.apple:
+                  return _buildAppleMap();
+                default:
+                  return _buildHint("Invalid state! No map provider given.");
+              }
+            }));
   }
 
   Widget _buildGoogleMap() {
-    return Container();
+    return Scaffold(
+        body: GoogleMapWidget(
+      initialCameraPosition: initialCameraPosition,
+      onMapCreated: onMapCreated,
+      onCameraIdle: onCameraIdle,
+      onCameraMove: onCameraMove,
+      markers: markers,
+    ));
   }
 
   Widget _buildAppleMap() {
-    return Container();
+    if (Platform.isIOS) {
+      return Scaffold(
+          body: AppleMapWidget(
+        initialCameraPosition: initialCameraPosition,
+        onMapCreated: onMapCreated,
+        onCameraIdle: onCameraIdle,
+        onCameraMove: onCameraMove,
+        markers: markers,
+      ));
+    } else {
+      return _buildHint("AppleMaps is only supported by iOS platform.");
+    }
+  }
+
+  Widget _buildHint(String text) {
+    return Scaffold(body: Center(child: Text(text)));
   }
 }

@@ -2,7 +2,6 @@ import 'package:core/cubit/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/ui/preview/route_preview.dart';
-import 'package:navigation/util.dart';
 import 'package:station/details/cubit/station_details_cubit.dart';
 import 'package:station/details/cubit/station_details_state.dart';
 import 'package:station/station_model.dart';

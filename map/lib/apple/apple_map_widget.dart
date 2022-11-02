@@ -45,7 +45,7 @@ class AppleMapWidgetState extends State<AppleMapWidget> {
   @override
   void didUpdateWidget(AppleMapWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     // Convert markers only on changes, to prevent expensive work
     if (!setEquals(oldWidget.markers.map((m) => m.id).toSet(),
         widget.markers.map((m) => m.id).toSet())) {
