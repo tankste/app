@@ -1,4 +1,7 @@
 {
+  "tankste": {
+    "useOpenStreetMap": true
+  },
   "google": {
     "mapsKey": ""
   },
