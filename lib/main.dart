@@ -5,6 +5,8 @@ import 'package:core/cubit/base_state.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:map/child_map.dart';
+import 'package:map/map_widget.dart';
 import 'package:settings/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/repository/station_repository.dart';
@@ -15,7 +17,7 @@ import 'package:tankste/app/cubit/app_cubit.dart';
 import 'package:tankste/app/cubit/app_state.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as google_maps;
 import 'package:tankste/filter_dialog.dart';
 import 'package:station/details/station_details_page.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -65,7 +67,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final LatLng startPosition = const LatLng(51.2147194, 10.3634281);
+  final LatLng startPosition = LatLng(51.2147194, 10.3634281);
   Set<Marker> _markers = {};
   List<StationModel> _stations = [];
   Filter _filter = Filter("e5");
@@ -74,188 +76,185 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _showMarkers = false;
   CameraPosition? _lastRequestPosition;
   CameraPosition? _position;
-  GoogleMapController? _mapController;
+  MapController? _mapController;
   bool _isLoading = true;
   Exception? _error;
 
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: Platform.isIOS ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
-    child:
-
-      Stack(children: <Widget>[
-      GoogleMap(
-          mapType: MapType.normal,
-          onMapCreated: (GoogleMapController controller) {
-            setState(() {
-              _mapController = controller;
-            });
-          },
-          onCameraIdle: () {
-            _updateStations();
-          },
-          onCameraMove: (position) {
-            setState(() {
-              _position = position;
-              if (position.zoom >= 12) {
-                _showLabelMarkers = true;
-                _showMarkers = true;
-              } else if (position.zoom >= 10.5) {
-                _showLabelMarkers = false;
-                _showMarkers = true;
-              } else {
-                _showMarkers = false;
-              }
-            });
-          },
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          compassEnabled: false,
-          mapToolbarEnabled: false,
-          markers: _markers,
-          myLocationEnabled: true,
-          initialCameraPosition:
-              CameraPosition(target: startPosition, zoom: 6.0)),
-      _isLoading
-          ? const SafeArea(child: LinearProgressIndicator())
-          : Container(),
-      _error != null
-          ? Positioned(
-              top: 8,
-              left: 8,
-              right: 80,
-              child: SafeArea(
-                  child: Card(
-                      child: Padding(
-                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Unerwarteter Fehler",
-                        style: Theme.of(context).textTheme.headline6),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                            "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
-                            style: Theme.of(context).textTheme.bodyText2)),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
-                        children: [
-                          const Spacer(),
-                          TextButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Fehler Details'),
-                                        content: Text(_error.toString()),
-                                        actions: <Widget>[
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(true),
-                                              child: const Text('Ok')),
-                                        ],
-                                      );
-                                    });
-                              },
-                              child: const Text("Fehler anzeigen")),
-                          Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: ElevatedButton(
+        value: Platform.isIOS
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
+        child: Stack(children: <Widget>[
+          MapWidget(
+            initialCameraPosition:
+                CameraPosition(latLng: startPosition, zoom: 6.0),
+            onMapCreated: (mapController) {
+              setState(() {
+                _mapController = mapController;
+              });
+            },
+            onCameraIdle: () {
+              _updateStations();
+            },
+            onCameraMove: (position) {
+              setState(() {
+                _position = position;
+                if (position.zoom >= 12) {
+                  _showLabelMarkers = true;
+                  _showMarkers = true;
+                } else if (position.zoom >= 10.5) {
+                  _showLabelMarkers = false;
+                  _showMarkers = true;
+                } else {
+                  _showMarkers = false;
+                }
+              });
+            },
+            markers: _markers,
+          ),
+          _isLoading
+              ? const SafeArea(child: LinearProgressIndicator())
+              : Container(),
+          _error != null
+              ? Positioned(
+                  top: 8,
+                  left: 8,
+                  right: 80,
+                  child: SafeArea(
+                      child: Card(
+                          child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 16, left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Unerwarteter Fehler",
+                            style: Theme.of(context).textTheme.headline6),
+                        Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                                "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+                                style: Theme.of(context).textTheme.bodyText2)),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              const Spacer(),
+                              TextButton(
                                   onPressed: () {
-                                    _updateStations();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Fehler Details'),
+                                            content: Text(_error.toString()),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(true),
+                                                  child: const Text('Ok')),
+                                            ],
+                                          );
+                                        });
                                   },
-                                  child: const Text("Wiederholen")))
+                                  child: const Text("Fehler anzeigen")),
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        _updateStations();
+                                      },
+                                      child: const Text("Wiederholen")))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ))))
+              : Container(),
+          Positioned(
+              top: 8,
+              right: 8,
+              child: SafeArea(
+                  child: SizedBox(
+                      width: 64,
+                      child: Card(
+                          child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SettingsPage()));
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Icon(
+                                    Icons.settings,
+                                    color: Theme.of(context).primaryColor,
+                                  ))),
+                          const Padding(
+                              padding: EdgeInsets.only(left: 8, right: 8),
+                              child: Divider(height: 1)),
+                          InkWell(
+                              onTap: () {
+                                _moveCameraToOwnPosition();
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Icon(
+                                    Icons.gps_fixed,
+                                    color: Theme.of(context).primaryColor,
+                                  ))),
                         ],
-                      ),
-                    )
-                  ],
-                ),
-              ))))
-          : Container(),
-      Positioned(
-          top: 8,
-          right: 8,
-          child: SafeArea(
-              child: SizedBox(
-                  width: 64,
-                  child: Card(
-                      child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsPage()));
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.settings,
-                                color: Theme.of(context).primaryColor,
-                              ))),
-                      const Padding(
-                          padding: EdgeInsets.only(left: 8, right: 8),
-                          child: Divider(height: 1)),
-                      InkWell(
-                          onTap: () {
-                            _moveCameraToOwnPosition();
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.gps_fixed,
-                                color: Theme.of(context).primaryColor,
-                              ))),
-                    ],
-                  ))))),
-      Positioned(
-          bottom: 8,
-          right: 8,
-          child: SafeArea(
-              child: SizedBox(
-                  width: 64,
-                  child: Card(
-                      child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              isFilterVisible = true;
-                            });
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.tune,
-                                color: Theme.of(context).primaryColor,
-                              ))))))),
-      isFilterVisible
-          ? FilterDialog(
-              currentFilter: _filter,
-              onSubmit: (filter) {
-                _storeFilter(filter);
+                      ))))),
+          Positioned(
+              bottom: !Platform.isIOS ? 8 : 32,
+              // Need more padding to keep "legal" link visible
+              right: 8,
+              child: SafeArea(
+                  child: SizedBox(
+                      width: 64,
+                      child: Card(
+                          child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isFilterVisible = true;
+                                });
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Icon(
+                                    Icons.tune,
+                                    color: Theme.of(context).primaryColor,
+                                  ))))))),
+          isFilterVisible
+              ? FilterDialog(
+                  currentFilter: _filter,
+                  onSubmit: (filter) {
+                    _storeFilter(filter);
 
-                setState(() {
-                  _filter = filter;
-                  isFilterVisible = false;
-                  _updateStations();
-                });
-              },
-              onCancel: () {
-                setState(() {
-                  isFilterVisible = false;
-                });
-              })
-          : Container()
-    ]));
+                    setState(() {
+                      _filter = filter;
+                      isFilterVisible = false;
+                      _updateStations();
+                    });
+                  },
+                  onCancel: () {
+                    setState(() {
+                      isFilterVisible = false;
+                    });
+                  })
+              : Container()
+        ]));
   }
 
   @override
@@ -275,9 +274,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Set<Marker>> _genMarkers(List<StationModel> stations) async {
     List<Marker> markers = await Future.wait(stations.map((s) async => Marker(
-        markerId: MarkerId(s.id),
-        position: LatLng(s.coordinate.latitude, s.coordinate.longitude),
-        consumeTapEvents: true,
+        id: "${s.id}#${_showLabelMarkers ? "label" : "dot"}",
+        latLng: LatLng(s.coordinate.latitude, s.coordinate.longitude),
         onTap: () {
           Navigator.push(
               context,
@@ -289,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return markers.toSet();
   }
 
-  Future<BitmapDescriptor> _genMarkerBitmap(StationModel station) {
+  Future<ByteData> _genMarkerBitmap(StationModel station) {
     if (_showLabelMarkers) {
       return _genLabelMarkerBitmap(station);
     } else {
@@ -297,7 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<BitmapDescriptor> _genDotMarkerBitmap(StationModel station) async {
+  Future<ByteData> _genDotMarkerBitmap(StationModel station) async {
     String path;
 
     if (!station.isOpen) {
@@ -314,11 +312,10 @@ class _MyHomePageState extends State<MyHomePage> {
       path = 'assets/images/markers/grey.png';
     }
 
-    return await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), path);
+    return await rootBundle.load(path);
   }
 
-  Future<BitmapDescriptor> _genLabelMarkerBitmap(StationModel station) async {
+  Future<ByteData> _genLabelMarkerBitmap(StationModel station) async {
     const double padding = 5.0;
     const double textPadding = 10.0;
     const double triangleSize = 25.0;
@@ -427,7 +424,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .endRecording()
         .toImage(maxWidth.toInt(), labelHeight.toInt() + triangleSize.toInt());
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
+    return data!;
   }
 
   Future<List<StationModel>> _requestStations(CameraPosition location) async {
@@ -439,7 +436,7 @@ class _MyHomePageState extends State<MyHomePage> {
     GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(
         TankerkoenigStationRepository(FileConfigRepository()));
     return getStationsUseCase.invoke(_filter.gas,
-        CoordinateModel(location.target.latitude, location.target.longitude));
+        CoordinateModel(location.latLng.latitude, location.latLng.longitude));
   }
 
   Future<Position?> _moveCameraToOwnPosition() async {
@@ -448,9 +445,9 @@ class _MyHomePageState extends State<MyHomePage> {
     if (locationData != null) {
       position = LatLng(locationData.latitude, locationData.longitude);
     } else {
-      position = startPosition;
+      position = LatLng(startPosition.latitude, startPosition.longitude);
     }
-    _mapController?.animateCamera(CameraUpdate.newLatLngZoom(position, 12.5));
+    _mapController?.moveCamera(CameraPosition(latLng: position, zoom: 12.5));
     return locationData;
   }
 
@@ -527,10 +524,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // Fetch new stations only if we move camera by 8 kilometers
     if (_lastRequestPosition != null) {
       double movementDistance = Geolocator.distanceBetween(
-          _lastRequestPosition!.target.latitude,
-          _lastRequestPosition!.target.longitude,
-          _position!.target.latitude,
-          _position!.target.longitude);
+          _lastRequestPosition!.latLng.latitude,
+          _lastRequestPosition!.latLng.longitude,
+          _position!.latLng.latitude,
+          _position!.latLng.longitude);
       if (movementDistance < 8000) {
         return;
       }
