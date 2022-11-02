@@ -17,7 +17,6 @@ import 'package:tankste/app/cubit/app_cubit.dart';
 import 'package:tankste/app/cubit/app_state.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as google_maps;
 import 'package:tankste/filter_dialog.dart';
 import 'package:station/details/station_details_page.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -67,13 +66,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final LatLng startPosition = LatLng(51.2147194, 10.3634281);
+  final CameraPosition initialCameraPosition =
+      CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
   Set<Marker> _markers = {};
   List<StationModel> _stations = [];
   Filter _filter = Filter("e5");
   bool isFilterVisible = false;
   bool _showLabelMarkers = false;
-  bool _showMarkers = false;
+  bool _showMarkers = true;
   CameraPosition? _lastRequestPosition;
   CameraPosition? _position;
   MapController? _mapController;
@@ -88,29 +88,18 @@ class _MyHomePageState extends State<MyHomePage> {
             : SystemUiOverlayStyle.light,
         child: Stack(children: <Widget>[
           MapWidget(
-            initialCameraPosition:
-                CameraPosition(latLng: startPosition, zoom: 6.0),
+            initialCameraPosition: initialCameraPosition,
             onMapCreated: (mapController) {
+              mapController.moveCamera(_position ?? initialCameraPosition);
               setState(() {
                 _mapController = mapController;
               });
             },
             onCameraIdle: () {
-              _updateStations();
+              _updateStations(false);
             },
             onCameraMove: (position) {
-              setState(() {
-                _position = position;
-                if (position.zoom >= 12) {
-                  _showLabelMarkers = true;
-                  _showMarkers = true;
-                } else if (position.zoom >= 10.5) {
-                  _showLabelMarkers = false;
-                  _showMarkers = true;
-                } else {
-                  _showMarkers = false;
-                }
-              });
+              _handleCameraPositionUpdate(position);
             },
             markers: _markers,
           ),
@@ -165,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   padding: const EdgeInsets.only(left: 8),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        _updateStations();
+                                        _updateStations(true);
                                       },
                                       child: const Text("Wiederholen")))
                             ],
@@ -206,7 +195,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Divider(height: 1)),
                           InkWell(
                               onTap: () {
-                                _moveCameraToOwnPosition();
+                                _moveCameraToOwnPosition()
+                                    .then((value) => _updateStations(true));
                               },
                               child: Padding(
                                   padding: const EdgeInsets.all(16),
@@ -245,7 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     setState(() {
                       _filter = filter;
                       isFilterVisible = false;
-                      _updateStations();
+                      _updateStations(true);
                     });
                   },
                   onCancel: () {
@@ -269,7 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
 
       return _moveCameraToOwnPosition();
-    });
+    }).then((value) => _updateStations(true));
   }
 
   Future<Set<Marker>> _genMarkers(List<StationModel> stations) async {
@@ -441,13 +431,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Position?> _moveCameraToOwnPosition() async {
     Position? locationData = await _getOwnPosition();
-    LatLng position;
+    CameraPosition cameraPosition = initialCameraPosition;
     if (locationData != null) {
-      position = LatLng(locationData.latitude, locationData.longitude);
-    } else {
-      position = LatLng(startPosition.latitude, startPosition.longitude);
+      cameraPosition = CameraPosition(
+          latLng: LatLng(locationData.latitude, locationData.longitude),
+          zoom: 12.5);
     }
-    _mapController?.moveCamera(CameraPosition(latLng: position, zoom: 12.5));
+    _handleCameraPositionUpdate(cameraPosition);
+    _mapController?.moveCamera(cameraPosition);
     return locationData;
   }
 
@@ -505,7 +496,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await prefs.setString("filter_gas", filter.gas);
   }
 
-  void _updateStations() async {
+  void _updateStations(bool force) async {
     if (_position == null) {
       setState(() {
         _stations = [];
@@ -522,7 +513,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     // Fetch new stations only if we move camera by 8 kilometers
-    if (_lastRequestPosition != null) {
+    if (!force && _lastRequestPosition != null) {
       double movementDistance = Geolocator.distanceBetween(
           _lastRequestPosition!.latLng.latitude,
           _lastRequestPosition!.latLng.longitude,
@@ -576,5 +567,20 @@ class _MyHomePageState extends State<MyHomePage> {
     _genMarkers(_stations).then((m) => setState(() {
           _markers = m;
         }));
+  }
+
+  void _handleCameraPositionUpdate(CameraPosition position) {
+    setState(() {
+      _position = position;
+      if (position.zoom >= 12) {
+        _showLabelMarkers = true;
+        _showMarkers = true;
+      } else if (position.zoom >= 10.5) {
+        _showLabelMarkers = false;
+        _showMarkers = true;
+      } else {
+        _showMarkers = false;
+      }
+    });
   }
 }
