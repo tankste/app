@@ -33,11 +33,10 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
         create: (context) => AppCubit(),
         child: BlocConsumer<AppCubit, AppState>(listener: (context, state) {
-
           // iOS specific theme handling for native view elements
           if (Platform.isIOS) {
             MethodChannel channel =
-            const MethodChannel('app.tankste.settings/theme');
+                const MethodChannel('app.tankste.settings/theme');
 
             String value = "system";
             if (state.theme == ThemeMode.light) {
@@ -105,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
           MapWidget(
             initialCameraPosition: initialCameraPosition,
             onMapCreated: (mapController) {
-              mapController.moveCamera(_position ?? initialCameraPosition);
+              mapController
+                  .moveCameraToPosition(_position ?? initialCameraPosition);
               _mapController = mapController;
             },
             onCameraIdle: () {
@@ -451,7 +451,7 @@ class _MyHomePageState extends State<MyHomePage> {
           zoom: 12.5);
     }
     _handleCameraPositionUpdate(cameraPosition);
-    _mapController?.moveCamera(cameraPosition);
+    _mapController?.moveCameraToPosition(cameraPosition);
     return locationData;
   }
 

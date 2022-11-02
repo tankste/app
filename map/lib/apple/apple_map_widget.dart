@@ -10,6 +10,7 @@ class AppleMapWidget extends ChildMap {
       super.onCameraIdle,
       super.onCameraMove,
       super.markers,
+      super.polylines,
       Key? key})
       : super(key: key);
 
@@ -36,10 +37,27 @@ class AppleMapWidgetState extends State<AppleMapWidget> {
           latLng: LatLng(position.target.latitude, position.target.longitude),
           zoom: position.zoom)),
       annotations: _annotations,
+      polylines: widget.polylines
+          .map((p) => apple_maps.Polyline(
+              polylineId: apple_maps.PolylineId(p.id),
+              points: p.points
+                  .map((latLng) =>
+                      apple_maps.LatLng(latLng.latitude, latLng.longitude))
+                  .toList(),
+              color: p.color,
+              width: p.width))
+          .toSet(),
       myLocationButtonEnabled: false,
       compassEnabled: false,
       myLocationEnabled: true,
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _convertMarkers();
   }
 
   @override
@@ -57,8 +75,11 @@ class AppleMapWidgetState extends State<AppleMapWidget> {
     Set<apple_maps.Annotation> annotations = widget.markers
         .map((m) => apple_maps.Annotation(
             annotationId: apple_maps.AnnotationId(m.id),
-            icon: apple_maps.BitmapDescriptor.fromBytes(
-                m.icon.buffer.asUint8List()),
+            icon: m.icon != null
+                ? apple_maps.BitmapDescriptor.fromBytes(
+                    m.icon!.buffer.asUint8List())
+                : apple_maps.BitmapDescriptor.defaultAnnotationWithHue(
+                    apple_maps.BitmapDescriptor.hueAzure),
             position: apple_maps.LatLng(m.latLng.latitude, m.latLng.longitude),
             onTap: () => m.onTap?.call()))
         .toSet();
@@ -75,9 +96,20 @@ class AppleMapController extends MapController {
   AppleMapController(this.childController);
 
   @override
-  void moveCamera(CameraPosition position) {
+  void moveCameraToPosition(CameraPosition position) {
     childController.animateCamera(apple_maps.CameraUpdate.newLatLngZoom(
         apple_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
         position.zoom));
+  }
+
+  @override
+  void moveCameraToBounds(LatLngBounds bounds, double padding) {
+    childController.animateCamera(apple_maps.CameraUpdate.newLatLngBounds(
+        apple_maps.LatLngBounds(
+            northeast: apple_maps.LatLng(
+                bounds.northEast.latitude, bounds.northEast.longitude),
+            southwest: apple_maps.LatLng(
+                bounds.southWest.latitude, bounds.southWest.longitude)),
+        padding));
   }
 }

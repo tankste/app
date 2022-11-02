@@ -7,7 +7,6 @@ import 'package:station/details/cubit/station_details_state.dart';
 import 'package:station/station_model.dart';
 
 //TODO: extract duplicated layouts to functions / widgets
-//TODO: show distance and travel time in details
 class StationDetailsPage extends StatelessWidget {
   final String stationId;
   final String? stationName;

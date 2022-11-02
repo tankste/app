@@ -11,6 +11,7 @@ class GoogleMapWidget extends ChildMap {
       super.onCameraIdle,
       super.onCameraMove,
       super.markers,
+      super.polylines,
       Key? key})
       : super(key: key);
 
@@ -37,6 +38,16 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
           latLng: LatLng(position.target.latitude, position.target.longitude),
           zoom: position.zoom)),
       markers: _markers,
+      polylines: widget.polylines
+          .map((p) => google_maps.Polyline(
+              polylineId: google_maps.PolylineId(p.id),
+              points: p.points
+                  .map((latLng) =>
+                      google_maps.LatLng(latLng.latitude, latLng.longitude))
+                  .toList(),
+              color: p.color,
+              width: p.width))
+          .toSet(),
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
       compassEnabled: false,
@@ -46,9 +57,16 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _checkTheme();
+    _convertMarkers();
+  }
+
+  @override
   void didUpdateWidget(GoogleMapWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("UPDATED!!!!");
     _checkTheme();
 
     // Convert markers only on changes, to prevent expensive work
@@ -87,8 +105,11 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
     Set<google_maps.Marker> markers = widget.markers
         .map((m) => google_maps.Marker(
             markerId: google_maps.MarkerId(m.id),
-            icon: google_maps.BitmapDescriptor.fromBytes(
-                m.icon.buffer.asUint8List()),
+            icon: m.icon != null
+                ? google_maps.BitmapDescriptor.fromBytes(
+                    m.icon!.buffer.asUint8List())
+                : google_maps.BitmapDescriptor.defaultMarkerWithHue(
+                    google_maps.BitmapDescriptor.hueAzure),
             position: google_maps.LatLng(m.latLng.latitude, m.latLng.longitude),
             onTap: () => m.onTap?.call()))
         .toSet();
@@ -105,9 +126,20 @@ class GoogleMapController extends MapController {
   GoogleMapController(this.childController);
 
   @override
-  void moveCamera(CameraPosition position) {
+  void moveCameraToPosition(CameraPosition position) {
     childController.animateCamera(google_maps.CameraUpdate.newLatLngZoom(
         google_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
         position.zoom));
+  }
+
+  @override
+  void moveCameraToBounds(LatLngBounds bounds, double padding) {
+    childController.animateCamera(google_maps.CameraUpdate.newLatLngBounds(
+        google_maps.LatLngBounds(
+            northeast: google_maps.LatLng(
+                bounds.northEast.latitude, bounds.northEast.longitude),
+            southwest: google_maps.LatLng(
+                bounds.southWest.latitude, bounds.southWest.longitude)),
+        padding));
   }
 }

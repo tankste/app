@@ -13,6 +13,7 @@ abstract class ChildMap extends StatefulWidget {
   final VoidCallback? onCameraIdle;
   final CameraPositionCallback? onCameraMove;
   final Set<Marker> markers;
+  final Set<Polyline> polylines;
 
   ChildMap(
       {required this.initialCameraPosition,
@@ -20,6 +21,7 @@ abstract class ChildMap extends StatefulWidget {
       this.onCameraIdle,
       this.onCameraMove,
       this.markers = const <Marker>{},
+      this.polylines = const <Polyline>{},
       Key? key})
       : super(key: key);
 }
@@ -38,16 +40,38 @@ class LatLng {
   LatLng(this.latitude, this.longitude);
 }
 
+class LatLngBounds {
+  final LatLng northEast;
+  final LatLng southWest;
+
+  LatLngBounds({required this.northEast, required this.southWest});
+}
+
 abstract class MapController {
-  void moveCamera(CameraPosition position);
+  void moveCameraToPosition(CameraPosition position);
+
+  void moveCameraToBounds(LatLngBounds bounds, double padding);
 }
 
 class Marker {
   String id;
   LatLng latLng;
-  ByteData icon; //TODO: Check if we can use better format here
+  ByteData? icon; //TODO: Check if we can use better format here
   VoidCallback? onTap;
 
   Marker(
       {required this.id, required this.latLng, required this.icon, this.onTap});
+}
+
+class Polyline {
+  String id;
+  List<LatLng> points;
+  Color color;
+  int width;
+
+  Polyline(
+      {required this.id,
+      required this.points,
+      required this.color,
+      required this.width});
 }
