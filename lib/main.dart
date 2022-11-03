@@ -445,6 +445,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Position?> _moveCameraToOwnPosition() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     Position? locationData = await _getOwnPosition();
     CameraPosition cameraPosition = initialCameraPosition;
     if (locationData != null) {
