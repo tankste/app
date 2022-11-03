@@ -315,16 +315,23 @@ class _MyHomePageState extends State<MyHomePage> {
       path = 'assets/images/markers/grey.png';
     }
 
-    return await rootBundle.load(path);
+    String resolutionName = await AssetImage(path)
+        .obtainKey(ImageConfiguration.empty)
+        .then((value) => value.name);
+
+    return await rootBundle.load(resolutionName);
   }
 
   Future<ByteData> _genLabelMarkerBitmap(StationModel station) async {
-    const double padding = 5.0;
-    const double textPadding = 10.0;
-    const double triangleSize = 25.0;
-    const double maxWidth = 160.0;
-    const double brandFontSize = 25.0;
-    const double priceFontSize = 45.0;
+    double ratio = MediaQuery.of(context).devicePixelRatio;
+
+    // Ratio version *
+    double padding = 1.6 * ratio;
+    double textPadding = 3.2 * ratio;
+    double triangleSize = 8.0 * ratio;
+    double maxWidth = 51.2 * ratio;
+    double brandFontSize = 8.0 * ratio;
+    double priceFontSize = 14.4 * ratio;
 
     // Create canvas
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
@@ -374,7 +381,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ..addText(priceText))
             .build();
 
-    const constraints = ui.ParagraphConstraints(width: maxWidth);
+    ui.ParagraphConstraints constraints =
+        ui.ParagraphConstraints(width: maxWidth);
     brandParagraph.layout(constraints);
     priceParagraph.layout(constraints);
 
@@ -405,9 +413,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Create triangle path
     var trianglePath = Path();
-    trianglePath.moveTo(maxWidth / 2, labelHeight + triangleSize);
-    trianglePath.lineTo(maxWidth / 2 - triangleSize, labelHeight);
-    trianglePath.lineTo(maxWidth / 2 + triangleSize, labelHeight);
+    trianglePath.moveTo(
+        maxWidth / 2, labelHeight + triangleSize - (1 * ratio)); // Bottom
+    trianglePath.lineTo(
+        maxWidth / 2 - triangleSize, labelHeight - (1 * ratio)); // Top-Left
+    trianglePath.lineTo(
+        maxWidth / 2 + triangleSize, labelHeight - (1 * ratio)); // Top-Right
     trianglePath.close();
 
     // Draw background
@@ -415,12 +426,10 @@ class _MyHomePageState extends State<MyHomePage> {
     canvas.drawRRect(rrect, backgroundPaint);
 
     // Draw text
-    canvas.drawParagraph(brandParagraph,
-        const Offset(padding + textPadding, padding + textPadding));
     canvas.drawParagraph(
-        priceParagraph,
-        const Offset(
-            padding + textPadding, padding + textPadding + brandFontSize));
+        brandParagraph, Offset(padding + textPadding, padding + textPadding));
+    canvas.drawParagraph(priceParagraph,
+        Offset(padding + textPadding, padding + textPadding + brandFontSize));
 
     // Draw trianglePath path
     canvas.drawPath(trianglePath, backgroundPaint);
@@ -428,6 +437,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final img = await pictureRecorder
         .endRecording()
         .toImage(maxWidth.toInt(), labelHeight.toInt() + triangleSize.toInt());
+
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     return data!;
   }
