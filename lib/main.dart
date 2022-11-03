@@ -582,23 +582,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (position.zoom >= 12) {
       if (!_showLabelMarkers || !_showMarkers) {
-        setState(() {
-          _showLabelMarkers = true;
-          _showMarkers = true;
-        });
+        _showLabelMarkers = true;
+        _showMarkers = true;
+        _updateMarkers();
       }
     } else if (position.zoom >= 10.5) {
       if (_showLabelMarkers || !_showMarkers) {
-        setState(() {
-          _showLabelMarkers = false;
-          _showMarkers = true;
-        });
+        _showLabelMarkers = false;
+        _showMarkers = true;
+        _updateMarkers();
       }
     } else {
       if (_showMarkers) {
-        setState(() {
-          _showMarkers = false;
-        });
+        _showMarkers = false;
+        _updateMarkers();
       }
     }
   }

@@ -28,8 +28,6 @@ class MapWidget extends StatelessWidget {
       Key? key})
       : super(key: key);
 
-  //TODO: Check for map provider settings
-  //TODO: check for open source flag and use OSM if needed
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
