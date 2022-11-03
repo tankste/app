@@ -401,6 +401,7 @@ class _MyHomePageState extends State<MyHomePage> {
         padding;
 
     var rect = Rect.fromLTWH(0, 0, maxWidth, labelHeight);
+    var rrect = RRect.fromRectXY(rect, 12, 12);
 
     // Create triangle path
     var trianglePath = Path();
@@ -410,7 +411,8 @@ class _MyHomePageState extends State<MyHomePage> {
     trianglePath.close();
 
     // Draw background
-    canvas.drawRect(rect, backgroundPaint);
+    // canvas.drawRect(rect, backgroundPaint);
+    canvas.drawRRect(rrect, backgroundPaint);
 
     // Draw text
     canvas.drawParagraph(brandParagraph,
