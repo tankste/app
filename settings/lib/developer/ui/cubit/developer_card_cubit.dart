@@ -24,6 +24,10 @@ class DeveloperCardCubit extends Cubit<DeveloperCardState> {
     emit(DeveloperCardState.loading());
 
     getDeveloperSettingsUseCase.invoke().listen((developerSettings) {
+      if (isClosed) {
+        return;
+      }
+
       emit(DeveloperCardState.success(developerSettings.isDeveloperModeEnabled,
           developerSettings.mapProvider));
     }).onError((error) => emit(DeveloperCardState.failure(error)));

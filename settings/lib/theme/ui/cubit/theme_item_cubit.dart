@@ -20,6 +20,10 @@ class ThemeItemCubit extends Cubit<ThemeItemState> {
     emit(ThemeItemState.loading());
 
     getThemeUseCase.invoke().listen((theme) {
+      if (isClosed) {
+        return;
+      }
+      
       String label;
       if (theme == ThemeMode.light) {
         label = "Hell";

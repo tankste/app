@@ -23,6 +23,10 @@ class FeatureSettingsCubit extends Cubit<FeatureSettingsState> {
     emit(FeatureSettingsState.loading());
 
     getDeveloperSettingsUseCase.invoke().listen((developerSettings) {
+      if (isClosed) {
+        return;
+      }
+
       emit(FeatureSettingsState.success(
           developerSettings.isFetchingWithoutLocationEnabled,
           developerSettings.isPercentagePriceRangesEnabled));
