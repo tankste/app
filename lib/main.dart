@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map/generic/generic_map.dart';
+import 'package:settings/developer/repository/developer_settings_repository.dart';
 import 'package:settings/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/repository/station_repository.dart';
@@ -448,7 +449,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(
-        TankerkoenigStationRepository(FileConfigRepository()));
+        TankerkoenigStationRepository(FileConfigRepository()),
+        LocalDeveloperSettingsRepository());
     return getStationsUseCase.invoke(_filter.gas,
         CoordinateModel(location.latLng.latitude, location.latLng.longitude));
   }
