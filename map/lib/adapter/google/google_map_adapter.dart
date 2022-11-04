@@ -2,10 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as google_maps;
-import 'package:map/child_map.dart';
+import 'package:map/generic/generic_map.dart';
+import 'package:map/adapter/map_adapter.dart';
 
-class GoogleMapWidget extends ChildMap {
-  GoogleMapWidget(
+class GoogleMapAdapter extends MapAdapter {
+  const GoogleMapAdapter(
       {required super.initialCameraPosition,
       required super.onMapCreated,
       super.onCameraIdle,
@@ -16,10 +17,10 @@ class GoogleMapWidget extends ChildMap {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => GoogleMapWidgetState();
+  State<StatefulWidget> createState() => GoogleMapAdapterState();
 }
 
-class GoogleMapWidgetState extends State<GoogleMapWidget> {
+class GoogleMapAdapterState extends State<GoogleMapAdapter> {
   Set<google_maps.Marker> _markers = <google_maps.Marker>{};
   google_maps.GoogleMapController? _mapController;
   bool? _isDark;
@@ -65,7 +66,7 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   @override
-  void didUpdateWidget(GoogleMapWidget oldWidget) {
+  void didUpdateWidget(GoogleMapAdapter oldWidget) {
     super.didUpdateWidget(oldWidget);
     _checkTheme();
 

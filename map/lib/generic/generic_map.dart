@@ -2,15 +2,16 @@ import 'dart:io';
 
 import 'package:core/cubit/base_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:map/apple/apple_map_widget.dart';
-import 'package:map/child_map.dart';
+import 'package:map/adapter/apple/apple_map_widget.dart';
+import 'package:map/adapter/google/google_map_adapter.dart';
+import 'package:map/adapter/map_adapter.dart';
 import 'package:map/cubit/map_cubit.dart';
 import 'package:map/cubit/map_state.dart';
-import 'package:map/google/google_map_widget.dart';
 import 'package:map/usecase/get_map_provider_use_case.dart';
 
-class MapWidget extends StatelessWidget {
+class GenericMap extends StatelessWidget {
   final CameraPosition initialCameraPosition;
   final MapCreatedCallback onMapCreated;
   final VoidCallback? onCameraIdle;
@@ -18,7 +19,7 @@ class MapWidget extends StatelessWidget {
   final Set<Marker> markers;
   final Set<Polyline> polylines;
 
-  MapWidget(
+  const GenericMap(
       {required this.initialCameraPosition,
       required this.onMapCreated,
       this.onCameraIdle,
@@ -59,7 +60,7 @@ class MapWidget extends StatelessWidget {
 
   Widget _buildGoogleMap() {
     return Scaffold(
-        body: GoogleMapWidget(
+        body: GoogleMapAdapter(
             initialCameraPosition: initialCameraPosition,
             onMapCreated: onMapCreated,
             onCameraIdle: onCameraIdle,
@@ -71,7 +72,7 @@ class MapWidget extends StatelessWidget {
   Widget _buildAppleMap() {
     if (Platform.isIOS) {
       return Scaffold(
-          body: AppleMapWidget(
+          body: AppleMapAdapter(
               initialCameraPosition: initialCameraPosition,
               onMapCreated: onMapCreated,
               onCameraIdle: onCameraIdle,
@@ -86,4 +87,54 @@ class MapWidget extends StatelessWidget {
   Widget _buildHint(String text) {
     return Scaffold(body: Center(child: Text(text)));
   }
+}
+
+class CameraPosition {
+  LatLng latLng;
+  double zoom;
+
+  CameraPosition({required this.latLng, required this.zoom});
+}
+
+class LatLng {
+  double latitude;
+  double longitude;
+
+  LatLng(this.latitude, this.longitude);
+}
+
+class LatLngBounds {
+  final LatLng northEast;
+  final LatLng southWest;
+
+  LatLngBounds({required this.northEast, required this.southWest});
+}
+
+abstract class MapController {
+  void moveCameraToPosition(CameraPosition position);
+
+  void moveCameraToBounds(LatLngBounds bounds, double padding);
+}
+
+class Marker {
+  String id;
+  LatLng latLng;
+  ByteData? icon; //TODO: Check if we can use better format here
+  VoidCallback? onTap;
+
+  Marker(
+      {required this.id, required this.latLng, required this.icon, this.onTap});
+}
+
+class Polyline {
+  String id;
+  List<LatLng> points;
+  Color color;
+  int width;
+
+  Polyline(
+      {required this.id,
+      required this.points,
+      required this.color,
+      required this.width});
 }

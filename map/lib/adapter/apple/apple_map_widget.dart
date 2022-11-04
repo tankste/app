@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_maps;
-import 'package:map/child_map.dart';
+import 'package:map/adapter/map_adapter.dart';
+import 'package:map/generic/generic_map.dart';
 
-class AppleMapWidget extends ChildMap {
-  AppleMapWidget(
+class AppleMapAdapter extends MapAdapter {
+  const AppleMapAdapter(
       {required super.initialCameraPosition,
       required super.onMapCreated,
       super.onCameraIdle,
@@ -15,10 +16,10 @@ class AppleMapWidget extends ChildMap {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => AppleMapWidgetState();
+  State<StatefulWidget> createState() => AppleMapAdapterState();
 }
 
-class AppleMapWidgetState extends State<AppleMapWidget> {
+class AppleMapAdapterState extends State<AppleMapAdapter> {
   Set<apple_maps.Annotation> _annotations = <apple_maps.Annotation>{};
 
   @override
@@ -61,7 +62,7 @@ class AppleMapWidgetState extends State<AppleMapWidget> {
   }
 
   @override
-  void didUpdateWidget(AppleMapWidget oldWidget) {
+  void didUpdateWidget(AppleMapAdapter oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     // Convert markers only on changes, to prevent expensive work

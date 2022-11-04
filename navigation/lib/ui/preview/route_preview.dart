@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:map/child_map.dart';
-import 'package:map/map_widget.dart';
+import 'package:map/generic/generic_map.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_cubit.dart';
@@ -112,7 +111,7 @@ class PreviewMapState extends State<PreviewMap> {
       _mapController?.moveCameraToBounds(bounds, 36);
     }
 
-    return MapWidget(
+    return GenericMap(
       initialCameraPosition:
           CameraPosition(latLng: toLatLng(widget.target), zoom: 13),
       polylines: _genPolylines(widget.routePoints),

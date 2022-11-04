@@ -5,8 +5,7 @@ import 'package:core/cubit/base_state.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:map/child_map.dart';
-import 'package:map/map_widget.dart';
+import 'package:map/generic/generic_map.dart';
 import 'package:settings/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/repository/station_repository.dart';
@@ -101,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 : SystemUiOverlayStyle.dark)
             : SystemUiOverlayStyle.light,
         child: Stack(children: <Widget>[
-          MapWidget(
+          GenericMap(
             initialCameraPosition: initialCameraPosition,
             onMapCreated: (mapController) {
               mapController

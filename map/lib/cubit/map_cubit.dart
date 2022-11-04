@@ -5,8 +5,8 @@ import 'package:map/usecase/get_map_provider_use_case.dart';
 import 'package:settings/developer/repository/developer_settings_repository.dart';
 
 class MapCubit extends Cubit<MapState> {
-  final GetMapProviderUseCase getMapProviderUseCase =
-      GetMapProviderUseCaseImpl(FileConfigRepository(), LocalDeveloperSettingsRepository());
+  final GetMapProviderUseCase getMapProviderUseCase = GetMapProviderUseCaseImpl(
+      FileConfigRepository(), LocalDeveloperSettingsRepository());
 
   MapCubit() : super(MapState.loading()) {
     _fetchProvider();
