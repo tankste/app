@@ -16,6 +16,10 @@ class MapCubit extends Cubit<MapState> {
     emit(MapState.loading());
 
     getMapProviderUseCase.invoke().listen((mapProvider) {
+      if (isClosed) {
+        return;
+      }
+
       emit(MapState.success(mapProvider));
     }).onError((error) => emit(MapState.failure(error)));
   }

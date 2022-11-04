@@ -15,6 +15,9 @@ dependencies:
   navigation:
     path: '../navigation'
 
+  settings:
+    path: '../settings'
+
   # BLoC - https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^8.0.1
 
