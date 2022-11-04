@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map/generic/generic_map.dart';
+import 'package:settings/developer/model/developer_settings_model.dart';
 import 'package:settings/developer/repository/developer_settings_repository.dart';
 import 'package:settings/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,6 +81,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final CameraPosition initialCameraPosition =
       CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
+  final DeveloperSettingsRepository developerSettingsRepository =
+      LocalDeveloperSettingsRepository();
   Set<Marker> _markers = {};
   List<StationModel> _stations = [];
   Filter _filter = Filter("e5");
@@ -88,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _showMarkers = true;
   CameraPosition? _lastRequestPosition;
   CameraPosition? _position;
+  CameraPosition? _ownPosition;
   MapController? _mapController;
   bool _isLoading = true;
   Exception? _error;
@@ -469,6 +473,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     _handleCameraPositionUpdate(cameraPosition);
     _mapController?.moveCameraToPosition(cameraPosition);
+    _ownPosition = cameraPosition;
     return locationData;
   }
 
@@ -539,6 +544,14 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
+    // Allow fetching without location only with enabled flag
+    DeveloperSettingsModel developerSettings =
+        await developerSettingsRepository.get().first;
+    CameraPosition position = _ownPosition!;
+    if (developerSettings.isFetchingWithoutLocationEnabled) {
+      position = _position!;
+    }
+
     // Fetch new stations only if we move camera by 8 kilometers
     if (!force && _lastRequestPosition != null) {
       double movementDistance = Geolocator.distanceBetween(
@@ -551,7 +564,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    _requestStations(_position!)
+    _requestStations(position)
         .then((stations) {
           _lastRequestPosition = _position;
           _stations = stations;
