@@ -12,8 +12,8 @@ dependencies:
   core:
     path: '../core'
 
-  # Google Maps - https://pub.dev/packages/google_maps_flutter
-  google_maps_flutter: ^2.1.8
+  map:
+    path: '../map'
 
   # Location - https://pub.dev/packages/geolocator
   geolocator: ^9.0.0

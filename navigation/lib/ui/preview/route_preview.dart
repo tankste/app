@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:map/generic/generic_map.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_cubit.dart';
@@ -101,26 +101,21 @@ class PreviewMap extends StatefulWidget {
 }
 
 class PreviewMapState extends State<PreviewMap> {
-  GoogleMapController? _mapController;
+  MapController? _mapController;
 
   @override
   Widget build(BuildContext context) {
     LatLngBounds? bounds = _boundsFromLatLngList(
         widget.routePoints?.map((e) => toLatLng(e)).toList() ?? []);
     if (bounds != null) {
-      _mapController?.moveCamera(CameraUpdate.newLatLngBounds(bounds, 36));
+      _mapController?.moveCameraToBounds(bounds, 36);
     }
 
-    return GoogleMap(
+    return GenericMap(
       initialCameraPosition:
-          CameraPosition(target: toLatLng(widget.target), zoom: 13),
+          CameraPosition(latLng: toLatLng(widget.target), zoom: 13),
       polylines: _genPolylines(widget.routePoints),
       markers: _genMarkers(),
-      myLocationButtonEnabled: false,
-      zoomControlsEnabled: false,
-      compassEnabled: false,
-      mapToolbarEnabled: false,
-      myLocationEnabled: true,
       onMapCreated: (controller) {
         setState(() {
           _mapController = controller;
@@ -136,7 +131,7 @@ class PreviewMapState extends State<PreviewMap> {
 
     return {
       Polyline(
-          polylineId: const PolylineId("route"),
+          id: "route",
           points: routePoints.map((e) => toLatLng(e)).toList(),
           color: Theme.of(context).primaryColor,
           width: 4)
@@ -159,16 +154,10 @@ class PreviewMapState extends State<PreviewMap> {
       if (latLng.longitude > y1) y1 = latLng.longitude;
       if (latLng.longitude < y0) y0 = latLng.longitude;
     }
-    return LatLngBounds(northeast: LatLng(x1, y1), southwest: LatLng(x0, y0));
+    return LatLngBounds(northEast: LatLng(x1, y1), southWest: LatLng(x0, y0));
   }
 
   Set<Marker> _genMarkers() {
-    return {
-      Marker(
-          markerId: const MarkerId("target"),
-          position: toLatLng(widget.target),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure))
-    };
+    return {Marker(id: "target", latLng: toLatLng(widget.target), icon: null)};
   }
 }
