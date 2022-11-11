@@ -328,23 +328,29 @@ packages:
   open_street_map_flutter:
     dependency: transitive
     description:
-      path: "../../open_street_map_flutter/open_street_map_flutter"
-      relative: true
-    source: path
+      path: open_street_map_flutter
+      ref: "26c5ec474605230070609d458d4753ffbacd96ae"
+      resolved-ref: "26c5ec474605230070609d458d4753ffbacd96ae"
+      url: "https://github.com/tankste/open_street_map_flutter.git"
+    source: git
     version: "0.0.1"
   open_street_map_flutter_android:
     dependency: transitive
     description:
-      path: "../../open_street_map_flutter/open_street_map_flutter_android"
-      relative: true
-    source: path
+      path: open_street_map_flutter_android
+      ref: main
+      resolved-ref: "26c5ec474605230070609d458d4753ffbacd96ae"
+      url: "https://github.com/tankste/open_street_map_flutter.git"
+    source: git
     version: "0.0.1"
   open_street_map_flutter_platform_interface:
     dependency: transitive
     description:
-      path: "../../open_street_map_flutter/open_street_map_flutter_platform_interface"
-      relative: true
-    source: path
+      path: open_street_map_flutter_platform_interface
+      ref: main
+      resolved-ref: "26c5ec474605230070609d458d4753ffbacd96ae"
+      url: "https://github.com/tankste/open_street_map_flutter.git"
+    source: git
     version: "0.0.1"
   package_info_plus:
     dependency: "direct main"
@@ -597,6 +603,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.15"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: "0ea99cd2f9352b2586583ab2ce6489d1f95a5f6de6fb9492faaf97ae2060f0aa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   typed_data:
     dependency: transitive
     description:
