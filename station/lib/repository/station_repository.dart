@@ -24,6 +24,11 @@ class TankerkoenigStationRepository extends StationRepository {
     var url = Uri.parse(
         'https://creativecommons.tankerkoenig.de/json/list.php?lat=${position.latitude}&lng=${position.longitude}&rad=$radius&sort=price&type=$type&apikey=${await _getApiKey()}');
     var response = await http.get(url);
+
+    if (!(response.statusCode >= 200 && response.statusCode <= 299)) {
+      throw Exception("API Error!\n\n${response.body}");
+    }
+
     final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
     return (jsonResponse['stations'] as List)
         .map((i) => StationModel.fromJson(i, type))
@@ -35,6 +40,11 @@ class TankerkoenigStationRepository extends StationRepository {
     var url = Uri.parse(
         'https://creativecommons.tankerkoenig.de/json/detail.php?id=$id&apikey=${await _getApiKey()}');
     var response = await http.get(url);
+
+    if (!(response.statusCode >= 200 && response.statusCode <= 299)) {
+      throw Exception("API Error!\n\n${response.body}");
+    }
+
     final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
     return StationModel.fromJson(jsonResponse['station'], null);
   }
