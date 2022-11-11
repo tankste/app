@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:settings/developer/ui/developer_card.dart';
+import 'package:settings/map/ui/map_destination_item.dart';
 import 'package:settings/settings/settings_card.dart';
 import 'package:settings/theme/ui/theme_item.dart';
 import 'package:settings/version/ui/version_item.dart';
@@ -29,7 +30,8 @@ class SettingsPage extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     return [
-      const SettingsCard(title: "App", items: [ThemeItem()]),
+      const SettingsCard(
+          title: "App", items: [ThemeItem(), MapDestinationItem()]),
       SettingsCard(title: "Unterstütze", items: [
         ListTile(
             onTap: () {
