@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map/adapter/apple/apple_map_widget.dart';
 import 'package:map/adapter/google/google_map_adapter.dart';
 import 'package:map/adapter/map_adapter.dart';
+import 'package:map/adapter/osm/open_street_map_adapter.dart';
 import 'package:map/cubit/map_cubit.dart';
 import 'package:map/cubit/map_state.dart';
 import 'package:map/usecase/get_map_provider_use_case.dart';
@@ -49,7 +50,7 @@ class GenericMap extends StatelessWidget {
                 case MapProvider.google:
                   return _buildGoogleMap();
                 case MapProvider.openStreet:
-                  return _buildHint("OpenStreetMap is not implemented yet!");
+                  return _buildOpenStreetMap();
                 case MapProvider.apple:
                   return _buildAppleMap();
                 default:
@@ -67,6 +68,22 @@ class GenericMap extends StatelessWidget {
             onCameraMove: onCameraMove,
             markers: markers,
             polylines: polylines));
+  }
+
+  Widget _buildOpenStreetMap() {
+    if (Platform.isAndroid) {
+      return Scaffold(
+          body: OpenStreetMapAdapter(
+              initialCameraPosition: initialCameraPosition,
+              onMapCreated: onMapCreated,
+              onCameraIdle: onCameraIdle,
+              onCameraMove: onCameraMove,
+              markers: markers,
+              polylines: polylines));
+    } else {
+      return _buildHint(
+          "OpenStreetMap is only supported by Android platform yet.");
+    }
   }
 
   Widget _buildAppleMap() {
