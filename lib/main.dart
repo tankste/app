@@ -78,17 +78,20 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final CameraPosition initialCameraPosition =
       CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
   final DeveloperSettingsRepository developerSettingsRepository =
       LocalDeveloperSettingsRepository();
+  final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
+  final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   Set<Marker> _markers = {};
   List<StationModel> _stations = [];
   Filter _filter = Filter("e5");
   bool isFilterVisible = false;
   bool _showLabelMarkers = false;
   bool _showMarkers = true;
+  DateTime? _lastRequestTime;
   CameraPosition? _lastRequestPosition;
   CameraPosition? _position;
   CameraPosition? _ownPosition;
@@ -267,6 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     _requestReviewIfNeeded();
 
@@ -277,6 +281,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
       return _moveCameraToOwnPosition();
     }).then((value) => _updateStations(true));
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (_lastRequestTime != null) {
+        DateTime thresholdDate =
+            _lastRequestTime!.add(_refreshAfterBackgroundDuration);
+        if (DateTime.now().isAfter(thresholdDate)) {
+          _updateStations(true);
+        }
+      }
+    }
   }
 
   Future<Set<Marker>> _genMarkers(List<StationModel> stations) async {
@@ -455,7 +478,9 @@ class _MyHomePageState extends State<MyHomePage> {
     GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(
         TankerkoenigStationRepository(FileConfigRepository()),
         LocalDeveloperSettingsRepository());
-    print("Filter.gas: ${_filter.gas}");
+
+    _lastRequestTime = DateTime.now();
+
     return getStationsUseCase.invoke(_filter.gas,
         CoordinateModel(location.latLng.latitude, location.latLng.longitude));
   }
@@ -511,7 +536,8 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       DateTime firstAppStart =
           DateTime.fromMillisecondsSinceEpoch(firstAppStartMilliseconds);
-      DateTime thresholdDate = firstAppStart.add(const Duration(days: 7));
+      DateTime thresholdDate =
+          firstAppStart.add(_reviewAfterFirstAppStartDuration);
       if (DateTime.now().isAfter(thresholdDate)) {
         InAppReview inAppReview = InAppReview.instance;
         if (await inAppReview.isAvailable()) {
