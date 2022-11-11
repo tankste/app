@@ -281,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Set<Marker>> _genMarkers(List<StationModel> stations) async {
     List<Marker> markers = await Future.wait(stations.map((s) async => Marker(
-        id: "${s.id}#${_showLabelMarkers ? "label" : "dot"}",
+        id: "${s.id}#${Object.hash(s.prices.getFirstPrice(), s.prices.getFirstPriceRange(), _showLabelMarkers ? "label" : "dot")}",
         latLng: LatLng(s.coordinate.latitude, s.coordinate.longitude),
         onTap: () {
           Navigator.push(
@@ -455,6 +455,7 @@ class _MyHomePageState extends State<MyHomePage> {
     GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(
         TankerkoenigStationRepository(FileConfigRepository()),
         LocalDeveloperSettingsRepository());
+    print("Filter.gas: ${_filter.gas}");
     return getStationsUseCase.invoke(_filter.gas,
         CoordinateModel(location.latLng.latitude, location.latLng.longitude));
   }
