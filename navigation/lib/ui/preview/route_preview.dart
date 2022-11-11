@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map/generic/generic_map.dart';
@@ -6,6 +9,9 @@ import 'package:navigation/coordinate_model.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_cubit.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_state.dart';
 import 'package:navigation/util.dart';
+import 'package:settings/map/repository/map_destination_repository.dart';
+import 'package:settings/map/usecase/get_map_destination_use_case.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RoutePreview extends StatelessWidget {
   final CoordinateModel target;
@@ -82,10 +88,38 @@ class RoutePreview extends StatelessWidget {
   }
 
   void _openMap() async {
-    final availableMaps = await MapLauncher.installedMaps;
+    //TODO: where to locate this, cubit? usecase? split logic to use case & cubit?!
+    // Hacky solution with use case and type mapping here
+    GetMapDestinationUseCase getUseCase =
+        GetMapDestinationUseCaseImpl(LocalMapDestinationRepository());
 
-    await availableMaps.first.showMarker(
-        coords: Coords(target.latitude, target.longitude), title: label ?? "");
+    final availableMaps = await MapLauncher.installedMaps;
+    final destinationMap = await getUseCase.invoke();
+
+    final mapToLaunch = availableMaps
+        .where((m) =>
+            m.mapType ==
+            //XXX
+            LocalMapDestinationRepository()
+                .destinationToType(destinationMap.destination))
+        .firstOrNull;
+
+    if (mapToLaunch != null) {
+      mapToLaunch.showMarker(
+          coords: Coords(target.latitude, target.longitude),
+          title: label ?? "Tankstelle");
+    } else if (Platform.isAndroid) {
+      Uri androidUri = Uri.parse(
+          "geo:${target.latitude},${target.longitude}?q=${target.latitude},${target.longitude} (${label ?? "Tankstelle"})");
+      if (await canLaunchUrl(androidUri)) {
+        await launchUrl(androidUri);
+      }
+    } else if (Platform.isIOS) {
+      MapLauncher.showMarker(
+          mapType: MapType.apple,
+          coords: Coords(target.latitude, target.longitude),
+          title: label ?? "Tankstelle");
+    }
   }
 }
 
