@@ -311,7 +311,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               context,
               MaterialPageRoute(
                   builder: (context) => StationDetailsPage(
-                      stationId: s.id, stationName: s.label)));
+                        stationId: s.id,
+                        stationName: s.label,
+                        activeGasPriceFilter: _filter.gas,
+                      )));
         },
         icon: await _genMarkerBitmap(s))));
     return markers.toSet();

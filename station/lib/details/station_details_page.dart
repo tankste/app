@@ -10,9 +10,13 @@ import 'package:station/station_model.dart';
 class StationDetailsPage extends StatelessWidget {
   final String stationId;
   final String? stationName;
+  final String? activeGasPriceFilter;
 
   const StationDetailsPage(
-      {required this.stationId, this.stationName, Key? key})
+      {required this.stationId,
+      this.stationName,
+      this.activeGasPriceFilter,
+      Key? key})
       : super(key: key);
 
   @override
@@ -105,13 +109,28 @@ class StationDetailsPage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Expanded(
-                                          flex: 2, child: Text("Super E5")),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Text("Super E5",
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e5"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
                                       Expanded(
                                           flex: 1,
-                                          child: Text(_priceText(
-                                              station.prices.e5,
-                                              station.isOpen))),
+                                          child: Text(
+                                              _priceText(station.prices.e5,
+                                                  station.isOpen),
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e5"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
                                     ],
                                   )),
                               Padding(
@@ -120,13 +139,28 @@ class StationDetailsPage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Expanded(
-                                          flex: 2, child: Text("Super E10")),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Text("Super E10",
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e10"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
                                       Expanded(
                                           flex: 1,
-                                          child: Text(_priceText(
-                                              station.prices.e10,
-                                              station.isOpen))),
+                                          child: Text(
+                                              _priceText(station.prices.e10,
+                                                  station.isOpen),
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e10"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
                                     ],
                                   )),
                               Padding(
@@ -135,13 +169,28 @@ class StationDetailsPage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Expanded(
-                                          flex: 2, child: const Text("Diesel")),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Text("Diesel",
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "diesel"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
                                       Expanded(
                                           flex: 1,
-                                          child: Text(_priceText(
-                                              station.prices.diesel,
-                                              station.isOpen))),
+                                          child: Text(
+                                              _priceText(station.prices.diesel,
+                                                  station.isOpen),
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "diesel"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
                                     ],
                                   ))
                             ]))),
