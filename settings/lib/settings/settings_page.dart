@@ -32,7 +32,7 @@ class SettingsPage extends StatelessWidget {
     return [
       const SettingsCard(
           title: "App", items: [ThemeItem(), MapDestinationItem()]),
-      SettingsCard(title: "Unterstütze", items: [
+      SettingsCard(title: "Unterstütze uns", items: [
         ListTile(
             onTap: () {
               _openUrl("https://github.com/tankste");
