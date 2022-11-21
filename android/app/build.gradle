@@ -58,6 +58,10 @@ android {
         release {
             shrinkResources true
             minifyEnabled true
+
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:core/config/config_repository.dart';
 import 'package:core/cubit/base_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -97,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   CameraPosition? _ownPosition;
   MapController? _mapController;
   bool _isLoading = true;
-  Exception? _error;
+  String? _errorDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           _isLoading
               ? const SafeArea(child: LinearProgressIndicator())
               : Container(),
-          _error != null
+          _errorDetails != null
               ? Positioned(
                   top: 8,
                   left: 8,
@@ -158,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                         builder: (context) {
                                           return AlertDialog(
                                             title: const Text('Fehler Details'),
-                                            content: Text(_error.toString()),
+                                            content: Text(_errorDetails ?? ""),
                                             actions: <Widget>[
                                               TextButton(
                                                   onPressed: () =>
@@ -385,7 +386,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (!station.isOpen || price == 0.0) {
       priceText = "-,--\u{207B}";
     } else {
-      priceText = price.toString().replaceAll('.', ',');
+      priceText = price.toStringAsFixed(3).replaceAll('.', ',');
     }
 
     if (priceText.length == 5) {
@@ -475,7 +476,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Future<List<StationModel>> _requestStations(CameraPosition location) async {
     setState(() {
       _isLoading = true;
-      _error = null;
+      _errorDetails = null;
     });
 
     GetStationsUseCase getStationsUseCase = GetStationsUseCaseImpl(
@@ -610,8 +611,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               _markers = m;
             }))
         .catchError((error) {
+          if (kDebugMode) {
+            if (error is Error) {
+              print("===== Error =====");
+              print("$error\n${error.stackTrace}");
+            } else if (error is Exception) {
+              print("===== Error =====");
+              print(error.toString());
+            }
+          }
+
           setState(() {
-            _error = error;
+            _errorDetails = error.toString();
             _isLoading = false;
           });
         });
