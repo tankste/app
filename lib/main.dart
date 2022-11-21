@@ -386,7 +386,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (!station.isOpen || price == 0.0) {
       priceText = "-,--\u{207B}";
     } else {
-      priceText = price.toString().replaceAll('.', ',');
+      priceText = price.toStringAsFixed(3).replaceAll('.', ',');
     }
 
     if (priceText.length == 5) {

@@ -26,11 +26,11 @@ class StationModel {
         parsedJson['place']?.trim() ?? "",
       ),
       StationPricesModel(
-        (priceType == "e5" ? parsedJson['price'] : parsedJson['e5']) ?? 0.0,
+        (priceType == "e5" ? _parseDouble(parsedJson['price']) : _parseDouble(parsedJson['e5'])) ?? 0.0,
         StationPriceRange.unknown,
-        (priceType == "e10" ? parsedJson['price'] : parsedJson['e10']) ?? 0.0,
+        (priceType == "e10" ? _parseDouble(parsedJson['price']) : _parseDouble(parsedJson['e10'])) ?? 0.0,
         StationPriceRange.unknown,
-        (priceType == "diesel" ? parsedJson['price'] : parsedJson['diesel']) ?? 0.0,
+        (priceType == "diesel" ? _parseDouble(parsedJson['price']) : _parseDouble(parsedJson['diesel'])) ?? 0.0,
         StationPriceRange.unknown,
       ),
       CoordinateModel(
@@ -40,6 +40,18 @@ class StationModel {
       _parseOpenTimes(parsedJson),
       parsedJson['isOpen'] ?? false,
     );
+  }
+
+  static double? _parseDouble(dynamic value) {
+    if (value is double) {
+      return value;
+    }
+
+    if (value is int) {
+      return value.toDouble();
+    }
+
+    return null;
   }
 
   static List<StationOpenTime> _parseOpenTimes(
