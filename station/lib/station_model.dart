@@ -26,16 +26,25 @@ class StationModel {
         parsedJson['place']?.trim() ?? "",
       ),
       StationPricesModel(
-        (priceType == "e5" ? _parseDouble(parsedJson['price']) : _parseDouble(parsedJson['e5'])) ?? 0.0,
+        (priceType == "e5"
+                ? _parseDouble(parsedJson['price'])
+                : _parseDouble(parsedJson['e5'])) ??
+            0.0,
         StationPriceRange.unknown,
-        (priceType == "e10" ? _parseDouble(parsedJson['price']) : _parseDouble(parsedJson['e10'])) ?? 0.0,
+        (priceType == "e10"
+                ? _parseDouble(parsedJson['price'])
+                : _parseDouble(parsedJson['e10'])) ??
+            0.0,
         StationPriceRange.unknown,
-        (priceType == "diesel" ? _parseDouble(parsedJson['price']) : _parseDouble(parsedJson['diesel'])) ?? 0.0,
+        (priceType == "diesel"
+                ? _parseDouble(parsedJson['price'])
+                : _parseDouble(parsedJson['diesel'])) ??
+            0.0,
         StationPriceRange.unknown,
       ),
       CoordinateModel(
-        parsedJson['lat'] ?? "",
-        parsedJson['lng'] ?? "",
+        _parseDouble(parsedJson['lat']) ?? 0.0,
+        _parseDouble(parsedJson['lng']) ?? 0.0,
       ),
       _parseOpenTimes(parsedJson),
       parsedJson['isOpen'] ?? false,
