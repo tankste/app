@@ -7,6 +7,11 @@ CHANGELOG
 
 ## Upcoming version ##
 
+## 1.2.2 (2022-12-13) ##
+
+* 🐞 Integer coordinates were not parsed correctly ([#47](https://github.com/tankste/app/issues/44))
+
+
 ## 1.2.1 (2022-11-21) ##
 
 * 🐞 Integer prices were not parsed correctly ([#44](https://github.com/tankste/app/issues/44))
