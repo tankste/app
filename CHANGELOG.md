@@ -24,7 +24,7 @@ CHANGELOG
 * 🛠 Show progress & errors ([#16](https://github.com/tankste/app/issues/16))
 * ➕ Navigation app selection in settings ([#27](https://github.com/tankste/app/issues/27))
 * ➕ Developer settings ([#30](https://github.com/tankste/app/issues/30))
-* ➕ Apple Apps for iOS ([#4](https://github.com/tankste/app/issues/4))
+* ➕ Apple Maps for iOS ([#4](https://github.com/tankste/app/issues/4))
 * ➕ Open Street Map for Android ([#7](https://github.com/tankste/app/issues/7))
 
 ## 1.1.0 (2022-07-12) ##
