@@ -3,12 +3,11 @@ import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:settings/ui/developer/cubit/developer_card_state.dart';
 import 'package:settings/usecase/enable_developer_mode_use_case.dart';
-import 'package:settings/usecase/get_developer_settings_use_case.dart';
 import 'package:settings/usecase/update_map_provider_use_case.dart';
 
 class DeveloperCardCubit extends Cubit<DeveloperCardState> {
-  final GetDeveloperSettingsUseCase getDeveloperSettingsUseCase =
-      GetDeveloperSettingsUseCaseImpl(LocalDeveloperSettingsRepository());
+  final DeveloperSettingsRepository developerSettingsRepository =
+      LocalDeveloperSettingsRepository();
 
   final EnableDeveloperModeUseCase enableDeveloperModeUseCase =
       EnableDeveloperModeUseCaseImpl(LocalDeveloperSettingsRepository());
@@ -23,7 +22,7 @@ class DeveloperCardCubit extends Cubit<DeveloperCardState> {
   void _fetchDeveloperSettings() {
     emit(DeveloperCardState.loading());
 
-    getDeveloperSettingsUseCase.invoke().listen((developerSettings) {
+    developerSettingsRepository.get().listen((developerSettings) {
       if (isClosed) {
         return;
       }

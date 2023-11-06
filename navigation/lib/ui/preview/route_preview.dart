@@ -10,7 +10,6 @@ import 'package:navigation/ui/preview/cubit/route_preview_cubit.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_state.dart';
 import 'package:navigation/util.dart';
 import 'package:settings/repository/map_destination_repository.dart';
-import 'package:settings/usecase/get_map_destination_use_case.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RoutePreview extends StatelessWidget {
@@ -90,11 +89,11 @@ class RoutePreview extends StatelessWidget {
   void _openMap() async {
     //TODO: where to locate this, cubit? usecase? split logic to use case & cubit?!
     // Hacky solution with use case and type mapping here
-    GetMapDestinationUseCase getUseCase =
-        GetMapDestinationUseCaseImpl(LocalMapDestinationRepository());
+    MapDestinationRepository mapDestinationRepository =
+        LocalMapDestinationRepository();
 
     final availableMaps = await MapLauncher.installedMaps;
-    final destinationMap = await getUseCase.invoke();
+    final destinationMap = await mapDestinationRepository.get();
 
     final mapToLaunch = availableMaps
         .where((m) =>

@@ -2,15 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/repository/theme_repository.dart';
 import 'package:settings/ui/theme/cubit/theme_item_state.dart';
-import 'package:settings/usecase/get_theme_use_case.dart';
-import 'package:settings/usecase/update_theme_use_case.dart';
 
 class ThemeItemCubit extends Cubit<ThemeItemState> {
-  final GetThemeUseCase getThemeUseCase =
-      GetThemeUseCaseImpl(LocalThemeRepository());
-
-  final UpdateThemeUseCase updateThemeUseCase =
-      UpdateThemeUseCaseImpl(LocalThemeRepository());
+  final ThemeRepository themeRepository = LocalThemeRepository();
 
   ThemeItemCubit() : super(ThemeItemState.loading()) {
     _fetchTheme();
@@ -19,7 +13,7 @@ class ThemeItemCubit extends Cubit<ThemeItemState> {
   void _fetchTheme() {
     emit(ThemeItemState.loading());
 
-    getThemeUseCase.invoke().listen((theme) {
+    themeRepository.get().listen((theme) {
       if (isClosed) {
         return;
       }
@@ -38,6 +32,6 @@ class ThemeItemCubit extends Cubit<ThemeItemState> {
   }
 
   void onThemeChanged(ThemeMode theme) {
-    updateThemeUseCase.invoke(theme).then((_) => _fetchTheme());
+    themeRepository.update(theme).then((_) => _fetchTheme());
   }
 }
