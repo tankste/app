@@ -24,11 +24,13 @@ import 'package:station/details/station_details_page.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(const TanksteApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class TanksteApp extends StatelessWidget {
+  const TanksteApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
