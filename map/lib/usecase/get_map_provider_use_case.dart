@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:core/config/config_repository.dart';
-import 'package:settings/developer/model/developer_settings_model.dart';
-import 'package:settings/developer/repository/developer_settings_repository.dart';
+import 'package:settings/model/developer_settings_model.dart';
+import 'package:settings/repository/developer_settings_repository.dart';
 
 abstract class GetMapProviderUseCase {
   Stream<MapProvider> invoke();

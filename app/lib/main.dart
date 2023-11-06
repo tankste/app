@@ -6,10 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:map/generic/generic_map.dart';
-import 'package:settings/developer/model/developer_settings_model.dart';
-import 'package:settings/developer/repository/developer_settings_repository.dart';
-import 'package:settings/settings/settings_page.dart';
+import 'package:map/ui/generic/generic_map.dart';
+import 'package:settings/model/developer_settings_model.dart';
+import 'package:settings/repository/developer_settings_repository.dart';
+import 'package:settings/ui/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/repository/station_repository.dart';
 import 'package:station/station_model.dart';
@@ -20,7 +20,7 @@ import 'package:tankste/app/cubit/app_state.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:tankste/filter_dialog.dart';
-import 'package:station/details/station_details_page.dart';
+import 'package:station/ui/details/station_details_page.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 void main() {
