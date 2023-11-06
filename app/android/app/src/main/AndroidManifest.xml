@@ -53,19 +53,19 @@
 
         </activity>
 
-        <meta-data
-            android:name="com.google.android.gms.car.application"
-            android:resource="@xml/car"
-            tools:ignore="MetadataTagInsideApplicationTag" />
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.car.application"-->
+<!--            android:resource="@xml/car"-->
+<!--            tools:ignore="MetadataTagInsideApplicationTag" />-->
 
         <!--        <meta-data-->
         <!--            android:name="androidx.car.app.theme"-->
         <!--            android:resource= "@style/CarAppTheme"-->
         <!--            tools:ignore="MetadataTagInsideApplicationTag" />-->
 
-        <meta-data
-            android:name="androidx.car.app.minCarApiLevel"
-            android:value="1" />
+<!--        <meta-data-->
+<!--            android:name="androidx.car.app.minCarApiLevel"-->
+<!--            android:value="1" />-->
 
         <!--        <service-->
         <!--            android:name=".car.CarService"-->

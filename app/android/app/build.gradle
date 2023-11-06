@@ -71,7 +71,7 @@ flutter {
 }
 
 dependencies {
-    implementation project(':car')
+//    implementation project(':car')
     implementation project(':station')
     implementation project(':navigation')
     implementation project(':core')
