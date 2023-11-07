@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:map/generic/generic_map.dart';
+import 'package:map/ui/generic/generic_map.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_cubit.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_state.dart';
 import 'package:navigation/util.dart';
-import 'package:settings/map/repository/map_destination_repository.dart';
-import 'package:settings/map/usecase/get_map_destination_use_case.dart';
+import 'package:settings/repository/map_destination_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RoutePreview extends StatelessWidget {
@@ -90,11 +89,11 @@ class RoutePreview extends StatelessWidget {
   void _openMap() async {
     //TODO: where to locate this, cubit? usecase? split logic to use case & cubit?!
     // Hacky solution with use case and type mapping here
-    GetMapDestinationUseCase getUseCase =
-        GetMapDestinationUseCaseImpl(LocalMapDestinationRepository());
+    MapDestinationRepository mapDestinationRepository =
+        LocalMapDestinationRepository();
 
     final availableMaps = await MapLauncher.installedMaps;
-    final destinationMap = await getUseCase.invoke();
+    final destinationMap = await mapDestinationRepository.get();
 
     final mapToLaunch = availableMaps
         .where((m) =>

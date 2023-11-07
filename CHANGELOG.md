@@ -1,16 +1,23 @@
 CHANGELOG
 =========
 
-* ➕ New function
-* 🛠 Improvement changes
-* 🐞 Bug fixing
+| Symbol | Meaning             |
+|--------|---------------------|
+| ➕     | New function        |
+| 🛠     | Improvement changes |
+| 🐞     | Bug fixing          |
 
 ## Upcoming version ##
+
+* 🛠 Improve code base ([#21](https://github.com/tankste/app/issues/21))
+    * Move app to own module folder
+    * Remove unused flutter generated files
+    * Improve module folder structures
+    * Migrate prototype map code to own widget with BLoC pattern
 
 ## 1.2.2 (2022-12-13) ##
 
 * 🐞 Integer coordinates were not parsed correctly ([#47](https://github.com/tankste/app/issues/44))
-
 
 ## 1.2.1 (2022-11-21) ##
 

@@ -1,0 +1,75 @@
+name: tankste
+description: Finde die günstigste Tankstelle in deiner Nähe!
+publish_to: 'none'
+
+version: 1.2.2+13
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: '../core'
+
+  map:
+    path: '../map'
+
+  station:
+    path: '../station'
+
+  navigation:
+    path: '../navigation'
+
+  settings:
+    path: '../settings'
+
+  # BLoC - https://pub.dev/packages/flutter_bloc
+  flutter_bloc: ^8.0.1
+
+  # Google Maps - https://pub.dev/packages/google_maps_flutter
+  google_maps_flutter: ^2.1.8
+
+  # HTTP - https://pub.dev/packages/http
+  http: ^0.13.4
+
+  # Font Awesome - https://pub:dev/packages/font_awesome_flutter
+  font_awesome_flutter: ^10.1.0
+
+  # URL Launcher - https://pub.dev/packages/url_launcher
+  url_launcher: ^6.1.3
+
+  # Package Info - https://pub.dev/packages/package_info_plus
+  package_info_plus: ^2.0.0
+
+  # Location - https://pub.dev/packages/geolocator
+  geolocator: ^9.0.0
+
+  # Shared Preferences - https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.0.15
+
+  # Map launcher - https://pub.dev/packages/map_launcher
+  map_launcher: ^2.2.3
+
+  # In-App review - https://pub.dev/packages/in_app_review
+  in_app_review: ^2.0.4
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/markers/
+    - assets/google_maps/styles/
+    - config.json
+

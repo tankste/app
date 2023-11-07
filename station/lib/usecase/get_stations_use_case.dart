@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:navigation/coordinate_model.dart';
-import 'package:settings/developer/repository/developer_settings_repository.dart';
+import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:station/repository/station_repository.dart';
 import 'package:station/station_model.dart';
 
