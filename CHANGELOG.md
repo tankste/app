@@ -13,6 +13,7 @@ CHANGELOG
     * Move app to own module folder
     * Remove unused flutter generated files
     * Improve module folder structures
+    * Migrate prototype map code to own widget with BLoC pattern
 
 ## 1.2.2 (2022-12-13) ##
 

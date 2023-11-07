@@ -12,6 +12,9 @@ dependencies:
   core:
     path: '../core'
 
+  map:
+    path: '../map'
+
   navigation:
     path: '../navigation'
 
@@ -26,6 +29,15 @@ dependencies:
 
   # Google Maps - https://pub.dev/packages/google_maps_flutter
   google_maps_flutter: ^2.1.8
+
+  # Shared Preferences - https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.0.15
+
+  # Location - https://pub.dev/packages/geolocator
+  geolocator: ^9.0.0
+
+  # In-App review - https://pub.dev/packages/in_app_review
+  in_app_review: ^2.0.4
 
 dev_dependencies:
   flutter_test:
