@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:navigation/coordinate_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:station/repository/station_repository.dart';
-import 'package:station/station_model.dart';
+import 'package:station/model/station_model.dart';
 
 abstract class GetStationsUseCase {
   Future<List<StationModel>> invoke(String type, CoordinateModel position);

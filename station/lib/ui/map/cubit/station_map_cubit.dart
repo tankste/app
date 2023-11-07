@@ -9,9 +9,12 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:map/ui/generic/generic_map.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
+import 'package:station/di/station_module_factory.dart';
+import 'package:station/model/marker_model.dart';
+import 'package:station/repository/marker_repository.dart';
 import 'package:station/repository/station_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:station/station_model.dart';
+import 'package:station/model/station_model.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
 import 'package:station/usecase/get_stations_use_case.dart';
@@ -22,9 +25,8 @@ final CameraPosition initialCameraPosition =
 //TODO: continue refactoring
 class StationMapCubit extends Cubit<StationMapState>
     with WidgetsBindingObserver {
-  final GetStationsUseCase _getStationsUseCase = GetStationsUseCaseImpl(
-      TankerkoenigStationRepository(FileConfigRepository()),
-      LocalDeveloperSettingsRepository());
+  final MarkerRepository _markerRepository =
+      StationModuleFactory.createSessionRepository();
 
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
@@ -87,42 +89,40 @@ class StationMapCubit extends Cubit<StationMapState>
       }
     }
 
-    _getStationsUseCase
-        .invoke(
-            _filter!.gas,
+    _markerRepository
+        .list(
             CoordinateModel(
-                _position.latLng.latitude, _position.latLng.longitude))
-        .then((stations) {
+                _position.latLng.latitude, _position.latLng.longitude),
+            20)
+        .first //TODO: use stream benefits
+        .then((result) {
       if (isClosed) {
         return;
       }
 
-      _lastRequestTime = DateTime.now();
-      _lastRequestPosition = _position;
+      result.when((markers) {
+        _lastRequestTime = DateTime.now();
+        _lastRequestPosition = _position;
 
-      Future.wait(stations.map((station) async => MapEntry(
-              station, await _genMarkerBitmap(station, showLabelMarkers))))
-          .then((entries) {
-        if (isClosed) {
-          return;
-        }
+        Future.wait(markers.map((marker) async => MapEntry(
+                marker, await _genMarkerBitmap(marker, showLabelMarkers))))
+            .then((entries) {
+          if (isClosed) {
+            return;
+          }
 
-        Map<StationModel, ByteData> markers = {
-          for (var entry in entries) entry.key: entry.value
-        };
-        emit(MarkersStationMapState(
-            cameraPosition: _position,
-            stationMarkers: markers,
-            isShowingLabelMarkers: showLabelMarkers,
-            filter: _filter!));
-      });
-    }).catchError((error) {
-      if (isClosed) {
-        return;
-      }
-
-      emit(ErrorStationMapState(
-          cameraPosition: _position, errorDetails: error.toString()));
+          Map<MarkerModel, ByteData> markers = {
+            for (var entry in entries) entry.key: entry.value
+          };
+          emit(MarkersStationMapState(
+              cameraPosition: _position,
+              stationMarkers: markers,
+              isShowingLabelMarkers: showLabelMarkers,
+              filter: _filter!));
+        });
+      },
+          (error) => emit(ErrorStationMapState(
+              cameraPosition: _position, errorDetails: error.toString())));
     });
   }
 
@@ -264,27 +264,59 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   Future<ByteData> _genMarkerBitmap(
-      StationModel station, bool isShowingLabelMarkers) {
+      MarkerModel marker, bool isShowingLabelMarkers) {
     if (isShowingLabelMarkers) {
-      return _genLabelMarkerBitmap(station);
+      return _genLabelMarkerBitmap(marker);
     } else {
-      return _genDotMarkerBitmap(station);
+      return _genDotMarkerBitmap(marker);
     }
   }
 
-  Future<ByteData> _genDotMarkerBitmap(StationModel station) async {
+  Future<ByteData> _genDotMarkerBitmap(MarkerModel marker) async {
     String path;
 
-    if (!station.isOpen) {
-      path = 'assets/images/markers/grey.png';
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
-      path = 'assets/images/markers/green.png';
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.normal) {
-      path = 'assets/images/markers/orange.png';
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.expensive) {
-      path = 'assets/images/markers/red.png';
+    if (_filter?.gas == "e5") {
+      switch (marker.e5PriceState) {
+        case PriceState.expensive:
+          path = 'assets/images/markers/red.png';
+          break;
+        case PriceState.medium:
+          path = 'assets/images/markers/orange.png';
+          break;
+        case PriceState.cheap:
+          path = 'assets/images/markers/green.png';
+          break;
+        default:
+          path = 'assets/images/markers/grey.png';
+      }
+    } else if (_filter?.gas == "e10") {
+      switch (marker.e10PriceState) {
+        case PriceState.expensive:
+          path = 'assets/images/markers/red.png';
+          break;
+        case PriceState.medium:
+          path = 'assets/images/markers/orange.png';
+          break;
+        case PriceState.cheap:
+          path = 'assets/images/markers/green.png';
+          break;
+        default:
+          path = 'assets/images/markers/grey.png';
+      }
+    } else if (_filter?.gas == "diesel") {
+      switch (marker.dieselPriceState) {
+        case PriceState.expensive:
+          path = 'assets/images/markers/red.png';
+          break;
+        case PriceState.medium:
+          path = 'assets/images/markers/orange.png';
+          break;
+        case PriceState.cheap:
+          path = 'assets/images/markers/green.png';
+          break;
+        default:
+          path = 'assets/images/markers/grey.png';
+      }
     } else {
       path = 'assets/images/markers/grey.png';
     }
@@ -296,7 +328,7 @@ class StationMapCubit extends Cubit<StationMapState>
     return await rootBundle.load(resolutionName);
   }
 
-  Future<ByteData> _genLabelMarkerBitmap(StationModel station) async {
+  Future<ByteData> _genLabelMarkerBitmap(MarkerModel marker) async {
     double ratio = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
         .devicePixelRatio;
 
@@ -319,15 +351,25 @@ class StationMapCubit extends Cubit<StationMapState>
                 color: Colors.white70,
                 fontSize: brandFontSize,
               ))
-              ..addText(station.label.length > 8
-                  ? "${station.label.substring(0, 5)}..."
-                  : station.label))
+              ..addText(marker.label.length > 8
+                  ? "${marker.label.substring(0, 5)}..."
+                  : marker.label))
             .build();
 
     String priceText;
 
-    double price = station.prices.getFirstPrice() ?? 0.0;
-    if (!station.isOpen || price == 0.0) {
+    double? price;
+    if (_filter?.gas == "e5") {
+      price = marker.e5Price;
+    } else if (_filter?.gas == "e10") {
+      price = marker.e10Price;
+    } else if (_filter?.gas == "diesel") {
+      price = marker.dieselPrice;
+    } else {
+      price = null;
+    }
+
+    if (price == null) {
       priceText = "-,--\u{207B}";
     } else {
       priceText = price.toStringAsFixed(3).replaceAll('.', ',');
@@ -363,16 +405,48 @@ class StationMapCubit extends Cubit<StationMapState>
 
     // Create background rect
     final backgroundPaint = Paint();
-    if (!station.isOpen) {
-      backgroundPaint.color = Colors.grey;
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
-      backgroundPaint.color = Colors.green;
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.normal) {
-      backgroundPaint.color = Colors.orange;
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.expensive) {
-      backgroundPaint.color = Colors.red;
+    if (_filter?.gas == "e5") {
+      switch (marker.e5PriceState) {
+        case PriceState.expensive:
+          backgroundPaint.color = Colors.red;
+          break;
+        case PriceState.medium:
+          backgroundPaint.color = Colors.orange;
+          break;
+        case PriceState.cheap:
+          backgroundPaint.color = Colors.green;
+          break;
+        default:
+          backgroundPaint.color = Colors.grey;
+      }
+    } else if (_filter?.gas == "e10") {
+      switch (marker.e10PriceState) {
+        case PriceState.expensive:
+          backgroundPaint.color = Colors.red;
+          break;
+        case PriceState.medium:
+          backgroundPaint.color = Colors.orange;
+          break;
+        case PriceState.cheap:
+          backgroundPaint.color = Colors.green;
+          break;
+        default:
+          backgroundPaint.color = Colors.grey;
+      }
+    } else if (_filter?.gas == "diesel") {
+      switch (marker.dieselPriceState) {
+        case PriceState.expensive:
+          backgroundPaint.color = Colors.red;
+          break;
+        case PriceState.medium:
+          backgroundPaint.color = Colors.orange;
+          break;
+        case PriceState.cheap:
+          backgroundPaint.color = Colors.green;
+          break;
+        default:
+          backgroundPaint.color = Colors.grey;
+      }
     } else {
       backgroundPaint.color = Colors.grey;
     }

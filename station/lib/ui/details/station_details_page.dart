@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/ui/preview/route_preview.dart';
 import 'package:station/ui/details/cubit/station_details_cubit.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
-import 'package:station/station_model.dart';
+import 'package:station/model/station_model.dart';
 
 //TODO: extract duplicated layouts to functions / widgets
 class StationDetailsPage extends StatelessWidget {
-  final String stationId;
+  final int stationId;
   final String? stationName;
   final String? activeGasPriceFilter;
 
@@ -22,7 +22,7 @@ class StationDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => StationDetailsCubit(stationId),
+        create: (context) => StationDetailsCubit(stationId.toString()),
         child: BlocConsumer<StationDetailsCubit, StationDetailsState>(
             listener: (context, state) {},
             builder: (context, state) {

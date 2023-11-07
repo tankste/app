@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:core/config/config_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:navigation/coordinate_model.dart';
-import 'package:station/station_model.dart';
+import 'package:station/model/station_model.dart';
 
 abstract class StationRepository {
   //TODO: use enum instead of string for `type` parameter

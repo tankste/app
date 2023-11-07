@@ -1,7 +1,8 @@
 import 'package:core/cubit/base_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:map/ui/generic/generic_map.dart';
-import 'package:station/station_model.dart';
+import 'package:station/model/marker_model.dart';
+import 'package:station/model/station_model.dart';
 import 'package:station/ui/map/filter_dialog.dart';
 
 abstract class StationMapState {
@@ -21,7 +22,7 @@ class ErrorStationMapState extends StationMapState {
 }
 
 class MarkersStationMapState extends StationMapState {
-  Map<StationModel, ByteData> stationMarkers;
+  Map<MarkerModel, ByteData> stationMarkers;
   bool isShowingLabelMarkers;
   Filter filter;
 

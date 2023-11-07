@@ -39,6 +39,9 @@ dependencies:
   # In-App review - https://pub.dev/packages/in_app_review
   in_app_review: ^2.0.4
 
+  # Multiple Result - https://pub.dev/packages/multiple_result
+  multiple_result: ^4.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

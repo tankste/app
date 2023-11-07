@@ -1,5 +1,5 @@
 import 'package:core/cubit/base_state.dart';
-import 'package:station/station_model.dart';
+import 'package:station/model/station_model.dart';
 
 class StationDetailsState extends BaseState {
   final StationModel? station;

@@ -183,7 +183,7 @@ class StationMapPage extends StatelessWidget {
     List<Marker> markers = state.stationMarkers.entries
         .map((entry) => Marker(
             id:
-                "${entry.key.id}#${Object.hash(entry.key.prices.getFirstPrice(), entry.key.prices.getFirstPriceRange(), state.isShowingLabelMarkers ? "label" : "dot")}",
+                "${entry.key.id}#${Object.hash(entry.key.e5Price, entry.key.e5PriceState, entry.key.e10Price, entry.key.e10PriceState, entry.key.dieselPrice, entry.key.dieselPriceState, state.isShowingLabelMarkers ? "label" : "dot")}",
             latLng: LatLng(
                 entry.key.coordinate.latitude, entry.key.coordinate.longitude),
             onTap: () {
