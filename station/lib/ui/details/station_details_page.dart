@@ -9,12 +9,12 @@ import 'package:station/model/station_model.dart';
 //TODO: extract duplicated layouts to functions / widgets
 class StationDetailsPage extends StatelessWidget {
   final int stationId;
-  final String? stationName;
+  final String? markerLabel;
   final String? activeGasPriceFilter;
 
   const StationDetailsPage(
       {required this.stationId,
-      this.stationName,
+      this.markerLabel,
       this.activeGasPriceFilter,
       Key? key})
       : super(key: key);
@@ -22,24 +22,22 @@ class StationDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => StationDetailsCubit(stationId.toString()),
+        create: (context) => StationDetailsCubit(stationId, markerLabel ?? ""),
         child: BlocConsumer<StationDetailsCubit, StationDetailsState>(
             listener: (context, state) {},
             builder: (context, state) {
               return Scaffold(
                   appBar: AppBar(
-                    title: Text(state.station?.label ?? stationName ?? ""),
+                    title: Text(state.title),
                   ),
                   body: SafeArea(child: _buildBody(context, state)));
             }));
   }
 
   Widget _buildBody(BuildContext context, StationDetailsState state) {
-    if (state.status == Status.loading) {
+    if (state is LoadingStationDetailsState) {
       return const Center(child: CircularProgressIndicator());
-    }
-
-    if (state.status == Status.failure) {
+    } else if (state is ErrorStationDetailsState) {
       return Center(
           child: Column(children: [
         Spacer(),
@@ -65,7 +63,7 @@ class StationDetailsPage extends StatelessWidget {
                   builder: (context) {
                     return AlertDialog(
                       title: const Text('Fehler Details'),
-                      content: Text(state.error.toString()),
+                      content: Text(state.errorDetails),
                       actions: <Widget>[
                         TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
@@ -77,20 +75,15 @@ class StationDetailsPage extends StatelessWidget {
             child: const Text("Fehler anzeigen")),
         Spacer(),
       ]));
-    }
-
-    if (state.status == Status.success) {
-      final StationModel station = state.station!;
-
+    } else if (state is DetailStationDetailsState) {
       return SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(children: <Widget>[
                 RoutePreview(
-                    target: station.coordinate,
-                    address:
-                        "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}",
-                    label: station.label),
+                    target: state.coordinate,
+                    address: state.address,
+                    label: state.title),
                 Card(
                     child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -103,96 +96,96 @@ class StationDetailsPage extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline6),
                               ),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Text("Super E5",
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e5"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                              _priceText(station.prices.e5,
-                                                  station.isOpen),
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e5"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Text("Super E10",
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e10"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                              _priceText(station.prices.e10,
-                                                  station.isOpen),
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e10"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Text("Diesel",
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "diesel"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                              _priceText(station.prices.diesel,
-                                                  station.isOpen),
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "diesel"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                    ],
-                                  ))
+                            //   Padding(
+                            //       padding: const EdgeInsets.only(top: 4),
+                            //       child: Row(
+                            //         crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //         children: [
+                            //           Expanded(
+                            //               flex: 2,
+                            //               child: Text("Super E5",
+                            //                   style: TextStyle(
+                            //                       fontWeight:
+                            //                           activeGasPriceFilter ==
+                            //                                   "e5"
+                            //                               ? FontWeight.bold
+                            //                               : FontWeight
+                            //                                   .normal))),
+                            //           Expanded(
+                            //               flex: 1,
+                            //               child: Text(
+                            //                   _priceText(station.prices.e5,
+                            //                       station.isOpen),
+                            //                   style: TextStyle(
+                            //                       fontWeight:
+                            //                           activeGasPriceFilter ==
+                            //                                   "e5"
+                            //                               ? FontWeight.bold
+                            //                               : FontWeight
+                            //                                   .normal))),
+                            //         ],
+                            //       )),
+                            //   Padding(
+                            //       padding: const EdgeInsets.only(top: 4),
+                            //       child: Row(
+                            //         crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //         children: [
+                            //           Expanded(
+                            //               flex: 2,
+                            //               child: Text("Super E10",
+                            //                   style: TextStyle(
+                            //                       fontWeight:
+                            //                           activeGasPriceFilter ==
+                            //                                   "e10"
+                            //                               ? FontWeight.bold
+                            //                               : FontWeight
+                            //                                   .normal))),
+                            //           Expanded(
+                            //               flex: 1,
+                            //               child: Text(
+                            //                   _priceText(station.prices.e10,
+                            //                       station.isOpen),
+                            //                   style: TextStyle(
+                            //                       fontWeight:
+                            //                           activeGasPriceFilter ==
+                            //                                   "e10"
+                            //                               ? FontWeight.bold
+                            //                               : FontWeight
+                            //                                   .normal))),
+                            //         ],
+                            //       )),
+                            //   Padding(
+                            //       padding: const EdgeInsets.only(top: 4),
+                            //       child: Row(
+                            //         crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //         children: [
+                            //           Expanded(
+                            //               flex: 2,
+                            //               child: Text("Diesel",
+                            //                   style: TextStyle(
+                            //                       fontWeight:
+                            //                           activeGasPriceFilter ==
+                            //                                   "diesel"
+                            //                               ? FontWeight.bold
+                            //                               : FontWeight
+                            //                                   .normal))),
+                            //           Expanded(
+                            //               flex: 1,
+                            //               child: Text(
+                            //                   _priceText(station.prices.diesel,
+                            //                       station.isOpen),
+                            //                   style: TextStyle(
+                            //                       fontWeight:
+                            //                           activeGasPriceFilter ==
+                            //                                   "diesel"
+                            //                               ? FontWeight.bold
+                            //                               : FontWeight
+                            //                                   .normal))),
+                            //         ],
+                            //       ))
                             ]))),
                 Card(
                     child: Padding(
@@ -206,23 +199,23 @@ class StationDetailsPage extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline6),
                               ),
-                              ...(station.openTimes
-                                  .map((openTime) => Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                              flex: 2,
-                                              child: Text(openTime.label)),
-                                          Expanded(
-                                              flex: 1,
-                                              child: Text(
-                                                  "${openTime.start} - ${openTime.end}")),
-                                        ],
-                                      )))
-                                  .toList()),
+                              // ...(station.openTimes
+                              //     .map((openTime) => Padding(
+                              //         padding: const EdgeInsets.only(top: 4),
+                              //         child: Row(
+                              //           crossAxisAlignment:
+                              //               CrossAxisAlignment.start,
+                              //           children: [
+                              //             Expanded(
+                              //                 flex: 2,
+                              //                 child: Text(openTime.label)),
+                              //             Expanded(
+                              //                 flex: 1,
+                              //                 child: Text(
+                              //                     "${openTime.start} - ${openTime.end}")),
+                              //           ],
+                              //         )))
+                              //     .toList()),
                               Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: Text(

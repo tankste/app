@@ -1,20 +1,25 @@
-import 'package:core/cubit/base_state.dart';
-import 'package:station/model/station_model.dart';
+import 'package:navigation/coordinate_model.dart';
 
-class StationDetailsState extends BaseState {
-  final StationModel? station;
+abstract class StationDetailsState {
+  String title;
 
-  StationDetailsState(status, this.station, error): super(status, error);
+  StationDetailsState({required this.title});
+}
 
-  static StationDetailsState loading() {
-    return StationDetailsState(Status.loading, null, null);
-  }
+class LoadingStationDetailsState extends StationDetailsState {
+  LoadingStationDetailsState({required super.title});
+}
 
-  static StationDetailsState success(StationModel station) {
-    return StationDetailsState(Status.success, station, null);
-  }
+class ErrorStationDetailsState extends StationDetailsState {
+  final String errorDetails;
 
-  static StationDetailsState failure(Exception exception) {
-    return StationDetailsState(Status.failure, null, exception);
-  }
+  ErrorStationDetailsState({required this.errorDetails, required super.title});
+}
+
+class DetailStationDetailsState extends StationDetailsState {
+  final CoordinateModel coordinate;
+  final String address;
+
+  DetailStationDetailsState({required this.coordinate, required this.address, required super.title});
+
 }

@@ -1,55 +1,49 @@
 import 'dart:convert';
 import 'package:core/config/config_repository.dart';
 import 'package:http/http.dart' as http;
+import 'package:multiple_result/multiple_result.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:station/model/station_model.dart';
+import 'package:station/repository/dto/station_dto.dart';
 
 abstract class StationRepository {
-  //TODO: use enum instead of string for `type` parameter
-  Future<List<StationModel>> list(
-      String type, CoordinateModel position, int radius);
-
-  Future<StationModel> get(String id);
+  Stream<Result<StationModel, Exception>> get(int id);
 }
 
-class TankerkoenigStationRepository extends StationRepository {
+class TanksteWebStationRepository extends StationRepository {
+  static final TanksteWebStationRepository _instance =
+      TanksteWebStationRepository._internal();
 
-  final ConfigRepository configRepository;
-
-  TankerkoenigStationRepository(this.configRepository);
-
-  @override
-  Future<List<StationModel>> list(
-      String type, CoordinateModel position, int radius) async {
-    var url = Uri.parse(
-        'https://creativecommons.tankerkoenig.de/json/list.php?lat=${position.latitude}&lng=${position.longitude}&rad=$radius&sort=price&type=$type&apikey=${await _getApiKey()}');
-    var response = await http.get(url);
-
-    if (!(response.statusCode >= 200 && response.statusCode <= 299)) {
-      throw Exception("API Error!\n\n${response.body}");
-    }
-
-    final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
-    return (jsonResponse['stations'] as List)
-        .map((i) => StationModel.fromJson(i, type))
-        .toList();
+  factory TanksteWebStationRepository() {
+    return _instance;
   }
 
+  TanksteWebStationRepository._internal();
+
   @override
-  Future<StationModel> get(String id) async {
-    var url = Uri.parse(
-        'https://creativecommons.tankerkoenig.de/json/detail.php?id=$id&apikey=${await _getApiKey()}');
-    var response = await http.get(url);
-
-    if (!(response.statusCode >= 200 && response.statusCode <= 299)) {
-      throw Exception("API Error!\n\n${response.body}");
-    }
-
-    final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
-    return StationModel.fromJson(jsonResponse['station'], null);
+  Stream<Result<StationModel, Exception>> get(int id) {
+    //TODO: cache stream
+    return _getAsync(id).asStream();
   }
 
-  Future<String> _getApiKey() async {
-    return configRepository.get().then((config) => config.tankerkoenigApiKey);
+  Future<Result<StationModel, Exception>> _getAsync(int id) async {
+    try {
+      Uri url = Uri.parse('http://10.0.2.2:4000/stations/$id');
+      http.Response response = await http
+          .get(url); //TODO: add `, headers: await _apiRepository.getHeaders()`
+      if (response.statusCode >= 200 && response.statusCode <= 299) {
+        Map<String, dynamic> jsonResponse =
+            json.decode(response.body) as Map<String, dynamic>;
+
+        StationDto stationDto = StationDto.fromJson(jsonResponse);
+        StationModel station = stationDto.toModel();
+
+        return Result.success(station);
+      } else {
+        return Result.error(Exception("API Error!\n\n${response.body}"));
+      }
+    } on Exception catch (e) {
+      return Result.error(e);
+    }
   }
 }

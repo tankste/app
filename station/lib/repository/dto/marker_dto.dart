@@ -77,8 +77,8 @@ class MarkerDto {
       id: id ?? -1,
       label: label ?? "",
       coordinate: CoordinateModel(
-        latitude ?? 0.0,
-        longitude ?? 0.0,
+        latitude: latitude ?? 0.0,
+        longitude: longitude ?? 0.0,
       ),
       e5Price: e5Price ?? 0.0,
       e5PriceState: _parsePriceState(e5PriceState),

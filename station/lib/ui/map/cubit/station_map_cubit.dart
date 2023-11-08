@@ -1,5 +1,4 @@
 import 'dart:ui' as ui;
-import 'package:core/config/config_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,16 +7,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:map/ui/generic/generic_map.dart';
 import 'package:navigation/coordinate_model.dart';
-import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/marker_model.dart';
 import 'package:station/repository/marker_repository.dart';
-import 'package:station/repository/station_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:station/model/station_model.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
-import 'package:station/usecase/get_stations_use_case.dart';
 
 final CameraPosition initialCameraPosition =
     CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
@@ -26,7 +21,7 @@ final CameraPosition initialCameraPosition =
 class StationMapCubit extends Cubit<StationMapState>
     with WidgetsBindingObserver {
   final MarkerRepository _markerRepository =
-      StationModuleFactory.createSessionRepository();
+      StationModuleFactory.createMarkerRepository();
 
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
@@ -92,7 +87,8 @@ class StationMapCubit extends Cubit<StationMapState>
     _markerRepository
         .list(
             CoordinateModel(
-                _position.latLng.latitude, _position.latLng.longitude),
+                latitude: _position.latLng.latitude,
+                longitude: _position.latLng.longitude),
             20)
         .first //TODO: use stream benefits
         .then((result) {

@@ -192,7 +192,7 @@ class StationMapPage extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => StationDetailsPage(
                             stationId: entry.key.id,
-                            stationName: entry.key.label,
+                            markerLabel: entry.key.label,
                             activeGasPriceFilter: state.filter.gas,
                           )));
             },

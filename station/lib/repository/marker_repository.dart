@@ -21,6 +21,7 @@ class TanksteWebMarkerRepository extends MarkerRepository {
 
   TanksteWebMarkerRepository._internal();
 
+  @override
   Stream<Result<List<MarkerModel>, Exception>> list(
       CoordinateModel position, int radius) {
     //TODO: cache stream

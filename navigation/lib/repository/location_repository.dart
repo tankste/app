@@ -27,6 +27,6 @@ class GpsLocationRepository extends LocationRepository {
     }
 
     Position position = await Geolocator.getCurrentPosition();
-    return CoordinateModel(position.latitude, position.longitude);
+    return CoordinateModel(latitude: position.latitude, longitude: position.longitude);
   }
 }
