@@ -31,6 +31,12 @@ dependencies:
       ref: 26c5ec474605230070609d458d4753ffbacd96ae
       path: open_street_map_flutter
 
+  # MapLibre - https://github.com/maplibre/flutter-maplibre-gl
+  maplibre_gl:
+    git:
+      url: https://github.com/maplibre/flutter-maplibre-gl.git
+      ref: main
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

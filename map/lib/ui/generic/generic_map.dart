@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map/ui/apple/apple_map_widget.dart';
 import 'package:map/ui/google/google_map_adapter.dart';
 import 'package:map/ui/generic/map_adapter.dart';
+import 'package:map/ui/maplibre/map_libre_map_adapter.dart';
 import 'package:map/ui/osm/open_street_map_adapter.dart';
 import 'package:map/cubit/map_cubit.dart';
 import 'package:map/cubit/map_state.dart';
@@ -37,24 +38,18 @@ class GenericMap extends StatelessWidget {
         child: BlocConsumer<MapCubit, MapState>(
             listener: (context, state) {},
             builder: (context, state) {
-              if (state.status == Status.loading) {
+              if (state is LoadingMapState) {
                 return Container();
-              }
-
-              if (state.status == Status.failure) {
-                return _buildHint(
-                    "Apple Maps is only supported by iOS platforms.");
-              }
-
-              switch (state.mapProvider) {
-                case MapProvider.google:
-                  return _buildGoogleMap();
-                case MapProvider.openStreet:
-                  return _buildOpenStreetMap();
-                case MapProvider.apple:
-                  return _buildAppleMap();
-                default:
-                  return _buildHint("Invalid state! No map provider given.");
+              } else if (state is ErrorMapState) {
+                return _buildHint(state.errorDetails);
+              } else if (state is MapLibreMapState) {
+                return _buildMapLibreMap(state);
+              } else if (state is GoogleMapMapState) {
+                return _buildGoogleMap();
+              } else if (state is AppleMapsMapState) {
+                return _buildAppleMap();
+              } else {
+                return _buildHint("Invalid state! No map provider given.");
               }
             }));
   }
@@ -70,20 +65,17 @@ class GenericMap extends StatelessWidget {
             polylines: polylines));
   }
 
-  Widget _buildOpenStreetMap() {
-    if (Platform.isAndroid) {
-      return Scaffold(
-          body: OpenStreetMapAdapter(
-              initialCameraPosition: initialCameraPosition,
-              onMapCreated: onMapCreated,
-              onCameraIdle: onCameraIdle,
-              onCameraMove: onCameraMove,
-              markers: markers,
-              polylines: polylines));
-    } else {
-      return _buildHint(
-          "OpenStreetMap is only supported by Android platform yet.");
-    }
+  Widget _buildMapLibreMap(MapLibreMapState state) {
+    return Scaffold(
+        body: MapLibreMapAdapter(
+            styleUrlLight: state.styleUrlLight,
+            styleUrlDark: state.styleUrlDark,
+            initialCameraPosition: initialCameraPosition,
+            onMapCreated: onMapCreated,
+            onCameraIdle: onCameraIdle,
+            onCameraMove: onCameraMove,
+            markers: markers,
+            polylines: polylines));
   }
 
   Widget _buildAppleMap() {

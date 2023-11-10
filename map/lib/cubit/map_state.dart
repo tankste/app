@@ -1,20 +1,23 @@
 import 'package:core/cubit/base_state.dart';
 import 'package:map/usecase/get_map_provider_use_case.dart';
 
-class MapState extends BaseState {
-  final MapProvider? mapProvider;
+abstract class MapState {}
 
-  MapState(status, this.mapProvider, error) : super(status, error);
+class LoadingMapState extends MapState {}
 
-  static MapState loading() {
-    return MapState(Status.loading, null, null);
-  }
+class ErrorMapState extends MapState {
+  final String errorDetails;
 
-  static MapState success(MapProvider mapProvider) {
-    return MapState(Status.success, mapProvider, null);
-  }
-
-  static MapState failure(Exception exception) {
-    return MapState(Status.failure, null, exception);
-  }
+  ErrorMapState(this.errorDetails);
 }
+
+class GoogleMapMapState extends MapState {}
+
+class MapLibreMapState extends MapState {
+  String styleUrlLight;
+  String styleUrlDark;
+
+  MapLibreMapState({required this.styleUrlLight, required this.styleUrlDark});
+}
+
+class AppleMapsMapState extends MapState {}

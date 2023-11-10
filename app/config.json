@@ -5,6 +5,10 @@
   "google": {
     "mapsKey": ""
   },
+  "mapLibre": {
+    "styleUrlLight": "",
+    "styleUrlDark": ""
+  },
   "tankerKoenig": {
     "apiKey": ""
   }
