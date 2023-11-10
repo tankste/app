@@ -401,6 +401,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  multiple_result:
+    dependency: "direct main"
+    description:
+      name: multiple_result
+      sha256: af6e65c8f950d4aca82c5d16d029fe963d54809a75531f4f0f76e3a6d3f8c84b
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   navigation:
     dependency: "direct main"
     description:

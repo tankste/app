@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:core/config/config_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
-import 'package:navigation/coordinate_model.dart';
 import 'package:station/model/station_model.dart';
 import 'package:station/repository/dto/station_dto.dart';
 
