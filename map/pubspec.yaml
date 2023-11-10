@@ -2,8 +2,8 @@ name: map
 publish_to: none
 
 environment:
-  sdk: ">=2.17.1 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.19.6 <3.0.0"
+  flutter: ">=3.7.12"
 
 dependencies:
   flutter:
@@ -24,12 +24,11 @@ dependencies:
   # Apple Maps - https://pub.dev/packages/apple_maps_flutter
   apple_maps_flutter: ^1.2.0
 
-  # Open Street Map - https://github.com/tankste/open_street_map_flutter
-  open_street_map_flutter:
+  # MapLibre - https://github.com/maplibre/flutter-maplibre-gl
+  maplibre_gl:
     git:
-      url: https://github.com/tankste/open_street_map_flutter.git
-      ref: 26c5ec474605230070609d458d4753ffbacd96ae
-      path: open_street_map_flutter
+      url: https://github.com/maplibre/flutter-maplibre-gl.git
+      ref: main
 
 dev_dependencies:
   flutter_test:

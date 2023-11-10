@@ -21,8 +21,8 @@ class GetMapProviderUseCaseImpl extends GetMapProviderUseCase {
       switch (settings.mapProvider) {
         case DeveloperSettingsMapProvider.google:
           return MapProvider.google;
-        case DeveloperSettingsMapProvider.openStreet:
-          return MapProvider.openStreet;
+        case DeveloperSettingsMapProvider.mapLibre:
+          return MapProvider.mapLibre;
         case DeveloperSettingsMapProvider.apple:
           return MapProvider.apple;
         default:
@@ -30,8 +30,8 @@ class GetMapProviderUseCaseImpl extends GetMapProviderUseCase {
             return MapProvider.apple;
           } else {
             return _configRepository.get().then((config) {
-              if (config.useOpenStreetMap) {
-                return MapProvider.openStreet;
+              if (config.useMapLibreMap) {
+                return MapProvider.mapLibre;
               } else {
                 return MapProvider.google;
               }
@@ -42,4 +42,4 @@ class GetMapProviderUseCaseImpl extends GetMapProviderUseCase {
   }
 }
 
-enum MapProvider { google, openStreet, apple }
+enum MapProvider { google, mapLibre, apple }

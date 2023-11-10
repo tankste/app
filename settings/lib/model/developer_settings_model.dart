@@ -13,4 +13,4 @@ class DeveloperSettingsModel {
       this.mapProvider);
 }
 
-enum DeveloperSettingsMapProvider { system, google, openStreet, apple }
+enum DeveloperSettingsMapProvider { system, google, mapLibre, apple }

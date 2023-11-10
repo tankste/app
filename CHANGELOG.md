@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+* 🛠 Replace OpenStreetMap by MapLibre ([#52](https://github.com/tankste/app/issues/52))
 * 🛠 Improve code base ([#21](https://github.com/tankste/app/issues/21))
     * Move app to own module folder
     * Remove unused flutter generated files

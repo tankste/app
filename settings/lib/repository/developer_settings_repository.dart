@@ -76,8 +76,8 @@ class LocalDeveloperSettingsRepository extends DeveloperSettingsRepository {
         return "system";
       case DeveloperSettingsMapProvider.google:
         return "google";
-      case DeveloperSettingsMapProvider.openStreet:
-        return "openStreet";
+      case DeveloperSettingsMapProvider.mapLibre:
+        return "mapLibre";
       case DeveloperSettingsMapProvider.apple:
         return "apple";
     }
@@ -86,8 +86,8 @@ class LocalDeveloperSettingsRepository extends DeveloperSettingsRepository {
   DeveloperSettingsMapProvider _getProviderFromString(String provider) {
     if (provider == "google") {
       return DeveloperSettingsMapProvider.google;
-    } else if (provider == "openStreet") {
-      return DeveloperSettingsMapProvider.openStreet;
+    } else if (provider == "mapLibre") {
+      return DeveloperSettingsMapProvider.mapLibre;
     } else if (provider == "apple") {
       return DeveloperSettingsMapProvider.apple;
     } else {

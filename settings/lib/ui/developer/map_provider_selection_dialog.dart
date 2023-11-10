@@ -47,15 +47,15 @@ class MapProviderSelectionDialogState extends State<MapProviderSelectionDialog> 
         title: const Text("Google Maps"),
       ),
       RadioListTile<DeveloperSettingsMapProvider>(
-        value: DeveloperSettingsMapProvider.openStreet,
+        value: DeveloperSettingsMapProvider.mapLibre,
         groupValue: mapProvider,
         onChanged: (_) {
           setState(() {
-            mapProvider = DeveloperSettingsMapProvider.openStreet;
+            mapProvider = DeveloperSettingsMapProvider.mapLibre;
           });
-          Navigator.of(context).pop(DeveloperSettingsMapProvider.openStreet);
+          Navigator.of(context).pop(DeveloperSettingsMapProvider.mapLibre);
         },
-        title: const Text("Open Street Map"),
+        title: const Text("MapLibre"),
       ),
       RadioListTile<DeveloperSettingsMapProvider>(
         value: DeveloperSettingsMapProvider.apple,

@@ -1,9 +1,13 @@
 {
   "tankste": {
-    "useOpenStreetMap": true
+    "useMapLibreMap": true
   },
   "google": {
     "mapsKey": ""
+  },
+  "mapLibre": {
+    "styleUrlLight": "",
+    "styleUrlDark": ""
   },
   "tankerKoenig": {
     "apiKey": ""
