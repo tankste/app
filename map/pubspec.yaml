@@ -24,13 +24,6 @@ dependencies:
   # Apple Maps - https://pub.dev/packages/apple_maps_flutter
   apple_maps_flutter: ^1.2.0
 
-  # Open Street Map - https://github.com/tankste/open_street_map_flutter
-  open_street_map_flutter:
-    git:
-      url: https://github.com/tankste/open_street_map_flutter.git
-      ref: 26c5ec474605230070609d458d4753ffbacd96ae
-      path: open_street_map_flutter
-
   # MapLibre - https://github.com/maplibre/flutter-maplibre-gl
   maplibre_gl:
     git:

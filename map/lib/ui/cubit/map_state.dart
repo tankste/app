@@ -1,6 +1,3 @@
-import 'package:core/cubit/base_state.dart';
-import 'package:map/usecase/get_map_provider_use_case.dart';
-
 abstract class MapState {}
 
 class LoadingMapState extends MapState {}

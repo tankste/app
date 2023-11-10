@@ -1,6 +1,6 @@
 {
   "tankste": {
-    "useOpenStreetMap": true
+    "useMapLibreMap": true
   },
   "google": {
     "mapsKey": ""

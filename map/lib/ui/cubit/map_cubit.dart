@@ -1,8 +1,7 @@
 import 'package:core/config/config_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:map/cubit/map_state.dart';
+import 'package:map/ui/cubit/map_state.dart';
 import 'package:map/usecase/get_map_provider_use_case.dart';
-import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
 
 class MapCubit extends Cubit<MapState> {
@@ -24,7 +23,7 @@ class MapCubit extends Cubit<MapState> {
       }
 
       switch (mapProvider) {
-        case MapProvider.openStreet:
+        case MapProvider.mapLibre:
           configRepository.get().then((config) {
             emit(MapLibreMapState(
                 styleUrlLight: config.mapLibreStyleUrlLight,

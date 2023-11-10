@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:core/cubit/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,10 +7,8 @@ import 'package:map/ui/apple/apple_map_widget.dart';
 import 'package:map/ui/google/google_map_adapter.dart';
 import 'package:map/ui/generic/map_adapter.dart';
 import 'package:map/ui/maplibre/map_libre_map_adapter.dart';
-import 'package:map/ui/osm/open_street_map_adapter.dart';
-import 'package:map/cubit/map_cubit.dart';
-import 'package:map/cubit/map_state.dart';
-import 'package:map/usecase/get_map_provider_use_case.dart';
+import 'package:map/ui/cubit/map_cubit.dart';
+import 'package:map/ui/cubit/map_state.dart';
 
 class GenericMap extends StatelessWidget {
   final CameraPosition initialCameraPosition;
