@@ -211,4 +211,13 @@ class MapLibreMapController extends MapController {
         left: padding,
         right: padding));
   }
+
+  @override
+  Future<LatLngBounds> getVisibleBounds() {
+    return childController.getVisibleRegion().then((bounds) => LatLngBounds(
+        northEast:
+            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
+        southWest:
+            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
+  }
 }

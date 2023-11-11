@@ -8,7 +8,7 @@ import 'package:station/repository/dto/marker_dto.dart';
 
 abstract class MarkerRepository {
   Stream<Result<List<MarkerModel>, Exception>> list(
-      CoordinateModel position, int radius);
+      List<CoordinateModel> coordinates);
 }
 
 class TanksteWebMarkerRepository extends MarkerRepository {
@@ -23,17 +23,20 @@ class TanksteWebMarkerRepository extends MarkerRepository {
 
   @override
   Stream<Result<List<MarkerModel>, Exception>> list(
-      CoordinateModel position, int radius) {
+      List<CoordinateModel> coordinates) {
     //TODO: cache stream
     //TODO: re-fetch after delayed time, to show the newest prices
-    return _listAsync(position, radius).asStream();
+    return _listAsync(coordinates).asStream();
   }
 
   Future<Result<List<MarkerModel>, Exception>> _listAsync(
-      CoordinateModel position, int radius) async {
+      List<CoordinateModel> coordinates) async {
     try {
-      Uri url = Uri.parse(
-          'http://10.0.2.2:4000/markers?latitude=${position.latitude}&longitude=${position.longitude}&radius=$radius');
+      String boundQuery = coordinates
+          .map((c) => "boundary[]=${c.latitude},${c.longitude}")
+          .join("&");
+
+      Uri url = Uri.parse('http://10.0.2.2:4000/markers?$boundQuery');
       http.Response response = await http
           .get(url); //TODO: add `, headers: await _apiRepository.getHeaders()`
       if (response.statusCode >= 200 && response.statusCode <= 299) {
@@ -45,7 +48,6 @@ class TanksteWebMarkerRepository extends MarkerRepository {
             .map((dto) => dto.toModel())
             .toList();
 
-        print("markers: $markers");
         return Result.success(markers);
       } else {
         return Result.error(Exception("API Error!\n\n${response.body}"));

@@ -135,6 +135,8 @@ abstract class MapController {
   void moveCameraToPosition(CameraPosition position);
 
   void moveCameraToBounds(LatLngBounds bounds, double padding);
+
+  Future<LatLngBounds> getVisibleBounds();
 }
 
 class Marker {

@@ -27,8 +27,10 @@ class StationMapCubit extends Cubit<StationMapState>
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
   CameraPosition _position = initialCameraPosition;
   CameraPosition? _lastRequestPosition;
+  LatLngBounds? _visibleBounds;
   Filter? _filter;
   DateTime? _lastRequestTime;
+  Future? _stationRequest;
 
   StationMapCubit()
       : super(LoadingStationMapState(cameraPosition: initialCameraPosition)) {
@@ -38,6 +40,7 @@ class StationMapCubit extends Cubit<StationMapState>
       if (position != null) {
         _position = CameraPosition(
             latLng: LatLng(position.latitude, position.longitude), zoom: 12.5);
+        emit(LoadingStationMapState(cameraPosition: _position));
         _fetchStations(true);
       }
     });
@@ -50,12 +53,16 @@ class StationMapCubit extends Cubit<StationMapState>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gas = prefs.getString("filter_gas") ?? "e5";
     _filter = Filter(gas);
-    _fetchStations(true);
   }
 
   void _fetchStations(bool force) {
     // Require loaded filter
     if (_filter == null) {
+      return;
+    }
+
+    LatLngBounds? visibleBounds = _visibleBounds;
+    if (visibleBounds == null) {
       return;
     }
 
@@ -80,7 +87,8 @@ class StationMapCubit extends Cubit<StationMapState>
           _lastRequestPosition!.latLng.longitude,
           _position.latLng.latitude,
           _position.latLng.longitude);
-      if (movementDistance < 8000) {
+
+      if (movementDistance < 1000) {
         if (state is MarkersStationMapState) {
           emit(state as MarkersStationMapState);
         }
@@ -88,46 +96,50 @@ class StationMapCubit extends Cubit<StationMapState>
       }
     }
 
-    _markerRepository
-        .list(
-            CoordinateModel(
-                latitude: _position.latLng.latitude,
-                longitude: _position.latLng.longitude),
-            20)
+    _stationRequest?.ignore();
+    _stationRequest = _markerRepository
+        .list([
+          CoordinateModel(
+              latitude: visibleBounds.southWest.latitude,
+              longitude: visibleBounds.southWest.longitude),
+          CoordinateModel(
+              latitude: visibleBounds.northEast.latitude,
+              longitude: visibleBounds.northEast.longitude),
+        ])
         .first //TODO: use stream benefits
         .then((result) {
-      if (isClosed) {
-        return;
-      }
-
-      result.when((markers) {
-        _lastRequestTime = DateTime.now();
-        _lastRequestPosition = _position;
-
-        Future.wait(markers.map((marker) async => MapEntry(
-                marker, await _genMarkerBitmap(marker, showLabelMarkers))))
-            .then((entries) {
           if (isClosed) {
             return;
           }
 
-          Map<MarkerModel, ByteData> markers = {
-            for (var entry in entries) entry.key: entry.value
-          };
-          emit(MarkersStationMapState(
-              cameraPosition: _position,
-              stationMarkers: markers,
-              isShowingLabelMarkers: showLabelMarkers,
-              filter: _filter!));
+          result.when((markers) {
+            _lastRequestTime = DateTime.now();
+            _lastRequestPosition = _position;
+
+            Future.wait(markers.map((marker) async => MapEntry(
+                    marker, await _genMarkerBitmap(marker, showLabelMarkers))))
+                .then((entries) {
+              if (isClosed) {
+                return;
+              }
+
+              Map<MarkerModel, ByteData> markers = {
+                for (var entry in entries) entry.key: entry.value
+              };
+              emit(MarkersStationMapState(
+                  cameraPosition: _position,
+                  stationMarkers: markers,
+                  isShowingLabelMarkers: showLabelMarkers,
+                  filter: _filter!));
+            });
+          },
+              (error) => emit(ErrorStationMapState(
+                  cameraPosition: _position, errorDetails: error.toString())));
         });
-      },
-          (error) => emit(ErrorStationMapState(
-              cameraPosition: _position, errorDetails: error.toString())));
-    });
   }
 
   void onRetryClicked() {
-    _fetchGasFilter();
+    _fetchGasFilter().then((_) => _fetchStations(true));
   }
 
   void onMoveToLocationClicked() {
@@ -166,8 +178,10 @@ class StationMapCubit extends Cubit<StationMapState>
     _fetchStations(false);
   }
 
-  void onCameraPositionChanged(CameraPosition cameraPosition) {
+  void onCameraPositionChanged(
+      CameraPosition cameraPosition, LatLngBounds? bounds) {
     _position = cameraPosition;
+    _visibleBounds = bounds;
   }
 
   void onFilterSaved(Filter filter) {
