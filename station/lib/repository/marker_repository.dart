@@ -32,6 +32,7 @@ class TanksteWebMarkerRepository extends MarkerRepository {
   Future<Result<List<MarkerModel>, Exception>> _listAsync(
       List<CoordinateModel> coordinates) async {
     try {
+      //TODO: increase boundary by padding
       String boundQuery = coordinates
           .map((c) => "boundary[]=${c.latitude},${c.longitude}")
           .join("&");

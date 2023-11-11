@@ -96,96 +96,90 @@ class StationDetailsPage extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline6),
                               ),
-                            //   Padding(
-                            //       padding: const EdgeInsets.only(top: 4),
-                            //       child: Row(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           Expanded(
-                            //               flex: 2,
-                            //               child: Text("Super E5",
-                            //                   style: TextStyle(
-                            //                       fontWeight:
-                            //                           activeGasPriceFilter ==
-                            //                                   "e5"
-                            //                               ? FontWeight.bold
-                            //                               : FontWeight
-                            //                                   .normal))),
-                            //           Expanded(
-                            //               flex: 1,
-                            //               child: Text(
-                            //                   _priceText(station.prices.e5,
-                            //                       station.isOpen),
-                            //                   style: TextStyle(
-                            //                       fontWeight:
-                            //                           activeGasPriceFilter ==
-                            //                                   "e5"
-                            //                               ? FontWeight.bold
-                            //                               : FontWeight
-                            //                                   .normal))),
-                            //         ],
-                            //       )),
-                            //   Padding(
-                            //       padding: const EdgeInsets.only(top: 4),
-                            //       child: Row(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           Expanded(
-                            //               flex: 2,
-                            //               child: Text("Super E10",
-                            //                   style: TextStyle(
-                            //                       fontWeight:
-                            //                           activeGasPriceFilter ==
-                            //                                   "e10"
-                            //                               ? FontWeight.bold
-                            //                               : FontWeight
-                            //                                   .normal))),
-                            //           Expanded(
-                            //               flex: 1,
-                            //               child: Text(
-                            //                   _priceText(station.prices.e10,
-                            //                       station.isOpen),
-                            //                   style: TextStyle(
-                            //                       fontWeight:
-                            //                           activeGasPriceFilter ==
-                            //                                   "e10"
-                            //                               ? FontWeight.bold
-                            //                               : FontWeight
-                            //                                   .normal))),
-                            //         ],
-                            //       )),
-                            //   Padding(
-                            //       padding: const EdgeInsets.only(top: 4),
-                            //       child: Row(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           Expanded(
-                            //               flex: 2,
-                            //               child: Text("Diesel",
-                            //                   style: TextStyle(
-                            //                       fontWeight:
-                            //                           activeGasPriceFilter ==
-                            //                                   "diesel"
-                            //                               ? FontWeight.bold
-                            //                               : FontWeight
-                            //                                   .normal))),
-                            //           Expanded(
-                            //               flex: 1,
-                            //               child: Text(
-                            //                   _priceText(station.prices.diesel,
-                            //                       station.isOpen),
-                            //                   style: TextStyle(
-                            //                       fontWeight:
-                            //                           activeGasPriceFilter ==
-                            //                                   "diesel"
-                            //                               ? FontWeight.bold
-                            //                               : FontWeight
-                            //                                   .normal))),
-                            //         ],
-                            //       ))
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          flex: 2,
+                                          child: Text("Super E5",
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e5"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Text(state.e5Price,
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e5"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
+                                    ],
+                                  )),
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          flex: 2,
+                                          child: Text("Super E10",
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e10"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Text(state.e10Price,
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "e10"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
+                                    ],
+                                  )),
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                          flex: 2,
+                                          child: Text("Diesel",
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "diesel"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Text(state.dieselPrice,
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      activeGasPriceFilter ==
+                                                              "diesel"
+                                                          ? FontWeight.bold
+                                                          : FontWeight
+                                                              .normal))),
+                                    ],
+                                  ))
                             ]))),
                 Card(
                     child: Padding(
@@ -227,30 +221,5 @@ class StationDetailsPage extends StatelessWidget {
     }
 
     return Container();
-  }
-
-  String _priceText(double price, bool isOpen) {
-    String priceText;
-    if (!isOpen || price == 0) {
-      priceText = "-,--\u{207B}";
-    } else {
-      priceText = price.toStringAsFixed(3).replaceAll('.', ',');
-    }
-
-    if (priceText.length == 5) {
-      priceText = priceText
-          .replaceFirst('0', '\u{2070}', 4)
-          .replaceFirst('1', '\u{00B9}', 4)
-          .replaceFirst('2', '\u{00B2}', 4)
-          .replaceFirst('3', '\u{00B3}', 4)
-          .replaceFirst('4', '\u{2074}', 4)
-          .replaceFirst('5', '\u{2075}', 4)
-          .replaceFirst('6', '\u{2076}', 4)
-          .replaceFirst('7', '\u{2077}', 4)
-          .replaceFirst('8', '\u{2078}', 4)
-          .replaceFirst('9', '\u{2079}', 4);
-    }
-
-    return "$priceText €";
   }
 }

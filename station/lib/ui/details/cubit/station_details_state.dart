@@ -19,7 +19,15 @@ class ErrorStationDetailsState extends StationDetailsState {
 class DetailStationDetailsState extends StationDetailsState {
   final CoordinateModel coordinate;
   final String address;
+  final String e5Price;
+  final String e10Price;
+  final String dieselPrice;
 
-  DetailStationDetailsState({required this.coordinate, required this.address, required super.title});
-
+  DetailStationDetailsState(
+      {required this.coordinate,
+      required this.address,
+      required this.e5Price,
+      required this.e10Price,
+      required this.dieselPrice,
+      required super.title});
 }
