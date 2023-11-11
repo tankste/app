@@ -72,7 +72,6 @@ class MarkerDto {
   }
 
   MarkerModel toModel() {
-    print("dto: $this");
     return MarkerModel(
       id: id ?? -1,
       label: label ?? "",

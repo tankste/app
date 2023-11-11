@@ -62,7 +62,11 @@ class StationMapCubit extends Cubit<StationMapState>
     // Zoomed out too far, skip station loading
     if (_position.zoom < 10.5) {
       if (state is MarkersStationMapState) {
-        emit(MarkersStationMapState(stationMarkers: {}, isShowingLabelMarkers: false, filter: _filter!, cameraPosition: _position));
+        emit(MarkersStationMapState(
+            stationMarkers: {},
+            isShowingLabelMarkers: false,
+            filter: _filter!,
+            cameraPosition: _position));
       }
 
       return;

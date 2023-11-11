@@ -68,7 +68,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       attributionButtonPosition:
           map_libre_maps.AttributionButtonPosition.BottomLeft,
       attributionButtonMargins: const Point(8, 8),
-      trackCameraPosition: false,
+      trackCameraPosition: true,
       compassEnabled: false,
       myLocationEnabled: true,
       onStyleLoadedCallback: () {

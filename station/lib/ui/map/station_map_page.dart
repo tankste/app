@@ -9,10 +9,15 @@ import 'package:station/ui/map/cubit/station_map_cubit.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
 
-class StationMapPage extends StatelessWidget {
-  MapController? _mapController;
+class StationMapPage extends StatefulWidget {
+  const StationMapPage({super.key});
 
-  StationMapPage({super.key});
+  @override
+  State<StationMapPage> createState() => StationMapPageState();
+}
+
+class StationMapPageState extends State<StationMapPage> {
+  MapController? _mapController;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +37,9 @@ class StationMapPage extends StatelessWidget {
         initialCameraPosition: initialCameraPosition,
         onMapCreated: (mapController) {
           mapController.moveCameraToPosition(state.cameraPosition);
-          _mapController = mapController;
+          setState(() {
+            _mapController = mapController;
+          });
         },
         onCameraIdle: () {
           context.read<StationMapCubit>().onCameraIdle();
