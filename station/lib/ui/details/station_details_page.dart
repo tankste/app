@@ -189,33 +189,26 @@ class StationDetailsPage extends StatelessWidget {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 4),
-                                child: Text("Öffnungszeiten\u{002A}",
+                                child: Text("Öffnungszeiten",
                                     style:
                                         Theme.of(context).textTheme.headline6),
                               ),
-                              // ...(station.openTimes
-                              //     .map((openTime) => Padding(
-                              //         padding: const EdgeInsets.only(top: 4),
-                              //         child: Row(
-                              //           crossAxisAlignment:
-                              //               CrossAxisAlignment.start,
-                              //           children: [
-                              //             Expanded(
-                              //                 flex: 2,
-                              //                 child: Text(openTime.label)),
-                              //             Expanded(
-                              //                 flex: 1,
-                              //                 child: Text(
-                              //                     "${openTime.start} - ${openTime.end}")),
-                              //           ],
-                              //         )))
-                              //     .toList()),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                      "\u{002A}Die Öffnungszeiten können an gesetzlichen Feiertagen abweichen.",
-                                      style:
-                                          Theme.of(context).textTheme.caption))
+                              ...(state.openTimes
+                                  .map((openTime) => Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                              flex: 2,
+                                              child: Text(openTime.day)),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text(openTime.time)),
+                                        ],
+                                      )))
+                                  .toList()),
                             ])))
               ])));
     }

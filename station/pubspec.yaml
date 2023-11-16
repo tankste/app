@@ -45,6 +45,12 @@ dependencies:
   # Multiple Result - https://pub.dev/packages/multiple_result
   multiple_result: ^4.0.0
 
+  # Intl - https://pub.dev/packages/intl
+  intl: ^0.18.1
+
+  # Collection - https://pub.dev/packages/collection
+  collection: ^1.17.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

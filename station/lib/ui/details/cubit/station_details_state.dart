@@ -22,6 +22,7 @@ class DetailStationDetailsState extends StationDetailsState {
   final String e5Price;
   final String e10Price;
   final String dieselPrice;
+  final List<OpenTime> openTimes;
 
   DetailStationDetailsState(
       {required this.coordinate,
@@ -29,5 +30,13 @@ class DetailStationDetailsState extends StationDetailsState {
       required this.e5Price,
       required this.e10Price,
       required this.dieselPrice,
+      required this.openTimes,
       required super.title});
+}
+
+class OpenTime {
+  final String day;
+  final String time;
+
+  OpenTime({required this.day, required this.time});
 }
