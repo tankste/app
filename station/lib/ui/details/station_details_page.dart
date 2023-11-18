@@ -96,90 +96,32 @@ class StationDetailsPage extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline6),
                               ),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Text("Super E5",
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e5"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text(state.e5Price,
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e5"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Text("Super E10",
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e10"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text(state.e10Price,
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "e10"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Text("Diesel",
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "diesel"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text(state.dieselPrice,
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      activeGasPriceFilter ==
-                                                              "diesel"
-                                                          ? FontWeight.bold
-                                                          : FontWeight
-                                                              .normal))),
-                                    ],
-                                  ))
+                              ...(state.prices
+                                  .map((price) => Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                              flex: 2,
+                                              child: Text(price.fuel,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal))),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text(price.price,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          activeGasPriceFilter ==
+                                                                  "diesel"
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
+                                        ],
+                                      )))
+                                  .toList()),
                             ]))),
                 Card(
                     child: Padding(

@@ -19,19 +19,22 @@ class ErrorStationDetailsState extends StationDetailsState {
 class DetailStationDetailsState extends StationDetailsState {
   final CoordinateModel coordinate;
   final String address;
-  final String e5Price;
-  final String e10Price;
-  final String dieselPrice;
+  final List<Price> prices;
   final List<OpenTime> openTimes;
 
   DetailStationDetailsState(
       {required this.coordinate,
       required this.address,
-      required this.e5Price,
-      required this.e10Price,
-      required this.dieselPrice,
+      required this.prices,
       required this.openTimes,
       required super.title});
+}
+
+class Price {
+  final String fuel;
+  final String price;
+
+  Price({required this.fuel, required this.price});
 }
 
 class OpenTime {

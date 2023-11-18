@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/open_time.dart';
+import 'package:station/model/price_model.dart';
 import 'package:station/repository/open_time_repository.dart';
 import 'package:station/repository/price_repository.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
@@ -31,22 +32,17 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     emit(LoadingStationDetailsState(title: markerLabel));
 
     CombineLatestStream.combine3(stationRepository.get(stationId),
-            priceRepository.get(stationId), openTimeRepository.list(stationId),
+            priceRepository.list(stationId), openTimeRepository.list(stationId),
             (stationResult, priceResult, openTimesResult) {
       return stationResult.when((station) {
-        return priceResult.when((price) {
+        return priceResult.when((prices) {
           return openTimesResult.when((openTimes) {
-            openTimes.sort(
-                (a, b) => a.day.toDayOfWeek().compareTo(b.day.toDayOfWeek()));
-
             return DetailStationDetailsState(
                 title: station.name.isNotEmpty ? station.name : station.brand,
                 coordinate: station.coordinate,
                 address:
                     "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
-                e5Price: _priceText(price.e5Price),
-                e10Price: _priceText(price.e10Price),
-                dieselPrice: _priceText(price.dieselPrice),
+                prices: _genPricesList(prices),
                 openTimes: _genOpenTimeList(openTimes));
           },
               (error) => ErrorStationDetailsState(
@@ -70,6 +66,44 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
 
   void onRetryClicked() {
     _fetchStation();
+  }
+
+  List<Price> _genPricesList(List<PriceModel> prices) {
+    List<Price?> items = [];
+
+    items.add(_genPriceItem(FuelType.e5, prices));
+    items.add(_genPriceItem(FuelType.e10, prices));
+    items.add(_genPriceItem(FuelType.diesel, prices));
+
+    return items.whereNotNull().toList();
+  }
+
+  //TODO: should show not available prices, or hide completely?
+  Price? _genPriceItem(FuelType fuelType, List<PriceModel> prices) {
+    if (prices.isEmpty) {
+      return null;
+    }
+
+    String fuelLabel = "";
+    switch (fuelType) {
+      case FuelType.e5:
+        fuelLabel = "Super E5";
+        break;
+      case FuelType.e10:
+        fuelLabel = "Super E10";
+        break;
+      case FuelType.diesel:
+        fuelLabel = "Diesel";
+        break;
+      default:
+        fuelLabel = "Unbekannt";
+    }
+
+    return Price(
+        fuel: fuelLabel,
+        price: _priceText(
+            prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ??
+                0));
   }
 
   String _priceText(double price) {
@@ -98,7 +132,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   }
 
   List<OpenTime> _genOpenTimeList(List<OpenTimeModel> openTimes) {
-    List<OpenTime> items = [];
+    List<OpenTime?> items = [];
 
     items.add(_genOpenTimeItem(OpenTimeDay.monday,
         openTimes.where((ot) => ot.day == OpenTimeDay.monday).toList()));
@@ -117,10 +151,10 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     items.add(_genOpenTimeItem(OpenTimeDay.publicHoliday,
         openTimes.where((ot) => ot.day == OpenTimeDay.publicHoliday).toList()));
 
-    return items;
+    return items.whereNotNull().toList();
   }
 
-  OpenTime _genOpenTimeItem(OpenTimeDay day, List<OpenTimeModel> openTimes) {
+  OpenTime? _genOpenTimeItem(OpenTimeDay day, List<OpenTimeModel> openTimes) {
     String dayLabel = "";
     switch (day) {
       case OpenTimeDay.monday:
@@ -152,7 +186,11 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     }
 
     if (openTimes.isEmpty) {
-      return OpenTime(day: dayLabel, time: "Geschlossen");
+      if (day == OpenTimeDay.publicHoliday) {
+        return null;
+      } else {
+        return OpenTime(day: dayLabel, time: "Geschlossen");
+      }
     }
 
     DateFormat timeFormat = DateFormat('HH:mm');

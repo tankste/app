@@ -7,7 +7,7 @@ import 'package:station/repository/dto/price_dto.dart';
 import 'package:station/repository/dto/station_dto.dart';
 
 abstract class PriceRepository {
-  Stream<Result<PriceModel, Exception>> get(int id);
+  Stream<Result<List<PriceModel>, Exception>> list(int stationId);
 }
 
 class TanksteWebPriceRepository extends PriceRepository {
@@ -21,24 +21,26 @@ class TanksteWebPriceRepository extends PriceRepository {
   TanksteWebPriceRepository._internal();
 
   @override
-  Stream<Result<PriceModel, Exception>> get(int stationId) {
+  Stream<Result<List<PriceModel>, Exception>> list(int stationId) {
     //TODO: cache stream
-    return _getAsync(stationId).asStream();
+    return _listAsync(stationId).asStream();
   }
 
-  Future<Result<PriceModel, Exception>> _getAsync(int stationId) async {
+  Future<Result<List<PriceModel>, Exception>> _listAsync(int stationId) async {
     try {
-      Uri url = Uri.parse('http://10.0.2.2:4000/stations/$stationId/price');
+      Uri url = Uri.parse('http://10.0.2.2:4000/stations/$stationId/prices');
       http.Response response = await http
           .get(url); //TODO: add `, headers: await _apiRepository.getHeaders()`
       if (response.statusCode >= 200 && response.statusCode <= 299) {
-        Map<String, dynamic> jsonResponse =
-            json.decode(response.body) as Map<String, dynamic>;
+        List<dynamic> jsonResponse =
+        json.decode(response.body) as List<dynamic>;
 
-        PriceDto priceDto = PriceDto.fromJson(jsonResponse);
-        PriceModel price = priceDto.toModel();
+        List<PriceModel> prices = jsonResponse
+            .map((e) => PriceDto.fromJson(e))
+            .map((dto) => dto.toModel())
+            .toList();
 
-        return Result.success(price);
+        return Result.success(prices);
       } else {
         return Result.error(Exception("API Error!\n\n${response.body}"));
       }
