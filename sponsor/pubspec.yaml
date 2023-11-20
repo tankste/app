@@ -1,0 +1,38 @@
+name: sponsor
+publish_to: none
+
+environment:
+  sdk: ">=2.19.6 <3.0.0"
+  flutter: ">=3.7.12"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # BLoC - https://pub.dev/packages/flutter_bloc
+  flutter_bloc: ^8.0.1
+
+  # Rx Dart - https://pub.dev/packages/rxdart
+  rxdart: ^0.27.7
+
+  # HTTP - https://pub.dev/packages/http
+  http: ^0.13.4
+
+  # Multiple Result - https://pub.dev/packages/multiple_result
+  multiple_result: ^4.0.0
+
+  # Intl - https://pub.dev/packages/intl
+  intl: ^0.18.1
+
+  # Collection - https://pub.dev/packages/collection
+  collection: ^1.17.0
+
+  # Sync Fusion Gauges - https://pub.dev/packages/syncfusion_flutter_gauges
+  syncfusion_flutter_gauges: ^23.1.44
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:

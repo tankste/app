@@ -5,6 +5,7 @@ import 'package:settings/ui/map/map_destination_item.dart';
 import 'package:settings/ui/settings/settings_card.dart';
 import 'package:settings/ui/theme/theme_item.dart';
 import 'package:settings/ui/version/version_item.dart';
+import 'package:sponsor/ui/overview/overview_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -33,6 +34,16 @@ class SettingsPage extends StatelessWidget {
       const SettingsCard(
           title: "App", items: [ThemeItem(), MapDestinationItem()]),
       SettingsCard(title: "Unterstütze uns", items: [
+        ListTile(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => OverviewPage()));
+          },
+          minLeadingWidth: 8,
+          leading: const Icon(Icons.monetization_on),
+          title: Text("Spenden"),
+          subtitle: Text("Unterstütze tankste! durch eine kleine Spende."),
+        ),
         ListTile(
             onTap: () {
               _openUrl("https://github.com/tankste");
