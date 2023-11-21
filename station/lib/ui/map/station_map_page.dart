@@ -32,7 +32,6 @@ class StationMapPageState extends State<StationMapPage> {
   }
 
   Widget _buildBody(BuildContext context, StationMapState state) {
-    print("state: $state");
     return Stack(children: <Widget>[
       GenericMap(
         initialCameraPosition: initialCameraPosition,

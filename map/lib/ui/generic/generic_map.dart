@@ -148,6 +148,14 @@ class Marker {
   Marker(
       {required this.id, required this.latLng, required this.icon, this.onTap});
 
+  Marker withoutIcon() {
+    return Marker(
+        id: id,
+        latLng: latLng,
+        icon: null,
+        onTap: onTap);
+  }
+
   @override
   String toString() {
     return 'Marker{id: $id, latLng: $latLng, icon: $icon, onTap: $onTap}';

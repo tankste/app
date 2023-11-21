@@ -41,7 +41,7 @@ class StationMapCubit extends Cubit<StationMapState>
         _position = CameraPosition(
             latLng: LatLng(position.latitude, position.longitude), zoom: 12.5);
         emit(LoadingStationMapState(cameraPosition: _position));
-        _fetchStations(true);
+        _fetchStations(_position, true);
       }
     });
 
@@ -55,7 +55,7 @@ class StationMapCubit extends Cubit<StationMapState>
     _filter = Filter(gas);
   }
 
-  void _fetchStations(bool force) {
+  void _fetchStations(CameraPosition position, bool force) {
     // Require loaded filter
     if (_filter == null) {
       return;
@@ -67,26 +67,26 @@ class StationMapCubit extends Cubit<StationMapState>
     }
 
     // Zoomed out too far, skip station loading
-    if (_position.zoom < 10.5) {
+    if (position.zoom < 10.5) {
       if (state is MarkersStationMapState) {
         emit(MarkersStationMapState(
             stationMarkers: {},
             isShowingLabelMarkers: false,
             filter: _filter!,
-            cameraPosition: _position));
+            cameraPosition: position));
       }
 
       return;
     }
-    bool showLabelMarkers = _position.zoom >= 12;
+    bool showLabelMarkers = position.zoom >= 12;
 
     // Check for minimum map movement of 8 kilometers
     if (!force && _lastRequestPosition != null) {
       double movementDistance = Geolocator.distanceBetween(
           _lastRequestPosition!.latLng.latitude,
           _lastRequestPosition!.latLng.longitude,
-          _position.latLng.latitude,
-          _position.latLng.longitude);
+          position.latLng.latitude,
+          position.latLng.longitude);
 
       if (movementDistance < 1000) {
         if (state is MarkersStationMapState) {
@@ -114,7 +114,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
           result.when((markers) {
             _lastRequestTime = DateTime.now();
-            _lastRequestPosition = _position;
+            _lastRequestPosition = position;
 
             Future.wait(markers.map((marker) async => MapEntry(
                     marker, await _genMarkerBitmap(marker, showLabelMarkers))))
@@ -127,19 +127,19 @@ class StationMapCubit extends Cubit<StationMapState>
                 for (var entry in entries) entry.key: entry.value
               };
               emit(MarkersStationMapState(
-                  cameraPosition: _position,
+                  cameraPosition: position,
                   stationMarkers: markers,
                   isShowingLabelMarkers: showLabelMarkers,
                   filter: _filter!));
             });
           },
               (error) => emit(ErrorStationMapState(
-                  cameraPosition: _position, errorDetails: error.toString())));
+                  cameraPosition: position, errorDetails: error.toString())));
         });
   }
 
   void onRetryClicked() {
-    _fetchGasFilter().then((_) => _fetchStations(true));
+    _fetchGasFilter().then((_) => _fetchStations(_position, true));
   }
 
   void onMoveToLocationClicked() {
@@ -158,7 +158,7 @@ class StationMapCubit extends Cubit<StationMapState>
       if (position != null) {
         _position = CameraPosition(
             latLng: LatLng(position.latitude, position.longitude), zoom: 12.5);
-        _fetchStations(true);
+        _fetchStations(_position, true);
       }
     });
   }
@@ -175,7 +175,7 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onCameraIdle() {
-    _fetchStations(false);
+    _fetchStations(_position, false);
   }
 
   void onCameraPositionChanged(
@@ -200,7 +200,7 @@ class StationMapCubit extends Cubit<StationMapState>
           filter: filter));
     }
 
-    _fetchStations(true);
+    _fetchStations(_position, true);
   }
 
   void onCancelFilterSettings() {
@@ -271,7 +271,7 @@ class StationMapCubit extends Cubit<StationMapState>
         DateTime thresholdDate =
             _lastRequestTime!.add(_refreshAfterBackgroundDuration);
         if (DateTime.now().isAfter(thresholdDate)) {
-          _fetchStations(true);
+          _fetchStations(_position, true);
         }
       }
     }
@@ -383,7 +383,7 @@ class StationMapCubit extends Cubit<StationMapState>
       price = null;
     }
 
-    if (price == null) {
+    if (price == null || price == 0) {
       priceText = "-,--\u{207B}";
     } else {
       priceText = price.toStringAsFixed(3).replaceAll('.', ',');

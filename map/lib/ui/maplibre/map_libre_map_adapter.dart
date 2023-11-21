@@ -41,7 +41,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onCameraIdle: () {
+      onMapIdle: () {
         map_libre_maps.MaplibreMapController? mapController = _mapController;
         if (mapController == null) {
           return;
@@ -141,7 +141,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
                 marker.latLng.latitude, marker.latLng.longitude),
             iconImage: "${marker.id}-image",
           ),
-          {"marker": marker},
+          {"marker": marker.withoutIcon()},
         );
       }).then((symbol) => _symbols.add(symbol));
     }
