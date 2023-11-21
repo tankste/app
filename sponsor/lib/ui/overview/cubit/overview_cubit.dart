@@ -27,8 +27,7 @@ class OverviewCubit extends Cubit<OverviewState> {
             gaugePercentage: balance.spent > 0
                 ? (balance.earned / balance.spent * 100).round()
                 : 0,
-            earned: balance.earned,
-            spent: balance.spent);
+            balance: "${balance.earned.round()} € von ${balance.spent.round()} €");
       }, (error) => ErrorOverviewState(errorDetails: error.toString())));
     });
   }

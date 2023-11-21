@@ -63,125 +63,275 @@ class OverviewPage extends StatelessWidget {
         Spacer(),
       ]));
     } else if (state is BalanceOverviewState) {
-      return Column(children: [
-        SfRadialGauge(
-          axes: <RadialAxis>[
-            RadialAxis(
-                startAngle: 180,
-                endAngle: 0,
-                showTicks: false,
-                showAxisLine: false,
-                showLabels: false,
-                canScaleToFit: true,
-                ranges: <GaugeRange>[
-                  GaugeRange(
-                      startValue: 0,
-                      endValue: 10,
-                      startWidth: 10,
-                      endWidth: 12.5,
-                      color: Colors.red),
-                  GaugeRange(
-                      startValue: 12,
-                      endValue: 20,
-                      startWidth: 12.5,
-                      endWidth: 15,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 22,
-                      endValue: 30,
-                      startWidth: 15,
-                      endWidth: 17.5,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 32,
-                      endValue: 40,
-                      startWidth: 17.5,
-                      endWidth: 20,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 42,
-                      endValue: 50,
-                      startWidth: 20,
-                      endWidth: 22.5,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 52,
-                      endValue: 60,
-                      startWidth: 22.5,
-                      endWidth: 25,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 62,
-                      endValue: 70,
-                      startWidth: 25,
-                      endWidth: 27.5,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 72,
-                      endValue: 80,
-                      startWidth: 27.5,
-                      endWidth: 30,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 82,
-                      endValue: 90,
-                      startWidth: 30,
-                      endWidth: 32.5,
-                      color: Theme.of(context).primaryColor),
-                  GaugeRange(
-                      startValue: 92,
-                      endValue: 100,
-                      startWidth: 32.5,
-                      endWidth: 35,
-                      color: Theme.of(context).primaryColor)
-                ],
-                pointers: <GaugePointer>[
-                  NeedlePointer(
-                      value: state.gaugePercentage.toDouble(),
-                      needleEndWidth: 7,
-                      needleStartWidth: 1,
-                      needleColor: Colors.red,
-                      needleLength: 0.75,
-                      knobStyle:
-                          KnobStyle(color: Colors.black, knobRadius: 0.09))
-                ],
-                annotations: <GaugeAnnotation>[
-                  GaugeAnnotation(
-                      widget: Container(
-                          width: 30.00,
-                          height: 30.00,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: ExactAssetImage('images/fuel.jpg'),
-                              fit: BoxFit.fill,
-                            ),
-                          )),
-                      angle: 270,
-                      positionFactor: 0.35),
-                  GaugeAnnotation(
-                      widget: Text(
-                        'E',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Times'),
-                      ),
-                      angle: 175,
-                      positionFactor: 1),
-                  GaugeAnnotation(
-                      widget: Text(
-                        'F',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Times'),
-                      ),
-                      angle: 5,
-                      positionFactor: 0.95),
-                ])
-          ],
-        ),
-      ]);
+      return SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+            Container(
+                height: 240,
+                child: SfRadialGauge(
+                  axes: <RadialAxis>[
+                    RadialAxis(
+                        startAngle: 180,
+                        endAngle: 0,
+                        showTicks: false,
+                        showAxisLine: false,
+                        showLabels: false,
+                        canScaleToFit: true,
+                        ranges: <GaugeRange>[
+                          GaugeRange(
+                              startValue: 0,
+                              endValue: 10,
+                              startWidth: 10,
+                              endWidth: 12.5,
+                              color: Colors.red),
+                          GaugeRange(
+                              startValue: 12,
+                              endValue: 20,
+                              startWidth: 12.5,
+                              endWidth: 15,
+                              color: Color(0xFFdecbe3)),
+                          GaugeRange(
+                              startValue: 22,
+                              endValue: 30,
+                              startWidth: 15,
+                              endWidth: 17.5,
+                              color: Color(0xFFd3bada)),
+                          GaugeRange(
+                              startValue: 32,
+                              endValue: 40,
+                              startWidth: 17.5,
+                              endWidth: 20,
+                              color: Color(0xFFc8a9d1)),
+                          GaugeRange(
+                              startValue: 42,
+                              endValue: 50,
+                              startWidth: 20,
+                              endWidth: 22.5,
+                              color: Color(0xFFbd97c8)),
+                          GaugeRange(
+                              startValue: 52,
+                              endValue: 60,
+                              startWidth: 22.5,
+                              endWidth: 25,
+                              color: Color(0xFFb286bf)),
+                          GaugeRange(
+                              startValue: 62,
+                              endValue: 70,
+                              startWidth: 25,
+                              endWidth: 27.5,
+                              color: Color(0xFFa775b6)),
+                          GaugeRange(
+                              startValue: 72,
+                              endValue: 80,
+                              startWidth: 27.5,
+                              endWidth: 30,
+                              color: Color(0xFF9c64ad)),
+                          GaugeRange(
+                              startValue: 82,
+                              endValue: 90,
+                              startWidth: 30,
+                              endWidth: 32.5,
+                              color: Color(0xFF9253a4)),
+                          GaugeRange(
+                              startValue: 92,
+                              endValue: 100,
+                              startWidth: 32.5,
+                              endWidth: 35,
+                              color: Theme.of(context).primaryColor)
+                        ],
+                        pointers: <GaugePointer>[
+                          NeedlePointer(
+                              value: state.gaugePercentage.toDouble(),
+                              needleEndWidth: 7,
+                              needleStartWidth: 1,
+                              needleColor: Colors.red,
+                              needleLength: 0.75,
+                              knobStyle: KnobStyle(
+                                  color: Colors.black, knobRadius: 0.09))
+                        ],
+                        annotations: <GaugeAnnotation>[
+                          GaugeAnnotation(
+                              widget: Image.asset(
+                                color: Theme.of(context).primaryColor,
+                                'assets/images/logo_foreground.png',
+                                package: 'core',
+                                width: 30,
+                                height: 30,
+                              ),
+                              angle: 270,
+                              positionFactor: 0.35),
+                          GaugeAnnotation(
+                              widget: Text(
+                                'E',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Times'),
+                              ),
+                              angle: 175,
+                              positionFactor: 1),
+                          GaugeAnnotation(
+                              widget: Text(
+                                'F',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Times'),
+                              ),
+                              angle: 5,
+                              positionFactor: 0.95),
+                        ])
+                  ],
+                )),
+            Center(
+                child: Padding(
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: Text(state.balance,
+                        style: Theme.of(context).textTheme.bodySmall))),
+            Padding(
+              padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+              child: Text("tankste! braucht dich!",
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.titleLarge),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+              child: Text(
+                  "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft werbefrei!",
+                  style: Theme.of(context).textTheme.titleMedium),
+            ),
+            Padding(
+                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                child: Card(
+                    child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("12 €",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge),
+                                    Padding(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: Text("/ Jährlich",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall))
+                                  ]),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 4),
+                                  child: Text(
+                                      "Unterstütze tankste! mit einer jährlichen Zahlung von 12 €",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall))
+                            ])))),
+            Padding(
+                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                child: Card(
+                    child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("2 €",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge),
+                                    Padding(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: Text("/ Monatlich",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall))
+                                  ]),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 4),
+                                  child: Text(
+                                      "Unterstütze tankste! mit einer monatlichen Zahlung von 2 €",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall))
+                            ])))),
+            Padding(
+                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                child: Card(
+                    child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("10 €",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge),
+                                    Padding(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: Text("/ Einmalig",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall))
+                                  ]),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 4),
+                                  child: Text(
+                                      "Unterstütze tankste! mit einer einmaligen Zahlung von 10 €",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall))
+                            ])))),
+            Padding(
+                padding: EdgeInsets.only(left: 8, right: 8),
+                child: TextButton(
+                    onPressed: () {},
+                    child: Text("Weitere Möglichkeiten anzeigen"))),
+            Padding(
+              padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+              child: Text("Sponsoren",
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.titleLarge),
+            ),
+            Padding(
+                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(child: Text("F")),
+                    Expanded(
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Fabi755",
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
+                                Text("Tolle App!! Danke!",
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ],
+                            ))),
+                    Text("25 €", style: Theme.of(context).textTheme.bodyLarge)
+                  ],
+                )),
+            Center(
+                child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text("Danke an jede/n einzelnen Unterstützer/in! 💜💜💜💜",
+                        style: Theme.of(context).textTheme.bodySmall))),
+          ]));
     } else {
       return Container();
     }

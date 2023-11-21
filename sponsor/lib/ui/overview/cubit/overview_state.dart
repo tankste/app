@@ -4,10 +4,9 @@ class LoadingOverviewState extends OverviewState {}
 
 class BalanceOverviewState extends OverviewState {
   int gaugePercentage;
-  double earned;
-  double spent;
+  String balance;
 
-  BalanceOverviewState({required this.gaugePercentage, required this.earned, required this.spent});
+  BalanceOverviewState({required this.gaugePercentage, required this.balance});
 }
 
 class ErrorOverviewState extends OverviewState {

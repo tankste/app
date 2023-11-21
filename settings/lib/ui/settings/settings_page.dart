@@ -40,18 +40,18 @@ class SettingsPage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => OverviewPage()));
           },
           minLeadingWidth: 8,
-          leading: const Icon(Icons.monetization_on),
+          leading: const Icon(Icons.star),
           title: Text("Spenden"),
-          subtitle: Text("Unterstütze tankste! durch eine kleine Spende."),
+          subtitle: Text("Werde tankste! Sponsor"),
         ),
         ListTile(
             onTap: () {
-              _openUrl("https://github.com/tankste");
+              _openUrl("https://github.com/tankste/app");
             },
             minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.github),
-            title: const Text("Github"),
-            subtitle: const Text("@tankste")),
+            title: const Text("Source Code"),
+            subtitle: const Text("Fork me on Github")),
       ]),
       SettingsCard(title: "Kontakt", items: [
         ListTile(
