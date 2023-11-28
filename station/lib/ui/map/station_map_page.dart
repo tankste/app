@@ -9,10 +9,15 @@ import 'package:station/ui/map/cubit/station_map_cubit.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
 
-class StationMapPage extends StatelessWidget {
-  MapController? _mapController;
+class StationMapPage extends StatefulWidget {
+  const StationMapPage({super.key});
 
-  StationMapPage({super.key});
+  @override
+  State<StationMapPage> createState() => StationMapPageState();
+}
+
+class StationMapPageState extends State<StationMapPage> {
+  MapController? _mapController;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +37,20 @@ class StationMapPage extends StatelessWidget {
         initialCameraPosition: initialCameraPosition,
         onMapCreated: (mapController) {
           mapController.moveCameraToPosition(state.cameraPosition);
-          _mapController = mapController;
+          setState(() {
+            _mapController = mapController;
+          });
         },
         onCameraIdle: () {
           context.read<StationMapCubit>().onCameraIdle();
         },
-        onCameraMove: (position) {
-          context.read<StationMapCubit>().onCameraPositionChanged(position);
+        onCameraMove: (position) async {
+          if (_mapController == null) {
+            return;
+          }
+
+          context.read<StationMapCubit>().onCameraPositionChanged(
+              position, await _mapController!.getVisibleBounds());
         },
         markers:
             state is MarkersStationMapState ? _genMarkers(context, state) : {},
@@ -183,7 +195,7 @@ class StationMapPage extends StatelessWidget {
     List<Marker> markers = state.stationMarkers.entries
         .map((entry) => Marker(
             id:
-                "${entry.key.id}#${Object.hash(entry.key.prices.getFirstPrice(), entry.key.prices.getFirstPriceRange(), state.isShowingLabelMarkers ? "label" : "dot")}",
+                "${entry.key.id}#${Object.hash(entry.key.e5Price, entry.key.e5PriceState, entry.key.e10Price, entry.key.e10PriceState, entry.key.dieselPrice, entry.key.dieselPriceState, state.isShowingLabelMarkers ? "label" : "dot")}",
             latLng: LatLng(
                 entry.key.coordinate.latitude, entry.key.coordinate.longitude),
             onTap: () {
@@ -192,7 +204,7 @@ class StationMapPage extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => StationDetailsPage(
                             stationId: entry.key.id,
-                            stationName: entry.key.label,
+                            markerLabel: entry.key.label,
                             activeGasPriceFilter: state.filter.gas,
                           )));
             },

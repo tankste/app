@@ -1,6 +1,9 @@
 {
   "tankste": {
-    "useMapLibreMap": true
+    "useMapLibreMap": true,
+    "station": {
+      "apiBaseUrl": "http://stations.localhost"
+    }
   },
   "google": {
     "mapsKey": ""

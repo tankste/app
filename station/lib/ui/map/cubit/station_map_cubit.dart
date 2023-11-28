@@ -1,6 +1,4 @@
 import 'dart:ui' as ui;
-import 'package:core/config/config_repository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,13 +6,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:map/ui/generic/generic_map.dart';
 import 'package:navigation/coordinate_model.dart';
-import 'package:settings/repository/developer_settings_repository.dart';
-import 'package:station/repository/station_repository.dart';
+import 'package:station/di/station_module_factory.dart';
+import 'package:station/model/marker_model.dart';
+import 'package:station/repository/marker_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:station/station_model.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
-import 'package:station/usecase/get_stations_use_case.dart';
 
 final CameraPosition initialCameraPosition =
     CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
@@ -22,30 +19,29 @@ final CameraPosition initialCameraPosition =
 //TODO: continue refactoring
 class StationMapCubit extends Cubit<StationMapState>
     with WidgetsBindingObserver {
-  final GetStationsUseCase _getStationsUseCase = GetStationsUseCaseImpl(
-      TankerkoenigStationRepository(FileConfigRepository()),
-      LocalDeveloperSettingsRepository());
+  final MarkerRepository _markerRepository =
+      StationModuleFactory.createMarkerRepository();
 
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
   CameraPosition _position = initialCameraPosition;
   CameraPosition? _lastRequestPosition;
+  LatLngBounds? _visibleBounds;
   Filter? _filter;
   DateTime? _lastRequestTime;
+  Future? _stationRequest;
 
   StationMapCubit()
       : super(LoadingStationMapState(cameraPosition: initialCameraPosition)) {
     WidgetsBinding.instance.addObserver(this);
 
-    _fetchGasFilter().then((_) => _getOwnPosition()).then((position) {
-      if (position != null) {
-        _position = CameraPosition(
-            latLng: LatLng(position.latitude, position.longitude), zoom: 12.5);
-        _fetchStations(true);
-      }
-    });
+    _init();
 
     _requestReviewIfNeeded();
+  }
+
+  void _init() {
+    _fetchGasFilter().then((_) => _moveToOwnLocation());
   }
 
   //TODO: outsource to repository
@@ -53,84 +49,114 @@ class StationMapCubit extends Cubit<StationMapState>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gas = prefs.getString("filter_gas") ?? "e5";
     _filter = Filter(gas);
-    _fetchStations(true);
   }
 
-  void _fetchStations(bool force) {
+  void _fetchStations(
+      CameraPosition position, LatLngBounds visibleBounds, bool force) {
+    StationMapState state = this.state;
+
     // Require loaded filter
     if (_filter == null) {
+      if (state is MarkersStationMapState) {
+        emit(MarkersStationMapState(
+            cameraPosition: position,
+            stationMarkers: state.stationMarkers,
+            isShowingLabelMarkers: state.isShowingLabelMarkers,
+            filter: state.filter));
+      }
       return;
     }
 
     // Zoomed out too far, skip station loading
-    if (_position.zoom < 10.5) {
+    if (position.zoom < 10.5) {
       if (state is MarkersStationMapState) {
-        emit(state as MarkersStationMapState);
+        emit(MarkersStationMapState(
+            stationMarkers: {},
+            isShowingLabelMarkers: false,
+            filter: _filter!,
+            cameraPosition: position));
       }
-
       return;
     }
-    bool showLabelMarkers = _position.zoom >= 12;
+    bool showLabelMarkers = position.zoom >= 12;
 
-    // Check for minimum map movement of 8 kilometers
     if (!force && _lastRequestPosition != null) {
       double movementDistance = Geolocator.distanceBetween(
           _lastRequestPosition!.latLng.latitude,
           _lastRequestPosition!.latLng.longitude,
-          _position.latLng.latitude,
-          _position.latLng.longitude);
-      if (movementDistance < 8000) {
+          position.latLng.latitude,
+          position.latLng.longitude);
+
+      if (movementDistance < 300) {
         if (state is MarkersStationMapState) {
-          emit(state as MarkersStationMapState);
+          emit(MarkersStationMapState(
+              cameraPosition: position,
+              stationMarkers: state.stationMarkers,
+              isShowingLabelMarkers: state.isShowingLabelMarkers,
+              filter: state.filter));
         }
         return;
       }
     }
 
-    _getStationsUseCase
-        .invoke(
-            _filter!.gas,
-            CoordinateModel(
-                _position.latLng.latitude, _position.latLng.longitude))
-        .then((stations) {
-      if (isClosed) {
-        return;
-      }
+    _stationRequest?.ignore();
+    _stationRequest = _markerRepository
+        .list([
+          CoordinateModel(
+              latitude: visibleBounds.southWest.latitude,
+              longitude: visibleBounds.southWest.longitude),
+          CoordinateModel(
+              latitude: visibleBounds.northEast.latitude,
+              longitude: visibleBounds.northEast.longitude),
+        ])
+        .first //TODO: use stream benefits
+        .then((result) {
+          if (isClosed) {
+            return;
+          }
 
-      _lastRequestTime = DateTime.now();
-      _lastRequestPosition = _position;
+          result.when((markers) {
+            Future.wait(markers.map((marker) async => MapEntry(
+                    marker, await _genMarkerBitmap(marker, showLabelMarkers))))
+                .then((entries) {
+              if (isClosed) {
+                return;
+              }
 
-      Future.wait(stations.map((station) async => MapEntry(
-              station, await _genMarkerBitmap(station, showLabelMarkers))))
-          .then((entries) {
-        if (isClosed) {
-          return;
-        }
+              Map<MarkerModel, ByteData> markers = {
+                for (var entry in entries) entry.key: entry.value
+              };
 
-        Map<StationModel, ByteData> markers = {
-          for (var entry in entries) entry.key: entry.value
-        };
-        emit(MarkersStationMapState(
-            cameraPosition: _position,
-            stationMarkers: markers,
-            isShowingLabelMarkers: showLabelMarkers,
-            filter: _filter!));
-      });
-    }).catchError((error) {
-      if (isClosed) {
-        return;
-      }
+              _lastRequestTime = DateTime.now();
+              _lastRequestPosition = position;
 
-      emit(ErrorStationMapState(
-          cameraPosition: _position, errorDetails: error.toString()));
-    });
+              emit(MarkersStationMapState(
+                  cameraPosition: position,
+                  stationMarkers: markers,
+                  isShowingLabelMarkers: showLabelMarkers,
+                  filter: _filter!));
+            });
+          },
+              (error) => emit(ErrorStationMapState(
+                  cameraPosition: position, errorDetails: error.toString())));
+        });
   }
 
   void onRetryClicked() {
-    _fetchGasFilter();
+    if (_visibleBounds != null) {
+      _fetchStations(_position, _visibleBounds!, true);
+    } else if (_filter != null) {
+      _moveToOwnLocation();
+    } else {
+      _init();
+    }
   }
 
   void onMoveToLocationClicked() {
+    _moveToOwnLocation();
+  }
+
+  void _moveToOwnLocation() {
     StationMapState state = this.state;
     if (state is MarkersStationMapState) {
       emit(LoadingMarkersStationMapState(
@@ -146,7 +172,17 @@ class StationMapCubit extends Cubit<StationMapState>
       if (position != null) {
         _position = CameraPosition(
             latLng: LatLng(position.latitude, position.longitude), zoom: 12.5);
-        _fetchStations(true);
+
+        // Stations fetched automatically after map has moved
+        if (state is MarkersStationMapState) {
+          emit(LoadingMarkersStationMapState(
+              cameraPosition: _position,
+              stationMarkers: state.stationMarkers,
+              isShowingLabelMarkers: state.isShowingLabelMarkers,
+              filter: state.filter));
+        } else {
+          emit(LoadingStationMapState(cameraPosition: _position));
+        }
       }
     });
   }
@@ -163,11 +199,15 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onCameraIdle() {
-    _fetchStations(false);
+    if (_visibleBounds != null) {
+      _fetchStations(_position, _visibleBounds!, false);
+    }
   }
 
-  void onCameraPositionChanged(CameraPosition cameraPosition) {
+  void onCameraPositionChanged(
+      CameraPosition cameraPosition, LatLngBounds? bounds) {
     _position = cameraPosition;
+    _visibleBounds = bounds;
   }
 
   void onFilterSaved(Filter filter) {
@@ -186,7 +226,9 @@ class StationMapCubit extends Cubit<StationMapState>
           filter: filter));
     }
 
-    _fetchStations(true);
+    if (_visibleBounds != null) {
+      _fetchStations(_position, _visibleBounds!, true);
+    }
   }
 
   void onCancelFilterSettings() {
@@ -257,34 +299,68 @@ class StationMapCubit extends Cubit<StationMapState>
         DateTime thresholdDate =
             _lastRequestTime!.add(_refreshAfterBackgroundDuration);
         if (DateTime.now().isAfter(thresholdDate)) {
-          _fetchStations(true);
+          if (_visibleBounds != null) {
+            _fetchStations(_position, _visibleBounds!, true);
+          }
         }
       }
     }
   }
 
   Future<ByteData> _genMarkerBitmap(
-      StationModel station, bool isShowingLabelMarkers) {
+      MarkerModel marker, bool isShowingLabelMarkers) {
     if (isShowingLabelMarkers) {
-      return _genLabelMarkerBitmap(station);
+      return _genLabelMarkerBitmap(marker);
     } else {
-      return _genDotMarkerBitmap(station);
+      return _genDotMarkerBitmap(marker);
     }
   }
 
-  Future<ByteData> _genDotMarkerBitmap(StationModel station) async {
+  Future<ByteData> _genDotMarkerBitmap(MarkerModel marker) async {
     String path;
 
-    if (!station.isOpen) {
-      path = 'assets/images/markers/grey.png';
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
-      path = 'assets/images/markers/green.png';
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.normal) {
-      path = 'assets/images/markers/orange.png';
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.expensive) {
-      path = 'assets/images/markers/red.png';
+    if (_filter?.gas == "e5") {
+      switch (marker.e5PriceState) {
+        case PriceState.expensive:
+          path = 'assets/images/markers/red.png';
+          break;
+        case PriceState.medium:
+          path = 'assets/images/markers/orange.png';
+          break;
+        case PriceState.cheap:
+          path = 'assets/images/markers/green.png';
+          break;
+        default:
+          path = 'assets/images/markers/grey.png';
+      }
+    } else if (_filter?.gas == "e10") {
+      switch (marker.e10PriceState) {
+        case PriceState.expensive:
+          path = 'assets/images/markers/red.png';
+          break;
+        case PriceState.medium:
+          path = 'assets/images/markers/orange.png';
+          break;
+        case PriceState.cheap:
+          path = 'assets/images/markers/green.png';
+          break;
+        default:
+          path = 'assets/images/markers/grey.png';
+      }
+    } else if (_filter?.gas == "diesel") {
+      switch (marker.dieselPriceState) {
+        case PriceState.expensive:
+          path = 'assets/images/markers/red.png';
+          break;
+        case PriceState.medium:
+          path = 'assets/images/markers/orange.png';
+          break;
+        case PriceState.cheap:
+          path = 'assets/images/markers/green.png';
+          break;
+        default:
+          path = 'assets/images/markers/grey.png';
+      }
     } else {
       path = 'assets/images/markers/grey.png';
     }
@@ -296,7 +372,7 @@ class StationMapCubit extends Cubit<StationMapState>
     return await rootBundle.load(resolutionName);
   }
 
-  Future<ByteData> _genLabelMarkerBitmap(StationModel station) async {
+  Future<ByteData> _genLabelMarkerBitmap(MarkerModel marker) async {
     double ratio = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
         .devicePixelRatio;
 
@@ -319,15 +395,25 @@ class StationMapCubit extends Cubit<StationMapState>
                 color: Colors.white70,
                 fontSize: brandFontSize,
               ))
-              ..addText(station.label.length > 8
-                  ? "${station.label.substring(0, 5)}..."
-                  : station.label))
+              ..addText(marker.label.length > 8
+                  ? "${marker.label.substring(0, 5)}..."
+                  : marker.label))
             .build();
 
     String priceText;
 
-    double price = station.prices.getFirstPrice() ?? 0.0;
-    if (!station.isOpen || price == 0.0) {
+    double? price;
+    if (_filter?.gas == "e5") {
+      price = marker.e5Price;
+    } else if (_filter?.gas == "e10") {
+      price = marker.e10Price;
+    } else if (_filter?.gas == "diesel") {
+      price = marker.dieselPrice;
+    } else {
+      price = null;
+    }
+
+    if (price == null || price == 0) {
       priceText = "-,--\u{207B}";
     } else {
       priceText = price.toStringAsFixed(3).replaceAll('.', ',');
@@ -363,16 +449,48 @@ class StationMapCubit extends Cubit<StationMapState>
 
     // Create background rect
     final backgroundPaint = Paint();
-    if (!station.isOpen) {
-      backgroundPaint.color = Colors.grey;
-    } else if (station.prices.getFirstPriceRange() == StationPriceRange.cheap) {
-      backgroundPaint.color = Colors.green;
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.normal) {
-      backgroundPaint.color = Colors.orange;
-    } else if (station.prices.getFirstPriceRange() ==
-        StationPriceRange.expensive) {
-      backgroundPaint.color = Colors.red;
+    if (_filter?.gas == "e5") {
+      switch (marker.e5PriceState) {
+        case PriceState.expensive:
+          backgroundPaint.color = Colors.red;
+          break;
+        case PriceState.medium:
+          backgroundPaint.color = Colors.orange;
+          break;
+        case PriceState.cheap:
+          backgroundPaint.color = Colors.green;
+          break;
+        default:
+          backgroundPaint.color = Colors.grey;
+      }
+    } else if (_filter?.gas == "e10") {
+      switch (marker.e10PriceState) {
+        case PriceState.expensive:
+          backgroundPaint.color = Colors.red;
+          break;
+        case PriceState.medium:
+          backgroundPaint.color = Colors.orange;
+          break;
+        case PriceState.cheap:
+          backgroundPaint.color = Colors.green;
+          break;
+        default:
+          backgroundPaint.color = Colors.grey;
+      }
+    } else if (_filter?.gas == "diesel") {
+      switch (marker.dieselPriceState) {
+        case PriceState.expensive:
+          backgroundPaint.color = Colors.red;
+          break;
+        case PriceState.medium:
+          backgroundPaint.color = Colors.orange;
+          break;
+        case PriceState.cheap:
+          backgroundPaint.color = Colors.green;
+          break;
+        default:
+          backgroundPaint.color = Colors.grey;
+      }
     } else {
       backgroundPaint.color = Colors.grey;
     }

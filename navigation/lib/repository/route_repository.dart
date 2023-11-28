@@ -1,5 +1,4 @@
 import 'package:core/config/config_repository.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:navigation/coordinate_model.dart';
 import 'dart:convert';
@@ -59,7 +58,7 @@ class GoogleMapsRouteRepository extends RouteRepository {
       int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
       lng += dlng;
       CoordinateModel p =
-          CoordinateModel((lat / 1E5).toDouble(), (lng / 1E5).toDouble());
+          CoordinateModel(latitude: (lat / 1E5).toDouble(), longitude: (lng / 1E5).toDouble());
       poly.add(p);
     }
     return poly;

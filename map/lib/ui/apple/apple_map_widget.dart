@@ -113,4 +113,13 @@ class AppleMapController extends MapController {
                 bounds.southWest.latitude, bounds.southWest.longitude)),
         padding));
   }
+
+  @override
+  Future<LatLngBounds> getVisibleBounds() {
+    return childController.getVisibleRegion().then((bounds) => LatLngBounds(
+        northEast:
+            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
+        southWest:
+            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
+  }
 }

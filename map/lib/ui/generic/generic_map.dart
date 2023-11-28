@@ -100,6 +100,11 @@ class CameraPosition {
   double zoom;
 
   CameraPosition({required this.latLng, required this.zoom});
+
+  @override
+  String toString() {
+    return 'CameraPosition{latLng: $latLng, zoom: $zoom}';
+  }
 }
 
 class LatLng {
@@ -107,6 +112,11 @@ class LatLng {
   double longitude;
 
   LatLng(this.latitude, this.longitude);
+
+  @override
+  String toString() {
+    return 'LatLng{latitude: $latitude, longitude: $longitude}';
+  }
 }
 
 class LatLngBounds {
@@ -114,12 +124,19 @@ class LatLngBounds {
   final LatLng southWest;
 
   LatLngBounds({required this.northEast, required this.southWest});
+
+  @override
+  String toString() {
+    return 'LatLngBounds{northEast: $northEast, southWest: $southWest}';
+  }
 }
 
 abstract class MapController {
   void moveCameraToPosition(CameraPosition position);
 
   void moveCameraToBounds(LatLngBounds bounds, double padding);
+
+  Future<LatLngBounds> getVisibleBounds();
 }
 
 class Marker {
@@ -130,6 +147,19 @@ class Marker {
 
   Marker(
       {required this.id, required this.latLng, required this.icon, this.onTap});
+
+  Marker withoutIcon() {
+    return Marker(
+        id: id,
+        latLng: latLng,
+        icon: null,
+        onTap: onTap);
+  }
+
+  @override
+  String toString() {
+    return 'Marker{id: $id, latLng: $latLng, icon: $icon, onTap: $onTap}';
+  }
 }
 
 class Polyline {
@@ -143,4 +173,9 @@ class Polyline {
       required this.points,
       required this.color,
       required this.width});
+
+  @override
+  String toString() {
+    return 'Polyline{id: $id, points: $points, color: $color, width: $width}';
+  }
 }

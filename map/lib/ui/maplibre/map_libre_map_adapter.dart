@@ -30,6 +30,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   final Set<map_libre_maps.Symbol> _symbols = <map_libre_maps.Symbol>{};
   final Set<map_libre_maps.Line> _lines = <map_libre_maps.Line>{};
   map_libre_maps.MaplibreMapController? _mapController;
+  bool _isStyleLoaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +41,26 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onCameraIdle: () {
+      onMapIdle: () {
+        map_libre_maps.MaplibreMapController? mapController = _mapController;
+        if (mapController == null) {
+          return;
+        }
+
         map_libre_maps.CameraPosition? cameraPosition =
             _mapController?.cameraPosition;
         if (cameraPosition == null) {
           return;
         }
 
-        widget.onCameraMove?.call(CameraPosition(
-            latLng: LatLng(cameraPosition.target.latitude,
-                cameraPosition.target.longitude),
-            zoom: cameraPosition.zoom));
-        widget.onCameraIdle?.call();
+        if (!mapController.isCameraMoving) {
+          widget.onCameraMove?.call(CameraPosition(
+              latLng: LatLng(cameraPosition.target.latitude,
+                  cameraPosition.target.longitude),
+              zoom: cameraPosition.zoom));
+
+          widget.onCameraIdle?.call();
+        }
       },
       styleString: Theme.of(context).brightness == Brightness.dark
           ? widget.styleUrlDark
@@ -59,9 +68,14 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       attributionButtonPosition:
           map_libre_maps.AttributionButtonPosition.BottomLeft,
       attributionButtonMargins: const Point(8, 8),
-      trackCameraPosition: false,
+      trackCameraPosition: true,
       compassEnabled: false,
       myLocationEnabled: true,
+      onStyleLoadedCallback: () {
+        _isStyleLoaded = true;
+        _updateMarkers();
+        _updatePolylines();
+      },
       myLocationTrackingMode: map_libre_maps.MyLocationTrackingMode.None,
     );
   }
@@ -109,6 +123,10 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       return;
     }
 
+    if (!_isStyleLoaded) {
+      return;
+    }
+
     // Remove current symbols
     mapController.removeSymbols(_symbols);
     _symbols.clear();
@@ -123,7 +141,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
                 marker.latLng.latitude, marker.latLng.longitude),
             iconImage: "${marker.id}-image",
           ),
-          {"marker": marker},
+          {"marker": marker.withoutIcon()},
         );
       }).then((symbol) => _symbols.add(symbol));
     }
@@ -135,10 +153,14 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       return;
     }
 
+    if (!_isStyleLoaded) {
+      return;
+    }
+
     // Remove current lines
     mapController.removeLines(_lines);
     _lines.clear();
-    print("widget.polylines: ${widget.polylines}");
+
     for (var polyline in widget.polylines) {
       mapController
           .addLine(map_libre_maps.LineOptions(
@@ -161,6 +183,15 @@ class MapLibreMapController extends MapController {
 
   @override
   void moveCameraToPosition(CameraPosition position) {
+    // Don't update to same position, to prevent endless looping
+    if (position.latLng.latitude ==
+            childController.cameraPosition?.target.latitude &&
+        position.latLng.longitude ==
+            childController.cameraPosition?.target.longitude &&
+        position.zoom == childController.cameraPosition?.zoom) {
+      return;
+    }
+
     childController.animateCamera(map_libre_maps.CameraUpdate.newLatLngZoom(
         map_libre_maps.LatLng(
             position.latLng.latitude, position.latLng.longitude),
@@ -179,5 +210,14 @@ class MapLibreMapController extends MapController {
         bottom: padding,
         left: padding,
         right: padding));
+  }
+
+  @override
+  Future<LatLngBounds> getVisibleBounds() {
+    return childController.getVisibleRegion().then((bounds) => LatLngBounds(
+        northEast:
+            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
+        southWest:
+            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
   }
 }

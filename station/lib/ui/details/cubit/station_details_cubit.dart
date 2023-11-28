@@ -1,28 +1,204 @@
-import 'package:core/config/config_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:station/di/station_module_factory.dart';
+import 'package:station/model/open_time.dart';
+import 'package:station/model/price_model.dart';
+import 'package:station/repository/open_time_repository.dart';
+import 'package:station/repository/price_repository.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/repository/station_repository.dart';
+import 'package:rxdart/streams.dart';
+import 'package:collection/collection.dart';
 
 class StationDetailsCubit extends Cubit<StationDetailsState> {
-  final String stationId;
+  final int stationId;
+  final String markerLabel;
 
   final StationRepository stationRepository =
-      TankerkoenigStationRepository(FileConfigRepository());
+      StationModuleFactory.createStationRepository();
 
-  StationDetailsCubit(this.stationId) : super(StationDetailsState.loading()) {
+  final PriceRepository priceRepository =
+      StationModuleFactory.createPriceRepository();
+
+  final OpenTimeRepository openTimeRepository =
+      StationModuleFactory.createOpenTimeRepository();
+
+  StationDetailsCubit(this.stationId, this.markerLabel)
+      : super(LoadingStationDetailsState(title: markerLabel)) {
     _fetchStation();
   }
 
   void _fetchStation() {
-    emit(StationDetailsState.loading());
+    emit(LoadingStationDetailsState(title: markerLabel));
 
-    stationRepository
-        .get(stationId)
-        .then((station) => emit(StationDetailsState.success(station)))
-        .catchError((error) => emit(StationDetailsState.failure(error)));
+    CombineLatestStream.combine3(stationRepository.get(stationId),
+            priceRepository.list(stationId), openTimeRepository.list(stationId),
+            (stationResult, priceResult, openTimesResult) {
+      return stationResult.when((station) {
+        return priceResult.when((prices) {
+          return openTimesResult.when((openTimes) {
+            return DetailStationDetailsState(
+                title: station.name.isNotEmpty ? station.name : station.brand,
+                coordinate: station.coordinate,
+                address:
+                    "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
+                prices: _genPricesList(prices),
+                openTimes: _genOpenTimeList(openTimes));
+          },
+              (error) => ErrorStationDetailsState(
+                  errorDetails: error.toString(), title: markerLabel));
+        },
+            (error) => ErrorStationDetailsState(
+                errorDetails: error.toString(), title: markerLabel));
+      },
+          (error) => ErrorStationDetailsState(
+              errorDetails: error.toString(), title: markerLabel));
+    })
+        .first //TODO: use stream benefits
+        .then((state) {
+      if (isClosed) {
+        return;
+      }
+
+      emit(state);
+    });
   }
 
   void onRetryClicked() {
     _fetchStation();
+  }
+
+  List<Price> _genPricesList(List<PriceModel> prices) {
+    List<Price?> items = [];
+
+    items.add(_genPriceItem(FuelType.e5, prices));
+    items.add(_genPriceItem(FuelType.e10, prices));
+    items.add(_genPriceItem(FuelType.diesel, prices));
+
+    return items.whereNotNull().toList();
+  }
+
+  //TODO: should show not available prices, or hide completely?
+  Price? _genPriceItem(FuelType fuelType, List<PriceModel> prices) {
+    if (prices.isEmpty) {
+      return null;
+    }
+
+    String fuelLabel = "";
+    switch (fuelType) {
+      case FuelType.e5:
+        fuelLabel = "Super E5";
+        break;
+      case FuelType.e10:
+        fuelLabel = "Super E10";
+        break;
+      case FuelType.diesel:
+        fuelLabel = "Diesel";
+        break;
+      default:
+        fuelLabel = "Unbekannt";
+    }
+
+    return Price(
+        fuel: fuelLabel,
+        price: _priceText(
+            prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ??
+                0));
+  }
+
+  String _priceText(double price) {
+    String priceText;
+    if (price == 0) {
+      priceText = "-,--\u{207B}";
+    } else {
+      priceText = price.toStringAsFixed(3).replaceAll('.', ',');
+    }
+
+    if (priceText.length == 5) {
+      priceText = priceText
+          .replaceFirst('0', '\u{2070}', 4)
+          .replaceFirst('1', '\u{00B9}', 4)
+          .replaceFirst('2', '\u{00B2}', 4)
+          .replaceFirst('3', '\u{00B3}', 4)
+          .replaceFirst('4', '\u{2074}', 4)
+          .replaceFirst('5', '\u{2075}', 4)
+          .replaceFirst('6', '\u{2076}', 4)
+          .replaceFirst('7', '\u{2077}', 4)
+          .replaceFirst('8', '\u{2078}', 4)
+          .replaceFirst('9', '\u{2079}', 4);
+    }
+
+    return "$priceText €";
+  }
+
+  List<OpenTime> _genOpenTimeList(List<OpenTimeModel> openTimes) {
+    List<OpenTime?> items = [];
+
+    items.add(_genOpenTimeItem(OpenTimeDay.monday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.monday).toList()));
+    items.add(_genOpenTimeItem(OpenTimeDay.tuesday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.tuesday).toList()));
+    items.add(_genOpenTimeItem(OpenTimeDay.wednesday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.wednesday).toList()));
+    items.add(_genOpenTimeItem(OpenTimeDay.thursday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.thursday).toList()));
+    items.add(_genOpenTimeItem(OpenTimeDay.friday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.friday).toList()));
+    items.add(_genOpenTimeItem(OpenTimeDay.saturday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.saturday).toList()));
+    items.add(_genOpenTimeItem(OpenTimeDay.sunday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.sunday).toList()));
+    items.add(_genOpenTimeItem(OpenTimeDay.publicHoliday,
+        openTimes.where((ot) => ot.day == OpenTimeDay.publicHoliday).toList()));
+
+    return items.whereNotNull().toList();
+  }
+
+  OpenTime? _genOpenTimeItem(OpenTimeDay day, List<OpenTimeModel> openTimes) {
+    String dayLabel = "";
+    switch (day) {
+      case OpenTimeDay.monday:
+        dayLabel = "Montag";
+        break;
+      case OpenTimeDay.tuesday:
+        dayLabel = "Dienstag";
+        break;
+      case OpenTimeDay.wednesday:
+        dayLabel = "Mittwoch";
+        break;
+      case OpenTimeDay.thursday:
+        dayLabel = "Donnerstag";
+        break;
+      case OpenTimeDay.friday:
+        dayLabel = "Freitag";
+        break;
+      case OpenTimeDay.saturday:
+        dayLabel = "Samstag";
+        break;
+      case OpenTimeDay.sunday:
+        dayLabel = "Sonntag";
+        break;
+      case OpenTimeDay.publicHoliday:
+        dayLabel = "Feiertag";
+        break;
+      default:
+        dayLabel = "Unbekannt";
+    }
+
+    if (openTimes.isEmpty) {
+      if (day == OpenTimeDay.publicHoliday) {
+        return null;
+      } else {
+        return OpenTime(day: dayLabel, time: "Geschlossen");
+      }
+    }
+
+    DateFormat timeFormat = DateFormat('HH:mm');
+    return OpenTime(
+        day: dayLabel,
+        time: openTimes
+            .map((ot) =>
+                "${timeFormat.format(ot.startTime)} - ${timeFormat.format(ot.endTime)}")
+            .join("\n"));
   }
 }

@@ -1,7 +1,6 @@
-
 class CoordinateModel {
   final double latitude;
   final double longitude;
 
-  CoordinateModel(this.latitude, this.longitude);
+  CoordinateModel({required this.latitude, required this.longitude});
 }
