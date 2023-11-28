@@ -1,5 +1,4 @@
 import 'dart:ui' as ui;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,16 +35,13 @@ class StationMapCubit extends Cubit<StationMapState>
       : super(LoadingStationMapState(cameraPosition: initialCameraPosition)) {
     WidgetsBinding.instance.addObserver(this);
 
-    _fetchGasFilter().then((_) => _getOwnPosition()).then((position) {
-      if (position != null) {
-        _position = CameraPosition(
-            latLng: LatLng(position.latitude, position.longitude), zoom: 12.5);
-        emit(LoadingStationMapState(cameraPosition: _position));
-        _fetchStations(_position, true);
-      }
-    });
+    _init();
 
     _requestReviewIfNeeded();
+  }
+
+  void _init() {
+    _fetchGasFilter().then((_) => _moveToOwnLocation());
   }
 
   //TODO: outsource to repository
@@ -55,14 +51,19 @@ class StationMapCubit extends Cubit<StationMapState>
     _filter = Filter(gas);
   }
 
-  void _fetchStations(CameraPosition position, bool force) {
+  void _fetchStations(
+      CameraPosition position, LatLngBounds visibleBounds, bool force) {
+    StationMapState state = this.state;
+
     // Require loaded filter
     if (_filter == null) {
-      return;
-    }
-
-    LatLngBounds? visibleBounds = _visibleBounds;
-    if (visibleBounds == null) {
+      if (state is MarkersStationMapState) {
+        emit(MarkersStationMapState(
+            cameraPosition: position,
+            stationMarkers: state.stationMarkers,
+            isShowingLabelMarkers: state.isShowingLabelMarkers,
+            filter: state.filter));
+      }
       return;
     }
 
@@ -75,12 +76,10 @@ class StationMapCubit extends Cubit<StationMapState>
             filter: _filter!,
             cameraPosition: position));
       }
-
       return;
     }
     bool showLabelMarkers = position.zoom >= 12;
 
-    // Check for minimum map movement of 8 kilometers
     if (!force && _lastRequestPosition != null) {
       double movementDistance = Geolocator.distanceBetween(
           _lastRequestPosition!.latLng.latitude,
@@ -88,9 +87,13 @@ class StationMapCubit extends Cubit<StationMapState>
           position.latLng.latitude,
           position.latLng.longitude);
 
-      if (movementDistance < 1000) {
+      if (movementDistance < 300) {
         if (state is MarkersStationMapState) {
-          emit(state as MarkersStationMapState);
+          emit(MarkersStationMapState(
+              cameraPosition: position,
+              stationMarkers: state.stationMarkers,
+              isShowingLabelMarkers: state.isShowingLabelMarkers,
+              filter: state.filter));
         }
         return;
       }
@@ -113,9 +116,6 @@ class StationMapCubit extends Cubit<StationMapState>
           }
 
           result.when((markers) {
-            _lastRequestTime = DateTime.now();
-            _lastRequestPosition = position;
-
             Future.wait(markers.map((marker) async => MapEntry(
                     marker, await _genMarkerBitmap(marker, showLabelMarkers))))
                 .then((entries) {
@@ -126,6 +126,10 @@ class StationMapCubit extends Cubit<StationMapState>
               Map<MarkerModel, ByteData> markers = {
                 for (var entry in entries) entry.key: entry.value
               };
+
+              _lastRequestTime = DateTime.now();
+              _lastRequestPosition = position;
+
               emit(MarkersStationMapState(
                   cameraPosition: position,
                   stationMarkers: markers,
@@ -139,10 +143,20 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onRetryClicked() {
-    _fetchGasFilter().then((_) => _fetchStations(_position, true));
+    if (_visibleBounds != null) {
+      _fetchStations(_position, _visibleBounds!, true);
+    } else if (_filter != null) {
+      _moveToOwnLocation();
+    } else {
+      _init();
+    }
   }
 
   void onMoveToLocationClicked() {
+    _moveToOwnLocation();
+  }
+
+  void _moveToOwnLocation() {
     StationMapState state = this.state;
     if (state is MarkersStationMapState) {
       emit(LoadingMarkersStationMapState(
@@ -158,7 +172,17 @@ class StationMapCubit extends Cubit<StationMapState>
       if (position != null) {
         _position = CameraPosition(
             latLng: LatLng(position.latitude, position.longitude), zoom: 12.5);
-        _fetchStations(_position, true);
+
+        // Stations fetched automatically after map has moved
+        if (state is MarkersStationMapState) {
+          emit(LoadingMarkersStationMapState(
+              cameraPosition: _position,
+              stationMarkers: state.stationMarkers,
+              isShowingLabelMarkers: state.isShowingLabelMarkers,
+              filter: state.filter));
+        } else {
+          emit(LoadingStationMapState(cameraPosition: _position));
+        }
       }
     });
   }
@@ -175,7 +199,9 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onCameraIdle() {
-    _fetchStations(_position, false);
+    if (_visibleBounds != null) {
+      _fetchStations(_position, _visibleBounds!, false);
+    }
   }
 
   void onCameraPositionChanged(
@@ -200,7 +226,9 @@ class StationMapCubit extends Cubit<StationMapState>
           filter: filter));
     }
 
-    _fetchStations(_position, true);
+    if (_visibleBounds != null) {
+      _fetchStations(_position, _visibleBounds!, true);
+    }
   }
 
   void onCancelFilterSettings() {
@@ -271,7 +299,9 @@ class StationMapCubit extends Cubit<StationMapState>
         DateTime thresholdDate =
             _lastRequestTime!.add(_refreshAfterBackgroundDuration);
         if (DateTime.now().isAfter(thresholdDate)) {
-          _fetchStations(_position, true);
+          if (_visibleBounds != null) {
+            _fetchStations(_position, _visibleBounds!, true);
+          }
         }
       }
     }
