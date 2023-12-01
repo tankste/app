@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sponsor/ui/offer/offer_container.dart';
 import 'package:sponsor/ui/overview/cubit/overview_cubit.dart';
 import 'package:sponsor/ui/overview/cubit/overview_state.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -202,101 +203,7 @@ class OverviewPage extends StatelessWidget {
                   "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft werbefrei!",
                   style: Theme.of(context).textTheme.titleMedium),
             ),
-            Padding(
-                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
-                child: Card(
-                    child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("12 €",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge),
-                                    Padding(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Text("/ Jährlich",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall))
-                                  ]),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 4),
-                                  child: Text(
-                                      "Unterstütze tankste! mit einer jährlichen Zahlung von 12 €",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall))
-                            ])))),
-            Padding(
-                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
-                child: Card(
-                    child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("2 €",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge),
-                                    Padding(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Text("/ Monatlich",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall))
-                                  ]),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 4),
-                                  child: Text(
-                                      "Unterstütze tankste! mit einer monatlichen Zahlung von 2 €",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall))
-                            ])))),
-            Padding(
-                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
-                child: Card(
-                    child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("10 €",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge),
-                                    Padding(
-                                        padding: EdgeInsets.only(left: 4),
-                                        child: Text("/ Einmalig",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall))
-                                  ]),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 4),
-                                  child: Text(
-                                      "Unterstütze tankste! mit einer einmaligen Zahlung von 10 €",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall))
-                            ])))),
-            Padding(
-                padding: EdgeInsets.only(left: 8, right: 8),
-                child: TextButton(
-                    onPressed: () {},
-                    child: Text("Weitere Möglichkeiten anzeigen"))),
+            OfferContainer(),
             Padding(
               padding: EdgeInsets.only(top: 16, left: 16, right: 16),
               child: Text("Sponsoren",
@@ -329,7 +236,8 @@ class OverviewPage extends StatelessWidget {
             Center(
                 child: Padding(
                     padding: EdgeInsets.all(16),
-                    child: Text("Danke an jede/n einzelnen Unterstützer/in! 💜💜💜💜",
+                    child: Text(
+                        "Danke an jede/n einzelnen Unterstützer/in! 💜💜💜💜",
                         style: Theme.of(context).textTheme.bodySmall))),
           ]));
     } else {

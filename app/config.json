@@ -2,7 +2,10 @@
   "tankste": {
     "useMapLibreMap": true,
     "station": {
-      "apiBaseUrl": "http://stations.localhost"
+      "apiBaseUrl": "http://stations.local"
+    },
+    "sponsor": {
+      "apiBaseUrl": "http://sponsors.local"
     }
   },
   "google": {

@@ -1,11 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/streams.dart';
 import 'package:sponsor/di/sponsor_module_factory.dart';
 import 'package:sponsor/repository/balance_repository.dart';
+import 'package:sponsor/repository/product_repository.dart';
 import 'package:sponsor/ui/overview/cubit/overview_state.dart';
 
 class OverviewCubit extends Cubit<OverviewState> {
   final BalanceRepository _balanceRepository =
       SponsorModuleFactory.createBalanceRepository();
+
+  final ProductRepository _productRepository =
+      SponsorModuleFactory.createProductRepository();
 
   OverviewCubit() : super(LoadingOverviewState()) {
     _fetchBalance();
@@ -26,8 +31,9 @@ class OverviewCubit extends Cubit<OverviewState> {
         return BalanceOverviewState(
             gaugePercentage: balance.spent > 0
                 ? (balance.earned / balance.spent * 100).round()
-                : 0,
-            balance: "${balance.earned.round()} € von ${balance.spent.round()} €");
+                : 100,
+            balance:
+                "${balance.earned.round()} € von ${balance.spent.round()} €");
       }, (error) => ErrorOverviewState(errorDetails: error.toString())));
     });
   }

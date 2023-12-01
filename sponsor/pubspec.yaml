@@ -9,6 +9,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  core:
+    path: '../core'
+
   # BLoC - https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^8.0.1
 
@@ -29,6 +32,11 @@ dependencies:
 
   # Sync Fusion Gauges - https://pub.dev/packages/syncfusion_flutter_gauges
   syncfusion_flutter_gauges: ^23.1.44
+
+  # In App Purchase - https://pub.dev/packages/in_app_purchase
+  in_app_purchase: ^3.1.10
+  in_app_purchase_android:
+  in_app_purchase_storekit:
 
 dev_dependencies:
   flutter_test:

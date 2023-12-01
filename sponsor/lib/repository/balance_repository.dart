@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sponsor/model/balance_model.dart';
+import 'package:sponsor/model/config_model.dart';
+import 'package:sponsor/repository/config_repository.dart';
 import 'package:sponsor/repository/dto/balance_dto.dart';
 
 abstract class BalanceRepository {
@@ -12,7 +14,10 @@ class TanksteWebBalanceRepository extends BalanceRepository {
   static final TanksteWebBalanceRepository _instance =
       TanksteWebBalanceRepository._internal();
 
-  factory TanksteWebBalanceRepository() {
+  late ConfigRepository _configRepository;
+
+  factory TanksteWebBalanceRepository(ConfigRepository configRepository) {
+    _instance._configRepository = configRepository;
     return _instance;
   }
 
@@ -26,7 +31,14 @@ class TanksteWebBalanceRepository extends BalanceRepository {
 
   Future<Result<BalanceModel, Exception>> _getAsync() async {
     try {
-      Uri url = Uri.parse('http://10.0.2.2:4002/balance');
+      Result<ConfigModel, Exception> configResult =
+      await _configRepository.get().first;
+      if (configResult.isError()) {
+        return Result.error(configResult.tryGetError()!);
+      }
+      ConfigModel config = configResult.tryGetSuccess()!;
+
+      Uri url = Uri.parse('${config.apiBaseUrl}/balance');
       http.Response response = await http
           .get(url); //TODO: add `, headers: await _apiRepository.getHeaders()`
       if (response.statusCode >= 200 && response.statusCode <= 299) {
