@@ -10,11 +10,15 @@ class OfferContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => OfferCubit(),
-        child: BlocConsumer<OfferCubit, OfferState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              return SafeArea(child: _buildBody(context, state));
-            }));
+        child: BlocConsumer<OfferCubit, OfferState>(listener: (context, state) {
+          if (state is ErrorOfferState) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Something went wrong!"),
+            ));
+          }
+        }, builder: (context, state) {
+          return SafeArea(child: _buildBody(context, state));
+        }));
   }
 
   Widget _buildBody(BuildContext context, OfferState state) {
@@ -75,7 +79,9 @@ class OfferContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<OfferCubit>().onSponsorItemClicked(item.id);
+                  },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -100,12 +106,13 @@ class OfferContainer extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodySmall)),
               ],
             ))),
-        Center(
-            child: Padding(
-                padding: EdgeInsets.only(left: 8, right: 8),
-                child: TextButton(
-                    onPressed: () {},
-                    child: Text("Weitere Möglichkeiten anzeigen")))),
+        //TODO: add later more options to sponsor
+        // Center(
+        //     child: Padding(
+        //         padding: EdgeInsets.only(left: 8, right: 8),
+        //         child: TextButton(
+        //             onPressed: () {},
+        //             child: Text("Weitere Möglichkeiten anzeigen")))),
       ]);
     } else {
       return Container();

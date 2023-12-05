@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/streams.dart';
 import 'package:sponsor/di/sponsor_module_factory.dart';
-import 'package:sponsor/repository/balance_repository.dart';
 import 'package:sponsor/repository/product_repository.dart';
 import 'package:sponsor/ui/offer/cubit/offer_state.dart';
 
@@ -28,16 +27,19 @@ class OfferCubit extends Cubit<OfferState> {
           return onceTenProductResult.when((onceTenProduct) {
             return OffersOfferState(items: [
               OfferItem(
+                  id: yearlySubscriptionProduct.id,
                   labelPrice: yearlySubscriptionProduct.priceLabel,
                   labelType: "/ Jährlich",
                   hint:
                       "Unterstütze tankste! mit einer jährlichen Zahlung von ${yearlySubscriptionProduct.priceLabel}."),
               OfferItem(
+                  id: monthlySubscriptionProduct.id,
                   labelPrice: monthlySubscriptionProduct.priceLabel,
                   labelType: "/ Monatlich",
                   hint:
                       "Unterstütze tankste! mit einer monatlichen Zahlung von ${monthlySubscriptionProduct.priceLabel}."),
               OfferItem(
+                  id: onceTenProduct.id,
                   labelPrice: onceTenProduct.priceLabel,
                   labelType: "/ Einmalig",
                   hint:
@@ -52,6 +54,20 @@ class OfferCubit extends Cubit<OfferState> {
       }
 
       emit(state);
+    });
+  }
+
+  void onSponsorItemClicked(String itemId) {
+    _productRepository.purchase(itemId).listen((result) {
+      if (isClosed) {
+        return;
+      }
+
+      if (result.isError()) {
+        emit(ErrorPurchaseLoadingOfferState(
+            errorDetails: result.tryGetError()?.toString()));
+        _fetchItems();
+      }
     });
   }
 

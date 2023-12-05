@@ -140,7 +140,7 @@ class OverviewPage extends StatelessWidget {
                               endValue: 100,
                               startWidth: 32.5,
                               endWidth: 35,
-                              color: Theme.of(context).primaryColor)
+                              color: Color(0xFF9253a4))
                         ],
                         pointers: <GaugePointer>[
                           NeedlePointer(
@@ -171,7 +171,7 @@ class OverviewPage extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Times'),
                               ),
-                              angle: 175,
+                              angle: 173,
                               positionFactor: 1),
                           GaugeAnnotation(
                               widget: Text(
@@ -181,8 +181,8 @@ class OverviewPage extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Times'),
                               ),
-                              angle: 5,
-                              positionFactor: 0.95),
+                              angle: 7,
+                              positionFactor: 0.92),
                         ])
                   ],
                 )),

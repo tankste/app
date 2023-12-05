@@ -14,10 +14,17 @@ class ErrorOfferState extends OfferState {
   ErrorOfferState({required this.errorDetails});
 }
 
+class ErrorPurchaseLoadingOfferState extends LoadingOfferState {
+  String? errorDetails;
+
+  ErrorPurchaseLoadingOfferState({required this.errorDetails});
+}
+
 class OfferItem {
+  String id;
   String labelPrice;
   String labelType;
   String hint;
 
-  OfferItem({required this.labelPrice, required this.labelType, required this.hint});
+  OfferItem({required this.id, required this.labelPrice, required this.labelType, required this.hint});
 }
