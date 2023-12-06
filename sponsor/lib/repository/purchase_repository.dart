@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:core/device/model/device_model.dart';
+import 'package:core/device/repository/device_repository.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:http/http.dart' as http;
 import 'package:sponsor/model/apple_purchase_model.dart';
@@ -20,9 +22,12 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
       TanksteWebPurchaseRepository._internal();
 
   late ConfigRepository _configRepository;
+  late DeviceRepository _deviceRepository;
 
-  factory TanksteWebPurchaseRepository(ConfigRepository configRepository) {
+  factory TanksteWebPurchaseRepository(
+      ConfigRepository configRepository, DeviceRepository deviceRepository) {
     _instance._configRepository = configRepository;
+    _instance._deviceRepository = deviceRepository;
     return _instance;
   }
 
@@ -40,7 +45,6 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
 
   Future<Result<PurchaseModel, Exception>> _createAsync(
       PurchaseModel purchase) async {
-
     try {
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
@@ -49,13 +53,20 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
       }
       ConfigModel config = configResult.tryGetSuccess()!;
 
+      Result<DeviceModel, Exception> deviceResult =
+          await _deviceRepository.get().first;
+      if (deviceResult.isError()) {
+        return Result.error(deviceResult.tryGetError()!);
+      }
+      DeviceModel device = deviceResult.tryGetSuccess()!;
+
       Uri url = Uri.parse('${config.apiBaseUrl}/purchases');
 
       String body = "";
       if (purchase is PlayPurchaseModel) {
-        body = jsonEncode(PlayPurchaseDto.fromModel(purchase));
+        body = jsonEncode(PlayPurchaseDto.fromModel(purchase, device.id));
       } else if (purchase is ApplePurchaseModel) {
-        body = jsonEncode(ApplePurchaseDto.fromModel(purchase));
+        body = jsonEncode(ApplePurchaseDto.fromModel(purchase, device.id));
       } else {
         return Result.error(Exception("Unsupported purchase type!"));
       }

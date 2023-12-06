@@ -6,8 +6,10 @@ class PlayPurchaseDto {
   final String? productId;
   final String? token;
   final String? secret;
+  final String? deviceId;
 
-  PlayPurchaseDto({this.provider, this.productId, this.token, this.secret});
+  PlayPurchaseDto(
+      {this.provider, this.productId, this.token, this.secret, this.deviceId});
 
   factory PlayPurchaseDto.fromJson(Map<String, dynamic> parsedJson) {
     return PlayPurchaseDto(
@@ -15,6 +17,7 @@ class PlayPurchaseDto {
       productId: parsedJson['productId'],
       token: parsedJson['token'],
       secret: parsedJson['secret'],
+      deviceId: parsedJson['deviceId'],
     );
   }
 
@@ -24,19 +27,21 @@ class PlayPurchaseDto {
       'productId': productId,
       'token': token,
       'secret': secret,
+      'deviceId': deviceId,
     };
   }
 
-  factory PlayPurchaseDto.fromModel(PlayPurchaseModel model) {
+  factory PlayPurchaseDto.fromModel(PlayPurchaseModel model, String deviceId) {
     return PlayPurchaseDto(
       provider: model.provider == PurchaseProvider.playStore
           ? 'play_store'
           : model.provider == PurchaseProvider.appleStore
-          ? 'apple_store'
-          : null,
+              ? 'apple_store'
+              : null,
       productId: model.productId,
       token: model.token,
       secret: model.secret,
+      deviceId: deviceId,
     );
   }
 
@@ -45,8 +50,8 @@ class PlayPurchaseDto {
       provider: provider == 'play_store'
           ? PurchaseProvider.playStore
           : provider == 'apple_store'
-          ? PurchaseProvider.appleStore
-          : PurchaseProvider.unknown,
+              ? PurchaseProvider.appleStore
+              : PurchaseProvider.unknown,
       productId: productId ?? "",
       token: token ?? "",
       secret: secret ?? "",
@@ -55,6 +60,6 @@ class PlayPurchaseDto {
 
   @override
   String toString() {
-    return 'PlayPurchaseDto{provider: $provider, productId: $productId, token: $token, secret: $secret}';
+    return 'PlayPurchaseDto{provider: $provider, productId: $productId, token: $token, secret: $secret, deviceId: $deviceId}';
   }
 }

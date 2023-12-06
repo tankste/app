@@ -1,4 +1,3 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:navigation/repository/location_repository.dart';
 import 'package:navigation/repository/route_repository.dart';

@@ -15,6 +15,15 @@ dependencies:
   # Tuple - https://pub.dev/packages/tuple
   tuple: ^2.0.0
 
+  # Multiple Result - https://pub.dev/packages/multiple_result
+  multiple_result: ^4.0.0
+
+  # Shared Preferences - https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.0.15
+
+  # UUID - https://pub.dev/packages/uuid
+  uuid: ^4.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

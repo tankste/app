@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:core/device/model/device_model.dart';
+import 'package:core/device/repository/device_repository.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
@@ -24,11 +26,13 @@ class MobileProductRepository extends ProductRepository {
       MobileProductRepository._internal();
 
   late PurchaseRepository _purchaseRepository;
+  late DeviceRepository _deviceRepository;
   late BalanceRepository _balanceRepository;
 
   factory MobileProductRepository(PurchaseRepository purchaseRepository,
-      BalanceRepository balanceRepository) {
+      DeviceRepository deviceRepository, BalanceRepository balanceRepository) {
     _instance._purchaseRepository = purchaseRepository;
+    _instance._deviceRepository = deviceRepository;
     _instance._balanceRepository = balanceRepository;
     return _instance;
   }
@@ -99,12 +103,22 @@ class MobileProductRepository extends ProductRepository {
           await InAppPurchase.instance.queryProductDetails({id});
       ProductDetails productDetails = response.productDetails.first;
 
+      Result<DeviceModel, Exception> deviceResult =
+          await _deviceRepository.get().first;
+      if (deviceResult.isError()) {
+        return Result.error(deviceResult.tryGetError()!);
+      }
+      DeviceModel device = deviceResult.tryGetSuccess()!;
+
       if (id.contains("subscription")) {
         InAppPurchase.instance.buyNonConsumable(
-            purchaseParam: PurchaseParam(productDetails: productDetails));
+            purchaseParam: PurchaseParam(
+                productDetails: productDetails,
+                applicationUserName: device.id));
       } else {
         InAppPurchase.instance.buyConsumable(
-            purchaseParam: PurchaseParam(productDetails: productDetails),
+            purchaseParam: PurchaseParam(
+                productDetails: productDetails, applicationUserName: device.id),
             autoConsume: false);
       }
 
