@@ -11,6 +11,7 @@ import 'package:sponsor/model/play_purchase_model.dart';
 import 'package:sponsor/model/product_model.dart';
 import 'package:sponsor/model/purchase_model.dart';
 import 'package:sponsor/repository/balance_repository.dart';
+import 'package:sponsor/repository/comment_repository.dart';
 import 'package:sponsor/repository/purchase_repository.dart';
 
 abstract class ProductRepository {
@@ -28,12 +29,17 @@ class MobileProductRepository extends ProductRepository {
   late PurchaseRepository _purchaseRepository;
   late DeviceRepository _deviceRepository;
   late BalanceRepository _balanceRepository;
+  late CommentRepository _commentRepository;
 
-  factory MobileProductRepository(PurchaseRepository purchaseRepository,
-      DeviceRepository deviceRepository, BalanceRepository balanceRepository) {
+  factory MobileProductRepository(
+      PurchaseRepository purchaseRepository,
+      DeviceRepository deviceRepository,
+      BalanceRepository balanceRepository,
+      CommentRepository commentRepository) {
     _instance._purchaseRepository = purchaseRepository;
     _instance._deviceRepository = deviceRepository;
     _instance._balanceRepository = balanceRepository;
+    _instance._commentRepository = commentRepository;
     return _instance;
   }
 
@@ -88,7 +94,9 @@ class MobileProductRepository extends ProductRepository {
 
     _purchaseAsync(id)
         .then((result) => streamController.add(result))
-        .then((_) => _balanceRepository.get());
+        .then((_) => _balanceRepository.get())
+        .then((_) => _commentRepository.list())
+        .then((_) => _commentRepository.getOwn());
 
     return streamController.stream;
   }

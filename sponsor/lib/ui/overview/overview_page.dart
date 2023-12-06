@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sponsor/ui/comment/comment_container.dart';
 import 'package:sponsor/ui/offer/offer_container.dart';
 import 'package:sponsor/ui/overview/cubit/overview_cubit.dart';
 import 'package:sponsor/ui/overview/cubit/overview_state.dart';
@@ -205,41 +206,7 @@ class OverviewPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium),
             ),
             OfferContainer(),
-            Padding(
-              padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-              child: Text("Sponsoren",
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleLarge),
-            ),
-            Padding(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(child: Text("F")),
-                    Expanded(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Fabi755",
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                                Text("Tolle App!! Danke!",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium),
-                              ],
-                            ))),
-                    Text("25 €", style: Theme.of(context).textTheme.bodyLarge)
-                  ],
-                )),
-            Center(
-                child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                        "Danke an jede/n einzelnen Unterstützer/in! 💜💜💜💜",
-                        style: Theme.of(context).textTheme.bodySmall))),
+            CommentContainer(),
           ]));
     } else {
       return Container();
