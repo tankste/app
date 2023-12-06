@@ -40,7 +40,7 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
 
   Future<Result<PurchaseModel, Exception>> _createAsync(
       PurchaseModel purchase) async {
-    print("purchase: $purchase");
+
     try {
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
@@ -59,7 +59,7 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
       } else {
         return Result.error(Exception("Unsupported purchase type!"));
       }
-      print("body: $body");
+
       http.Response response = await http.post(url, body: body, headers: {
         'Content-Type': 'application/json',
       });

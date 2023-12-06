@@ -12,7 +12,7 @@ class SponsorModuleFactory {
   }
 
   static ProductRepository createProductRepository() {
-    return MobileProductRepository(createPurchaseRepository());
+    return MobileProductRepository(createPurchaseRepository(), createBalanceRepository());
   }
 
   static PurchaseRepository createPurchaseRepository() {

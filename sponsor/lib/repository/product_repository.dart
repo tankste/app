@@ -8,6 +8,7 @@ import 'package:sponsor/model/apple_purchase_model.dart';
 import 'package:sponsor/model/play_purchase_model.dart';
 import 'package:sponsor/model/product_model.dart';
 import 'package:sponsor/model/purchase_model.dart';
+import 'package:sponsor/repository/balance_repository.dart';
 import 'package:sponsor/repository/purchase_repository.dart';
 
 abstract class ProductRepository {
@@ -23,11 +24,12 @@ class MobileProductRepository extends ProductRepository {
       MobileProductRepository._internal();
 
   late PurchaseRepository _purchaseRepository;
+  late BalanceRepository _balanceRepository;
 
-  factory MobileProductRepository(
-    PurchaseRepository purchaseRepository,
-  ) {
+  factory MobileProductRepository(PurchaseRepository purchaseRepository,
+      BalanceRepository balanceRepository) {
     _instance._purchaseRepository = purchaseRepository;
+    _instance._balanceRepository = balanceRepository;
     return _instance;
   }
 
@@ -80,7 +82,9 @@ class MobileProductRepository extends ProductRepository {
     StreamController<Result<void, Exception>> streamController =
         StreamController.broadcast();
 
-    _purchaseAsync(id).then((result) => streamController.add(result));
+    _purchaseAsync(id)
+        .then((result) => streamController.add(result))
+        .then((_) => _balanceRepository.get());
 
     return streamController.stream;
   }
@@ -95,11 +99,14 @@ class MobileProductRepository extends ProductRepository {
           await InAppPurchase.instance.queryProductDetails({id});
       ProductDetails productDetails = response.productDetails.first;
 
-      // Check for subscriptions. Subscriptions are non-consumables
-      // InAppPurchase.instance.buyNonConsumable(purchaseParam: purchaseParam)
-
-      InAppPurchase.instance.buyConsumable(
-          purchaseParam: PurchaseParam(productDetails: productDetails), autoConsume: false);
+      if (id.contains("subscription")) {
+        InAppPurchase.instance.buyNonConsumable(
+            purchaseParam: PurchaseParam(productDetails: productDetails));
+      } else {
+        InAppPurchase.instance.buyConsumable(
+            purchaseParam: PurchaseParam(productDetails: productDetails),
+            autoConsume: false);
+      }
 
       Result<PurchaseDetails, Exception> purchaseDetailsResult =
           await _waitForPurchaseResultAsync();

@@ -69,7 +69,7 @@ class OfferContainer extends StatelessWidget {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-          child: Text("Angebote",
+          child: Text("Optionen",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.titleLarge),
         ),

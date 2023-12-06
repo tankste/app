@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
@@ -23,16 +24,20 @@ class TanksteWebBalanceRepository extends BalanceRepository {
 
   TanksteWebBalanceRepository._internal();
 
+  final StreamController<Result<BalanceModel, Exception>> _getStreamController =
+      StreamController.broadcast();
+
   @override
   Stream<Result<BalanceModel, Exception>> get() {
-    //TODO: cache stream
-    return _getAsync().asStream();
+    _getAsync().then((result) => _getStreamController.add(result));
+
+    return _getStreamController.stream;
   }
 
   Future<Result<BalanceModel, Exception>> _getAsync() async {
     try {
       Result<ConfigModel, Exception> configResult =
-      await _configRepository.get().first;
+          await _configRepository.get().first;
       if (configResult.isError()) {
         return Result.error(configResult.tryGetError()!);
       }

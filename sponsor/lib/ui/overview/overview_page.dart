@@ -144,6 +144,7 @@ class OverviewPage extends StatelessWidget {
                         ],
                         pointers: <GaugePointer>[
                           NeedlePointer(
+                              enableAnimation: true,
                               value: state.gaugePercentage.toDouble(),
                               needleEndWidth: 7,
                               needleStartWidth: 1,
