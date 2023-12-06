@@ -2,9 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/streams.dart';
 import 'package:sponsor/di/sponsor_module_factory.dart';
 import 'package:sponsor/repository/comment_repository.dart';
-import 'package:sponsor/repository/product_repository.dart';
-import 'package:sponsor/ui/comment/cubit/comment_state.dart';
-import 'package:sponsor/ui/offer/cubit/offer_state.dart';
+import 'package:sponsor/ui/comment/list/cubit/comment_state.dart';
 
 class CommentCubit extends Cubit<CommentState> {
   final CommentRepository _commentRepository =
@@ -25,7 +23,7 @@ class CommentCubit extends Cubit<CommentState> {
         List<CommentItem> items = comments
             .map((c) => CommentItem(
                 id: c.id,
-                avatarChar: c.name.isNotEmpty ? c.name[0] : "?",
+                avatarChar: c.name.isNotEmpty ? c.name[0].toUpperCase() : "?",
                 name: c.name.isNotEmpty ? c.name : "Anonym",
                 comment: c.comment.isNotEmpty ? c.comment : "-",
                 value: "${c.value.round()} €",

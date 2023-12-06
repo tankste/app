@@ -32,6 +32,15 @@ class CommentDto {
     };
   }
 
+  factory CommentDto.fromModel(CommentModel model) {
+    return CommentDto(
+      id: model.id,
+      name: model.name,
+      comment: model.comment,
+      value: model.value,
+    );
+  }
+
   CommentModel toModel() {
     return CommentModel(
       id: id ?? -1,

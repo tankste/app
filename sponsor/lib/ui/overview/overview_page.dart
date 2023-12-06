@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sponsor/ui/comment/comment_container.dart';
+import 'package:sponsor/ui/comment/list/comment_container.dart';
 import 'package:sponsor/ui/offer/offer_container.dart';
 import 'package:sponsor/ui/overview/cubit/overview_cubit.dart';
 import 'package:sponsor/ui/overview/cubit/overview_state.dart';

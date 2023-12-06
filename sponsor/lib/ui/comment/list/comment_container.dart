@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sponsor/ui/comment/cubit/comment_cubit.dart';
-import 'package:sponsor/ui/comment/cubit/comment_state.dart';
-import 'package:sponsor/ui/offer/cubit/offer_cubit.dart';
-import 'package:sponsor/ui/offer/cubit/offer_state.dart';
+import 'package:sponsor/ui/comment/form/comment_form_page.dart';
+import 'package:sponsor/ui/comment/list/cubit/comment_cubit.dart';
+import 'package:sponsor/ui/comment/list/cubit/comment_state.dart';
 
 class CommentContainer extends StatelessWidget {
   const CommentContainer({super.key});
@@ -13,15 +12,10 @@ class CommentContainer extends StatelessWidget {
     return BlocProvider(
         create: (context) => CommentCubit(),
         child: BlocConsumer<CommentCubit, CommentState>(
-            listener: (context, state) {
-          if (state is ErrorCommentState) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Something went wrong!"),
-            ));
-          }
-        }, builder: (context, state) {
-          return SafeArea(child: _buildBody(context, state));
-        }));
+            listener: (context, state) {},
+            builder: (context, state) {
+              return SafeArea(child: _buildBody(context, state));
+            }));
   }
 
   Widget _buildBody(BuildContext context, CommentState state) {
@@ -46,7 +40,7 @@ class CommentContainer extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16),
                 child: ElevatedButton(
                     onPressed: () {
-                      context.read<OfferCubit>().onRetryClicked();
+                      context.read<CommentCubit>().onRetryClicked();
                     },
                     child: const Text("Wiederholen"))),
             TextButton(
@@ -102,7 +96,16 @@ class CommentContainer extends StatelessWidget {
                 ],
               ),
               item.isEditable
-                  ? OutlinedButton(onPressed: () {}, child: Text("Bearbeiten"))
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CommentFormPage()));
+                          },
+                          child: Text("Bearbeiten")))
                   : Container(),
             ]))),
         Center(

@@ -120,7 +120,50 @@ class TanksteWebCommentRepository extends CommentRepository {
 
   @override
   Stream<Result<CommentModel, Exception>> update(CommentModel comment) {
-    // TODO: implement update
-    throw UnimplementedError();
+    final StreamController<Result<CommentModel, Exception>> streamController =
+        StreamController.broadcast();
+
+    _updateAsync(comment)
+        .then((result) => streamController.add(result))
+        .then((_) => getOwn())
+        .then((_) => list());
+
+    return streamController.stream;
+  }
+
+  Future<Result<CommentModel, Exception>> _updateAsync(
+      CommentModel comment) async {
+    try {
+      Result<ConfigModel, Exception> configResult =
+          await _configRepository.get().first;
+      if (configResult.isError()) {
+        return Result.error(configResult.tryGetError()!);
+      }
+      ConfigModel config = configResult.tryGetSuccess()!;
+
+      Result<DeviceModel, Exception> deviceResult =
+          await _deviceRepository.get().first;
+      if (deviceResult.isError()) {
+        return Result.error(deviceResult.tryGetError()!);
+      }
+      DeviceModel device = deviceResult.tryGetSuccess()!;
+
+      Uri url = Uri.parse('${config.apiBaseUrl}/comments/${device.id}');
+      String body = jsonEncode(CommentDto.fromModel(comment));
+      http.Response response = await http.put(url, body: body, headers: {
+        'Content-Type': 'application/json',
+      });
+      if (response.statusCode >= 200 && response.statusCode <= 299) {
+        final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+        final commentDto = CommentDto.fromJson(jsonResponse);
+        final CommentModel comment = commentDto.toModel();
+
+        return Result.success(comment);
+      } else {
+        return Result.error(Exception("API Error!\n\n${response.body}"));
+      }
+    } on Exception catch (e) {
+      return Result.error(e);
+    }
   }
 }
