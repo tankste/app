@@ -70,44 +70,49 @@ class CommentContainer extends StatelessWidget {
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.titleLarge),
         ),
-        ...state.items.map((item) => Padding(
-            padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-            child: Column(children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(child: Text(item.avatarChar)),
-                  Expanded(
-                      child: Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(item.name,
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall),
-                              Text(item.comment,
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
-                            ],
-                          ))),
-                  Text(item.value,
-                      style: Theme.of(context).textTheme.bodyLarge),
-                ],
-              ),
-              item.isEditable
-                  ? Padding(
-                      padding: EdgeInsets.only(top: 4),
-                      child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CommentFormPage()));
-                          },
-                          child: Text("Bearbeiten")))
-                  : Container(),
-            ]))),
+        ...state.items.map((item) => Container(
+            color: item.isEditable ? Color(0xFFd3bada) : Colors.transparent,
+            child: Padding(
+                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Column(children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(child: Text(item.avatarChar)),
+                      Expanded(
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(item.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall),
+                                  Text(item.comment,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                ],
+                              ))),
+                      Text(item.value,
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ],
+                  ),
+                  item.isEditable
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 4),
+                          child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CommentFormPage()));
+                              },
+                              child: Text("Bearbeiten")))
+                      : Container(),
+                ])))),
         Center(
             child: Padding(
                 padding: EdgeInsets.all(16),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sponsor/ui/offer/cubit/offer_cubit.dart';
 import 'package:sponsor/ui/offer/cubit/offer_state.dart';
 
 class OfferContainer extends StatelessWidget {
-  const OfferContainer({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -15,6 +14,23 @@ class OfferContainer extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Something went wrong!"),
             ));
+          } else if (state is PurchasedOffersOfferState) {
+            showDialog(
+                context: context,
+                builder: (ctx) {
+                  return AlertDialog(
+                    content: Lottie.asset(
+                      'assets/lottie/thank_you.json',
+                      package: 'sponsor',
+                      repeat: false,
+                      onLoaded: (composition) async {
+                        await Future.delayed(
+                            composition.duration + const Duration(seconds: 2));
+                        Navigator.of(ctx).pop(true);
+                      },
+                    ),
+                  );
+                });
           }
         }, builder: (context, state) {
           return SafeArea(child: _buildBody(context, state));

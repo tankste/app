@@ -8,6 +8,10 @@ class OffersOfferState extends OfferState {
   OffersOfferState({required this.items});
 }
 
+class PurchasedOffersOfferState extends OffersOfferState {
+  PurchasedOffersOfferState({required super.items});
+}
+
 class ErrorOfferState extends OfferState {
   String errorDetails;
 
@@ -26,5 +30,9 @@ class OfferItem {
   String labelType;
   String hint;
 
-  OfferItem({required this.id, required this.labelPrice, required this.labelType, required this.hint});
+  OfferItem(
+      {required this.id,
+      required this.labelPrice,
+      required this.labelType,
+      required this.hint});
 }
