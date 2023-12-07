@@ -11,7 +11,7 @@ class OfferContainer extends StatelessWidget {
     return BlocProvider(
         create: (context) => OfferCubit(),
         child: BlocConsumer<OfferCubit, OfferState>(listener: (context, state) {
-          if (state is ErrorOfferState) {
+          if (state is ErrorPurchaseLoadingOfferState) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Something went wrong!"),
             ));

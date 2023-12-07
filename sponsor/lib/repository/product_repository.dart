@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:core/device/model/device_model.dart';
 import 'package:core/device/repository/device_repository.dart';
@@ -127,7 +128,7 @@ class MobileProductRepository extends ProductRepository {
         InAppPurchase.instance.buyConsumable(
             purchaseParam: PurchaseParam(
                 productDetails: productDetails, applicationUserName: device.id),
-            autoConsume: false);
+            autoConsume: Platform.isIOS);
       }
 
       Result<PurchaseDetails, Exception> purchaseDetailsResult =
@@ -214,13 +215,17 @@ class MobileProductRepository extends ProductRepository {
             return _waitForPurchaseResultAsync();
           });
         case PurchaseStatus.purchased:
+          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.success(purchaseDetails);
         case PurchaseStatus.error:
+          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.error(
               Exception("Purchase error: ${purchaseDetails.error}"));
         case PurchaseStatus.restored:
+          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.success(purchaseDetails);
         case PurchaseStatus.canceled:
+          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.error(Exception("Purchase error: Canceled"));
       }
     } on Exception catch (e) {
