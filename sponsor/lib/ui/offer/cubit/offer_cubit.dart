@@ -68,6 +68,11 @@ class OfferCubit extends Cubit<OfferState> {
             errorDetails: result.tryGetError()?.toString()));
         _fetchItems();
       }
+
+      OfferState state = this.state;
+      if (state is OffersOfferState) {
+        emit(PurchasedOffersOfferState(items: state.items));
+      }
     });
   }
 
