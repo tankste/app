@@ -71,9 +71,10 @@ class CommentContainer extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge),
         ),
         ...state.items.map((item) => Container(
-            color: item.isEditable ? Color(0xFFd3bada) : Colors.transparent,
+            color: item.isEditable ? Color(0xFFe9dcec) : Colors.transparent,
             child: Padding(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                padding:
+                    EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 16),
                 child: Column(children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
