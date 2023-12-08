@@ -118,7 +118,7 @@ class CommentContainer extends StatelessWidget {
             child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
-                    "Danke an jede/n einzelnen Unterstützer/in! 💜💜💜💜",
+                    "Danke an jede/n einzelne/n Unterstützer/in! 💜💜💜💜",
                     style: Theme.of(context).textTheme.bodySmall)))
       ]);
     } else {

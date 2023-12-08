@@ -14,6 +14,7 @@ import 'package:sponsor/model/purchase_model.dart';
 import 'package:sponsor/repository/balance_repository.dart';
 import 'package:sponsor/repository/comment_repository.dart';
 import 'package:sponsor/repository/purchase_repository.dart';
+import 'package:sponsor/repository/sponsorship_repository.dart';
 
 abstract class ProductRepository {
   Stream<Result<ProductModel, Exception>> get(String id);
@@ -31,16 +32,20 @@ class MobileProductRepository extends ProductRepository {
   late DeviceRepository _deviceRepository;
   late BalanceRepository _balanceRepository;
   late CommentRepository _commentRepository;
+  late SponsorshipRepository _sponsorshipRepository;
 
   factory MobileProductRepository(
-      PurchaseRepository purchaseRepository,
-      DeviceRepository deviceRepository,
-      BalanceRepository balanceRepository,
-      CommentRepository commentRepository) {
+    PurchaseRepository purchaseRepository,
+    DeviceRepository deviceRepository,
+    BalanceRepository balanceRepository,
+    CommentRepository commentRepository,
+    SponsorshipRepository sponsorshipRepository,
+  ) {
     _instance._purchaseRepository = purchaseRepository;
     _instance._deviceRepository = deviceRepository;
     _instance._balanceRepository = balanceRepository;
     _instance._commentRepository = commentRepository;
+    _instance._sponsorshipRepository = sponsorshipRepository;
     return _instance;
   }
 
@@ -97,7 +102,8 @@ class MobileProductRepository extends ProductRepository {
         .then((result) => streamController.add(result))
         .then((_) => _balanceRepository.get())
         .then((_) => _commentRepository.list())
-        .then((_) => _commentRepository.getOwn());
+        .then((_) => _commentRepository.getOwn())
+        .then((_) => _sponsorshipRepository.get());
 
     return streamController.stream;
   }
@@ -215,17 +221,13 @@ class MobileProductRepository extends ProductRepository {
             return _waitForPurchaseResultAsync();
           });
         case PurchaseStatus.purchased:
-          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.success(purchaseDetails);
         case PurchaseStatus.error:
-          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.error(
               Exception("Purchase error: ${purchaseDetails.error}"));
         case PurchaseStatus.restored:
-          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.success(purchaseDetails);
         case PurchaseStatus.canceled:
-          InAppPurchase.instance.completePurchase(purchaseDetails);
           return Result.error(Exception("Purchase error: Canceled"));
       }
     } on Exception catch (e) {

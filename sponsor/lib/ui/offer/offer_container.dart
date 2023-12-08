@@ -83,9 +83,54 @@ class OfferContainer extends StatelessWidget {
           ]));
     } else if (state is OffersOfferState) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        state.isSponsorshipInfoVisible
+            ? Padding(
+                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Du unterstützt tankste!",
+                          textAlign: TextAlign.start,
+                          style: Theme.of(context).textTheme.titleLarge),
+                      Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text(
+                              "Ein großes Dankeschön an dich, dass du mir hilft das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit ${state.sponsoredValue} ausgeholfen, und somit die Weiterentwicklung voran getrieben.",
+                              style: TextStyle(fontSize: 16))),
+                      state.activeSubscription != null
+                          ? Padding(
+                              padding: EdgeInsets.only(top: 4),
+                              child: Text(
+                                  "Zur Zeit hast du das Abonnement „${state.activeSubscription}“ aktiv.",
+                                  style: TextStyle(fontSize: 16)))
+                          : Container(),
+                      Padding(
+                          padding: EdgeInsets.only(top: 4),
+                          child: Text(
+                              "Du wirst weiter unten als Sponsor gelistet. Du kannst einen Namen angeben, und zusätzlich einen Kommentar hinterlassen. Diese Angbaen sind für alle Nutzer sichtbar.",
+                              style: TextStyle(fontSize: 16))),
+                    ]))
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                    child: Text("tankste! braucht dich!",
+                        textAlign: TextAlign.start,
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+                    child: Text(
+                        "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft werbefrei!",
+                        style: TextStyle(fontSize: 16)),
+                  ),
+                  //TODO: add more information link
+                ],
+              ),
         Padding(
           padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-          child: Text("Optionen",
+          child: Text(state.title,
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.titleLarge),
         ),

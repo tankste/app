@@ -193,18 +193,6 @@ class OverviewPage extends StatelessWidget {
                     padding: EdgeInsets.only(left: 16, right: 16),
                     child: Text(state.balance,
                         style: Theme.of(context).textTheme.bodySmall))),
-            Padding(
-              padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-              child: Text("tankste! braucht dich!",
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleLarge),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 8, left: 16, right: 16),
-              child: Text(
-                  "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft werbefrei!",
-                  style: Theme.of(context).textTheme.titleMedium),
-            ),
             OfferContainer(),
             CommentContainer(),
           ]));
