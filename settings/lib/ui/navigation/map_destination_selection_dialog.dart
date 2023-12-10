@@ -26,7 +26,7 @@ class MapDestinationSelectionDialogState
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-        title: const Text("Navigations App"),
+        title: const Text("Navigation starten mit.."),
         children: widget.availableMaps
                 .map<Widget>(
                   (map) => RadioListTile<MapDestinationDestination>(

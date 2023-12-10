@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/model/map_destination_model.dart';
 import 'package:settings/repository/map_destination_repository.dart';
-import 'package:settings/ui/map/cubit/map_destination_item_state.dart';
+import 'package:settings/ui/navigation/cubit/map_destination_item_state.dart';
 import 'package:core/common/future.dart';
 
 class MapDestinationItemCubit extends Cubit<MapDestinationItemState> {
