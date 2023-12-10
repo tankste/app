@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/di/settings_module_factory.dart';
+import 'package:settings/model/map_provider_model.dart';
 import 'package:settings/repository/map_provider_repository.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_state.dart';
 import 'package:rxdart/streams.dart';
+import 'package:tuple/tuple.dart';
 
 class MapProviderItemCubit extends Cubit<MapProviderItemState> {
   final MapProviderRepository _mapProviderRepository =
@@ -19,9 +21,9 @@ class MapProviderItemCubit extends Cubit<MapProviderItemState> {
       return availableProviderResult.when((availableProviders) {
         return mapProviderResult.when((mapProvider) {
           return ProvidersMapProviderItemState(
-              selectedProvider: mapProvider.label,
-              availableProviders:
-                  availableProviders.map((p) => p.label).toList());
+              selectedProvider: Tuple2(mapProvider.provider, mapProvider.label),
+              availableProviders: Map.fromEntries(availableProviders
+                  .map((p) => MapEntry(p.provider, p.label))));
         },
             (error) =>
                 ErrorMapProviderItemState(errorDetails: error.toString()));
@@ -32,6 +34,24 @@ class MapProviderItemCubit extends Cubit<MapProviderItemState> {
       }
 
       emit(state);
+    });
+  }
+
+  void onProviderChanged(MapProvider provider) {
+    emit(LoadingMapProviderItemState());
+
+    _mapProviderRepository
+        .update(MapProviderModel("", provider))
+        .first
+        .then((result) {
+      if (isClosed) {
+        return;
+      }
+
+      if (result.isError()) {
+        emit(ErrorMapProviderItemState(
+            errorDetails: result.tryGetError()!.toString()));
+      }
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/model/map_destination_model.dart';
+import 'package:settings/model/map_provider_model.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_cubit.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_state.dart';
 import 'package:settings/ui/navigation/cubit/map_destination_item_cubit.dart';
@@ -15,10 +16,15 @@ class MapProviderItem extends StatelessWidget {
     return BlocProvider(
         create: (context) => MapProviderItemCubit(),
         child: BlocConsumer<MapProviderItemCubit, MapProviderItemState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              return _buildBody(context, state);
-            }));
+            listener: (context, state) {
+          if (state is SaveErrorMapProviderItemState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Ein Fehler ist aufgetreten"),
+            ));
+          }
+        }, builder: (context, state) {
+          return _buildBody(context, state);
+        }));
   }
 
   Widget _buildBody(BuildContext context, MapProviderItemState state) {
@@ -41,31 +47,53 @@ class MapProviderItem extends StatelessWidget {
     } else if (state is ProvidersMapProviderItemState) {
       return ListTile(
           onTap: () {
-            // _showSelectionDialog(
-            //     context,
-            //     state.availableDestinations ??
-            //         [
-            //           MapDestinationModel("Systemstandard",
-            //               MapDestinationDestination.system)
-            //         ],
-            //     state.value ?? MapDestinationDestination.system);
+            _showSelectionDialog(context, state);
           },
           minLeadingWidth: 10,
           leading: const Icon(Icons.map),
           title: const Text("Kartenanbieter"),
-          subtitle: Text(state.selectedProvider));
+          subtitle: Text(state.selectedProvider.item2));
     }
 
     return Container();
   }
 
-  void _showSelectionDialog(BuildContext context,
-      List<MapDestinationModel> availableMaps, MapDestinationDestination map) {
+  void _showSelectionDialog(
+      BuildContext context, ProvidersMapProviderItemState state) {
     showDialog(
         context: context,
-        builder: (context) {
-          return MapDestinationSelectionDialog(
-              availableMaps: availableMaps, selection: map);
+        builder: (ctx) {
+          return SimpleDialog(
+              title: const Text("Kartenanbieter"),
+              children: state.availableProviders.entries
+                      .map<Widget>((provider) => RadioListTile<MapProvider>(
+                            title: Text(provider.value),
+                            value: provider.key,
+                            selected:
+                                provider.key == state.selectedProvider.item1,
+                            groupValue: state.selectedProvider.item1,
+                            onChanged: (_) {
+                              context
+                                  .read<MapProviderItemCubit>()
+                                  .onProviderChanged(provider.key);
+
+                              Navigator.of(context).pop();
+                            },
+                          ))
+                      .toList() +
+                  [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          TextButton(
+                              onPressed: () => Navigator.of(context).pop(null),
+                              child: const Text('Abbrechen'))
+                        ],
+                      ),
+                    )
+                  ]);
         }).then((map) {
       if (map != null) {
         context.read<MapDestinationItemCubit>().onMapChanged(map);

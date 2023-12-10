@@ -28,25 +28,27 @@ class LocalMapProviderRepository extends MapProviderRepository {
   final MapProviderModel _sytemProvider =
       MapProviderModel("Systemstandard", MapProvider.system);
 
-
   final StreamController<Result<List<MapProviderModel>, Exception>>
-  _listAvailableStreamController = StreamController.broadcast();
+      _listAvailableStreamController = StreamController.broadcast();
 
   final StreamController<Result<MapProviderModel, Exception>>
       _getStreamController = StreamController.broadcast();
 
   @override
   Stream<Result<List<MapProviderModel>, Exception>> listAvailable() {
-    _listAvailableAsync().then((value) => _listAvailableStreamController.add(value));
+    _listAvailableAsync()
+        .then((value) => _listAvailableStreamController.add(value));
     return _listAvailableStreamController.stream;
   }
 
-  Future<Result<List<MapProviderModel>, Exception>> _listAvailableAsync() async {
+  Future<Result<List<MapProviderModel>, Exception>>
+      _listAvailableAsync() async {
     try {
       List<MapProviderModel> availableProviders = [];
 
       availableProviders.add(_sytemProvider);
-      availableProviders.add(MapProviderModel("MapLibre", MapProvider.mapLibre));
+      availableProviders
+          .add(MapProviderModel("MapLibre", MapProvider.mapLibre));
 
       //TODO: does Google Maps runs everywhere? (Android without Play Services, iOS without extra apps)
       //  If not, we should validate this before showing this option
@@ -156,7 +158,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
         return MapProvider.appleMaps;
       case "googleMaps":
         return MapProvider.googleMaps;
-      case "googleMapsGo":
+      case "mapLibre":
         return MapProvider.mapLibre;
       default:
         return MapProvider.system;
