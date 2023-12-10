@@ -12,11 +12,6 @@ abstract class DeveloperSettingsRepository {
 
 class LocalDeveloperSettingsRepository extends DeveloperSettingsRepository {
   final String keyDeveloperMode = "developer_enabled";
-  final String keyFetchingWithoutLocation =
-      "developer_feature_fetching_without_location";
-  final String keyPercentagePriceRanges =
-      "developer_feature_percentage_price_ranges";
-  final String keyMapProvider = "developer_feature_map_provider";
 
   static final LocalDeveloperSettingsRepository _singleton =
       LocalDeveloperSettingsRepository._internal();
@@ -45,12 +40,6 @@ class LocalDeveloperSettingsRepository extends DeveloperSettingsRepository {
           return Future.wait([
             preferences.setBool(
                 keyDeveloperMode, developerSettings.isDeveloperModeEnabled),
-            preferences.setBool(keyFetchingWithoutLocation,
-                developerSettings.isFetchingWithoutLocationEnabled),
-            preferences.setBool(keyPercentagePriceRanges,
-                developerSettings.isPercentagePriceRangesEnabled),
-            preferences.setString(keyMapProvider,
-                _getProviderValueKey(developerSettings.mapProvider)),
           ]);
         })
         .then((_) => _fetchDeveloperSettings())
@@ -61,38 +50,10 @@ class LocalDeveloperSettingsRepository extends DeveloperSettingsRepository {
     _getPreferences().then((preferences) {
       return DeveloperSettingsModel(
         preferences.getBool(keyDeveloperMode) ?? false,
-        preferences.getBool(keyFetchingWithoutLocation) ?? false,
-        preferences.getBool(keyPercentagePriceRanges) ?? false,
-        _getProviderFromString(preferences.getString(keyMapProvider) ?? ""),
       );
     }).then((developerSettings) {
       _developerSettingsStreamController.add(developerSettings);
     });
-  }
-
-  String _getProviderValueKey(DeveloperSettingsMapProvider provider) {
-    switch (provider) {
-      case DeveloperSettingsMapProvider.system:
-        return "system";
-      case DeveloperSettingsMapProvider.google:
-        return "google";
-      case DeveloperSettingsMapProvider.mapLibre:
-        return "mapLibre";
-      case DeveloperSettingsMapProvider.apple:
-        return "apple";
-    }
-  }
-
-  DeveloperSettingsMapProvider _getProviderFromString(String provider) {
-    if (provider == "google") {
-      return DeveloperSettingsMapProvider.google;
-    } else if (provider == "mapLibre") {
-      return DeveloperSettingsMapProvider.mapLibre;
-    } else if (provider == "apple") {
-      return DeveloperSettingsMapProvider.apple;
-    } else {
-      return DeveloperSettingsMapProvider.system;
-    }
   }
 
   // TODO: while `getInstance()` is asynchronous, we can't inject this without trouble.

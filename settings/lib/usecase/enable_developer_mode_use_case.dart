@@ -12,7 +12,7 @@ class EnableDeveloperModeUseCaseImpl extends EnableDeveloperModeUseCase {
 
   @override
   Future<DeveloperSettingsModel> invoke(bool isEnabled) {
-    return _developerSettingsRepository.update(DeveloperSettingsModel(
-        isEnabled, false, false, DeveloperSettingsMapProvider.system));
+    return _developerSettingsRepository
+        .update(DeveloperSettingsModel(isEnabled));
   }
 }
