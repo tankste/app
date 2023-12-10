@@ -28,7 +28,7 @@ class MapDestinationItem extends StatelessWidget {
                   },
                   minLeadingWidth: 10,
                   leading: const Icon(Icons.navigation),
-                  title: const Text("Navigation starten mit.."),
+                  title: const Text("Navigation starten mit…"),
                   subtitle: Text(state.valueLabel ?? ""));
             }));
   }

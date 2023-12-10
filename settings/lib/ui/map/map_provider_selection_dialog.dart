@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:settings/model/map_destination_model.dart';
 
-class MapDestinationSelectionDialog extends StatefulWidget {
+class MapProviderSelectionDialog extends StatefulWidget {
   final List<MapDestinationModel> availableMaps;
   final MapDestinationDestination selection;
 
-  const MapDestinationSelectionDialog(
+  const MapProviderSelectionDialog(
       {required this.availableMaps, required this.selection, Key? key})
       : super(key: key);
 
@@ -14,7 +14,7 @@ class MapDestinationSelectionDialog extends StatefulWidget {
 }
 
 class MapDestinationSelectionDialogState
-    extends State<MapDestinationSelectionDialog> {
+    extends State<MapProviderSelectionDialog> {
   late MapDestinationDestination mapDestination;
 
   @override
@@ -26,7 +26,7 @@ class MapDestinationSelectionDialogState
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-        title: const Text("Navigation starten mit…"),
+        title: const Text("Kartenanbieter"),
         children: widget.availableMaps
                 .map<Widget>(
                   (map) => RadioListTile<MapDestinationDestination>(
