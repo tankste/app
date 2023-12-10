@@ -1,45 +1,46 @@
 import 'dart:io';
 
 import 'package:core/config/config_repository.dart';
-import 'package:settings/model/developer_settings_model.dart';
-import 'package:settings/repository/developer_settings_repository.dart';
+import 'package:multiple_result/multiple_result.dart';
+import 'package:settings/model/map_provider_model.dart';
+import 'package:settings/repository/map_provider_repository.dart';
 
 abstract class GetMapProviderUseCase {
-  Stream<MapProvider> invoke();
+  Stream<Result<MapProvider, Exception>> invoke();
 }
 
-class GetMapProviderUseCaseImpl extends GetMapProviderUseCase {
+class DefaultGetMapProviderUseCase extends GetMapProviderUseCase {
+  final MapProviderRepository _mapProviderRepository;
   final ConfigRepository _configRepository;
-  final DeveloperSettingsRepository _developerSettingsRepository;
 
-  GetMapProviderUseCaseImpl(
-      this._configRepository, this._developerSettingsRepository);
+  DefaultGetMapProviderUseCase(
+      this._mapProviderRepository, this._configRepository);
 
   @override
-  Stream<MapProvider> invoke() {
-    return _developerSettingsRepository.get().asyncMap((settings) {
-      switch (settings.mapProvider) {
-        case DeveloperSettingsMapProvider.google:
-          return MapProvider.google;
-        case DeveloperSettingsMapProvider.mapLibre:
-          return MapProvider.mapLibre;
-        case DeveloperSettingsMapProvider.apple:
-          return MapProvider.apple;
-        default:
-          if (Platform.isIOS) {
-            return MapProvider.apple;
-          } else {
-            return _configRepository.get().then((config) {
-              if (config.useMapLibreMap) {
-                return MapProvider.mapLibre;
-              } else {
-                return MapProvider.google;
-              }
-            });
-          }
-      }
+  Stream<Result<MapProvider, Exception>> invoke() {
+    return _mapProviderRepository.get().asyncMap((mapProviderResult) {
+      return mapProviderResult.when((mapProvider) {
+        switch (mapProvider.provider) {
+          case MapProvider.googleMaps:
+            return Result.success(MapProvider.googleMaps);
+          case MapProvider.mapLibre:
+            return Result.success(MapProvider.mapLibre);
+          case MapProvider.appleMaps:
+            return Result.success(MapProvider.appleMaps);
+          default:
+            if (Platform.isIOS) {
+              return Result.success(MapProvider.appleMaps);
+            } else {
+              return _configRepository.get().then((config) {
+                if (config.useMapLibreMap) {
+                  return Result.success(MapProvider.mapLibre);
+                } else {
+                  return Result.success(MapProvider.googleMaps);
+                }
+              });
+            }
+        }
+      }, (error) => Result.error(error));
     });
   }
 }
-
-enum MapProvider { google, mapLibre, apple }

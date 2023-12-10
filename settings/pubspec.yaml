@@ -36,6 +36,12 @@ dependencies:
   # Tuple - https://pub:dev/packages/tuple
   tuple: ^2.0.0
 
+  # Multiple Result - https://pub.dev/packages/multiple_result
+  multiple_result: ^4.0.0
+
+  # Rx Dart - https://pub.dev/packages/rxdart
+  rxdart: ^0.27.7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

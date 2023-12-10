@@ -1,14 +1,16 @@
 import 'package:core/config/config_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:map/di/map_module_factory.dart';
 import 'package:map/ui/cubit/map_state.dart';
 import 'package:map/usecase/get_map_provider_use_case.dart';
-import 'package:settings/repository/developer_settings_repository.dart';
+import 'package:rxdart/streams.dart';
+import 'package:settings/model/map_provider_model.dart';
 
 class MapCubit extends Cubit<MapState> {
-  final GetMapProviderUseCase getMapProviderUseCase = GetMapProviderUseCaseImpl(
-      FileConfigRepository(), LocalDeveloperSettingsRepository());
+  final GetMapProviderUseCase _getMapProviderUseCase =
+      MapModuleFactory.createGetMapProviderUseCase();
 
-  final ConfigRepository configRepository = FileConfigRepository();
+  final ConfigRepository _configRepository = FileConfigRepository();
 
   MapCubit() : super(LoadingMapState()) {
     _fetchProvider();
@@ -17,26 +19,30 @@ class MapCubit extends Cubit<MapState> {
   void _fetchProvider() {
     emit(LoadingMapState());
 
-    getMapProviderUseCase.invoke().listen((mapProvider) {
+    CombineLatestStream.combine2(
+        _getMapProviderUseCase.invoke(), _configRepository.get().asStream(),
+        (mapProviderResult, config) {
+      return mapProviderResult.when((provider) {
+        switch (provider) {
+          case MapProvider.mapLibre:
+            return MapLibreMapState(
+                styleUrlLight: config.mapLibreStyleUrlLight,
+                styleUrlDark: config.mapLibreStyleUrlDark);
+          case MapProvider.googleMaps:
+            return GoogleMapMapState();
+          case MapProvider.appleMaps:
+            return AppleMapsMapState();
+          case MapProvider.system:
+            return ErrorMapState(
+                "Invalid map provider state. System can not be used on UI state.");
+        }
+      }, (error) => ErrorMapState(error.toString()));
+    }).listen((state) {
       if (isClosed) {
         return;
       }
 
-      switch (mapProvider) {
-        case MapProvider.mapLibre:
-          configRepository.get().then((config) {
-            emit(MapLibreMapState(
-                styleUrlLight: config.mapLibreStyleUrlLight,
-                styleUrlDark: config.mapLibreStyleUrlDark));
-          });
-          break;
-        case MapProvider.google:
-          emit(GoogleMapMapState());
-          break;
-        case MapProvider.apple:
-          emit(AppleMapsMapState());
-          break;
-      }
-    }).onError((error) => emit(ErrorMapState(error.toString())));
+      emit(state);
+    });
   }
 }
