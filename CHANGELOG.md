@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+* ➕ Add sponsor page to settings
 * 🛠 Use tankste! backend and remove Tankerkoenig usage ([#57](https://github.com/tankste/app/issues/57))
 * 🛠 Replace OpenStreetMap by MapLibre ([#52](https://github.com/tankste/app/issues/52))
 * 🛠 Improve code base ([#21](https://github.com/tankste/app/issues/21))

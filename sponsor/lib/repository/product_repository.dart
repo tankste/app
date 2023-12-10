@@ -221,13 +221,29 @@ class MobileProductRepository extends ProductRepository {
             return _waitForPurchaseResultAsync();
           });
         case PurchaseStatus.purchased:
+          if (purchaseDetails.pendingCompletePurchase && Platform.isIOS) {
+            await InAppPurchase.instance.completePurchase(purchaseDetails);
+          }
+
           return Result.success(purchaseDetails);
         case PurchaseStatus.error:
+          if (purchaseDetails.pendingCompletePurchase && Platform.isIOS) {
+            await InAppPurchase.instance.completePurchase(purchaseDetails);
+          }
+
           return Result.error(
               Exception("Purchase error: ${purchaseDetails.error}"));
         case PurchaseStatus.restored:
+          if (purchaseDetails.pendingCompletePurchase && Platform.isIOS) {
+            await InAppPurchase.instance.completePurchase(purchaseDetails);
+          }
+
           return Result.success(purchaseDetails);
         case PurchaseStatus.canceled:
+          if (purchaseDetails.pendingCompletePurchase && Platform.isIOS) {
+            await InAppPurchase.instance.completePurchase(purchaseDetails);
+          }
+
           return Result.error(Exception("Purchase error: Canceled"));
       }
     } on Exception catch (e) {
