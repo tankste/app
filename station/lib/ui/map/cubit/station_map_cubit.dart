@@ -69,7 +69,6 @@ class StationMapCubit extends Cubit<StationMapState>
             isShowingLabelMarkers: state.isShowingLabelMarkers,
             filter: state.filter));
       }
-      print("exit 1");
       return;
     }
 
@@ -81,7 +80,6 @@ class StationMapCubit extends Cubit<StationMapState>
             isShowingLabelMarkers: false,
             filter: _filter!));
       }
-      print("exit 2");
       return;
     }
     bool showLabelMarkers = position.zoom >= 12;
@@ -93,7 +91,6 @@ class StationMapCubit extends Cubit<StationMapState>
           position.latLng.latitude,
           position.latLng.longitude);
 
-      print("movementDistance: $movementDistance");
       if (movementDistance < 300) {
         if (state is MarkersStationMapState) {
           emit(MarkersStationMapState(
@@ -101,7 +98,6 @@ class StationMapCubit extends Cubit<StationMapState>
               isShowingLabelMarkers: state.isShowingLabelMarkers,
               filter: state.filter));
         }
-        print("exit 3");
         return;
       }
     }
@@ -227,7 +223,6 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onCameraIdle() {
-    print("camera idle $_visibleBounds");
     if (_visibleBounds != null) {
       _fetchStations(_position, _visibleBounds!, false);
     }
@@ -235,7 +230,6 @@ class StationMapCubit extends Cubit<StationMapState>
 
   void onCameraPositionChanged(
       CameraPosition cameraPosition, LatLngBounds? bounds) {
-    print("camera changed");
 
     _position = cameraPosition;
     _visibleBounds = bounds;
