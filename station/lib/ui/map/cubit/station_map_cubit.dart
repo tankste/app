@@ -43,6 +43,10 @@ class StationMapCubit extends Cubit<StationMapState>
     _fetchGasFilter().then((_) => _moveToOwnLocation());
   }
 
+  void onMapReady() {
+    _moveToOwnLocation();
+  }
+
   //TODO: outsource to repository
   Future<void> _fetchGasFilter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

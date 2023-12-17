@@ -42,10 +42,11 @@ class StationMapPageState extends State<StationMapPage> {
       GenericMap(
         initialCameraPosition: initialCameraPosition,
         onMapCreated: (mapController) {
-          // mapController.moveCameraToPosition(state.cameraPosition);
           setState(() {
             _mapController = mapController;
           });
+
+          context.read<StationMapCubit>().onMapReady();
         },
         onCameraIdle: () {
           context.read<StationMapCubit>().onCameraIdle();
