@@ -65,6 +65,28 @@ class StationMapPageState extends State<StationMapPage> {
       state is LoadingStationMapState || state is LoadingMarkersStationMapState
           ? const SafeArea(child: LinearProgressIndicator())
           : Container(),
+      state is TooFarZoomedOutStationMapState
+          ? Positioned(
+              top: 8,
+              left: 8,
+              right: 80,
+              child: SafeArea(
+                  child: Center(
+                      child: Card(
+                color: Theme.of(context).primaryColor,
+                child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Zu weit entfernt, bitte näher zoomen",
+                            style:
+                                TextStyle(fontSize: 14, color: Theme.of(context).brightness == Brightness.light ? Colors.white : Colors.black)),
+                      ],
+                    )),
+              ))))
+          : Container(),
       state is ErrorStationMapState
           ? Positioned(
               top: 8,

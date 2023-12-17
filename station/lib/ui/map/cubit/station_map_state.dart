@@ -41,6 +41,8 @@ class LoadingMarkersStationMapState extends MarkersStationMapState {
       required super.filter});
 }
 
+class TooFarZoomedOutStationMapState extends StationMapState {}
+
 class FilterMarkersStationMapState extends MarkersStationMapState {
   FilterMarkersStationMapState(
       {required super.stationMarkers,

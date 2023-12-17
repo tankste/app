@@ -78,12 +78,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
     // Zoomed out too far, skip station loading
     if (position.zoom < 10.5) {
-      if (state is MarkersStationMapState) {
-        emit(MarkersStationMapState(
-            stationMarkers: {},
-            isShowingLabelMarkers: false,
-            filter: _filter!));
-      }
+      emit(TooFarZoomedOutStationMapState());
       return;
     }
     bool showLabelMarkers = position.zoom >= 12;
@@ -298,8 +293,8 @@ class StationMapCubit extends Cubit<StationMapState>
       }
 
       permission = await Geolocator.requestPermission();
-      _permissionRepository
-          .updateLocationPermission(locationPermission.copyWith(hasRequested: true));
+      _permissionRepository.updateLocationPermission(
+          locationPermission.copyWith(hasRequested: true));
 
       if (permission == LocationPermission.denied) {
         return Result.success(null);
