@@ -25,18 +25,24 @@ class StationMapPageState extends State<StationMapPage> {
         create: (context) => StationMapCubit(),
         child: BlocConsumer<StationMapCubit, StationMapState>(
             listener: (context, state) {
-          _mapController?.moveCameraToPosition(state.cameraPosition);
+          if (state is MoveToPositionStationMapState) {
+            _mapController?.moveCameraToPosition(state.cameraPosition);
+          }
         }, builder: (context, state) {
           return Scaffold(body: _buildBody(context, state));
         }));
   }
 
   Widget _buildBody(BuildContext context, StationMapState state) {
+    if (state is MoveToPositionStationMapState) {
+      return _buildBody(context, state.underlyingState);
+    }
+
     return Stack(children: <Widget>[
       GenericMap(
         initialCameraPosition: initialCameraPosition,
         onMapCreated: (mapController) {
-          mapController.moveCameraToPosition(state.cameraPosition);
+          // mapController.moveCameraToPosition(state.cameraPosition);
           setState(() {
             _mapController = mapController;
           });
@@ -187,7 +193,7 @@ class StationMapPageState extends State<StationMapPage> {
               onCancel: () {
                 context.read<StationMapCubit>().onCancelFilterSettings();
               })
-          : Container()
+          : Container(),
     ]);
   }
 
