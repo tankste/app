@@ -40,7 +40,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         return priceResult.when((prices) {
           return openTimesResult.when((openTimes) {
             return DetailStationDetailsState(
-                title: station.name.isNotEmpty ? station.name : station.brand,
+                title: station.brand,
                 coordinate: station.coordinate,
                 address:
                     "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
