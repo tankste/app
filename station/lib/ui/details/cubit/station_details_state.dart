@@ -42,6 +42,7 @@ class Price {
 class OpenTime {
   final String day;
   final String time;
+  final bool isHighlighted;
 
-  OpenTime({required this.day, required this.time});
+  OpenTime({required this.day, required this.time, required this.isHighlighted});
 }

@@ -153,10 +153,22 @@ class StationDetailsPage extends StatelessWidget {
                                         children: [
                                           Expanded(
                                               flex: 2,
-                                              child: Text(openTime.day)),
+                                              child: Text(openTime.day,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          openTime.isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
                                           Expanded(
                                               flex: 1,
-                                              child: Text(openTime.time)),
+                                              child: Text(openTime.time,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          openTime.isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
                                         ],
                                       )))
                                   .toList()),
