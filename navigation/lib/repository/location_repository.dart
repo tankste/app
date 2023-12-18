@@ -6,7 +6,6 @@ abstract class LocationRepository {
 }
 
 class GpsLocationRepository extends LocationRepository {
-
   @override
   Future<CoordinateModel?> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -16,17 +15,13 @@ class GpsLocationRepository extends LocationRepository {
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return null;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
+      return null;
+    } else if (permission == LocationPermission.deniedForever) {
       return null;
     }
 
     Position position = await Geolocator.getCurrentPosition();
-    return CoordinateModel(latitude: position.latitude, longitude: position.longitude);
+    return CoordinateModel(
+        latitude: position.latitude, longitude: position.longitude);
   }
 }
