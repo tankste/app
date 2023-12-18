@@ -16,13 +16,11 @@ class DeveloperCard extends StatelessWidget {
         create: (context) => DeveloperCardCubit(),
         child: BlocConsumer<DeveloperCardCubit, DeveloperCardState>(
             listener: (context, state) {
-              if (state
-                  is SuccessRestLocationPermissionEnabledDeveloperCardState) {
+              if (state is SuccessDeleteCacheEnabledDeveloperCardState) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Standortberechtigung zurückgesetzt"),
+                  content: Text("App Cache wurde zurückgesetzt!"),
                 ));
-              } else if (state
-                  is ErrorRestLocationPermissionEnabledDeveloperCardState) {
+              } else if (state is ErrorDeleteCacheEnabledDeveloperCardState) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Es ist ein Fehler aufgetreten!"),
                 ));
@@ -62,12 +60,12 @@ class DeveloperCard extends StatelessWidget {
         ),
         ListTile(
           onTap: () {
-            context.read<DeveloperCardCubit>().onResetLocationClicked();
+            context.read<DeveloperCardCubit>().onResetCacheClicked();
           },
           minLeadingWidth: 8,
-          leading: const Icon(Icons.location_disabled),
-          title: const Text("Standortberechtigung zurücksetzen"),
-          subtitle: const Text("Löschen des Caches zur Standortberechtigung"),
+          leading: const Icon(Icons.cookie_outlined),
+          title: const Text("Cache zurücksetzen"),
+          subtitle: const Text("Lösche alle Cache Parameter"),
         ),
       ]);
     } else if (state is ErrorDeveloperCardState) {

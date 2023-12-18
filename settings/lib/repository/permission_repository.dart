@@ -9,6 +9,8 @@ abstract class PermissionRepository {
 
   Stream<Result<PermissionModel, Exception>> updateLocationPermission(
       PermissionModel permission);
+
+  Stream<Result<void, Exception>> deleteLocationPermission();
 }
 
 class LocalPermissionRepository extends PermissionRepository {
@@ -63,6 +65,28 @@ class LocalPermissionRepository extends PermissionRepository {
       await preferences.setBool(
           'permission_location_requested', permission.hasRequested);
       return Result.success(permission);
+    } on Exception catch (e) {
+      return Result.error(e);
+    }
+  }
+
+  @override
+  Stream<Result<void, Exception>> deleteLocationPermission() {
+    StreamController<Result<void, Exception>> controller =
+        StreamController.broadcast();
+
+    _deleteAsync()
+        .then((result) => controller.add(result))
+        .then((_) => getLocationPermission());
+
+    return controller.stream;
+  }
+
+  Future<Result<void, Exception>> _deleteAsync() async {
+    try {
+      final SharedPreferences preferences = await _getPreferences();
+      await preferences.remove('permission_location_requested');
+      return Result.success(null);
     } on Exception catch (e) {
       return Result.error(e);
     }

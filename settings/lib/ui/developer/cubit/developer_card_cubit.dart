@@ -1,4 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:map/di/map_module_factory.dart';
+import 'package:map/repository/camera_position_repository.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:settings/di/settings_module_factory.dart';
 import 'package:settings/model/permission_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
@@ -11,6 +14,8 @@ class DeveloperCardCubit extends Cubit<DeveloperCardState> {
       LocalDeveloperSettingsRepository();
   final PermissionRepository _permissionRepository =
       SettingsModuleFactory.createPermissionRepository();
+  final CameraPositionRepository _cameraPositionRepository =
+      MapModuleFactory.createCameraPositionRepository();
 
   final EnableDeveloperModeUseCase enableDeveloperModeUseCase =
       EnableDeveloperModeUseCaseImpl(LocalDeveloperSettingsRepository());
@@ -37,19 +42,26 @@ class DeveloperCardCubit extends Cubit<DeveloperCardState> {
     enableDeveloperModeUseCase.invoke(isEnabled);
   }
 
-  void onResetLocationClicked() {
-    _permissionRepository
-        .updateLocationPermission(PermissionModel(hasRequested: false))
-        .first
-        .then((result) {
+  void onResetCacheClicked() {
+    CombineLatestStream.combine2(
+        _permissionRepository.deleteLocationPermission(),
+        _cameraPositionRepository.deleteLast(),
+        (deletePermissionResult, deletePositionResult) {
+      return deletePermissionResult.when((_) {
+        return deletePositionResult.when((_) {
+          return SuccessDeleteCacheEnabledDeveloperCardState();
+        },
+            (error) => ErrorDeleteCacheEnabledDeveloperCardState(
+                errorDetails: error.toString()));
+      },
+          (error) => ErrorDeleteCacheEnabledDeveloperCardState(
+              errorDetails: error.toString()));
+    }).first.then((state) {
       if (isClosed) {
         return;
       }
 
-      emit(result.when(
-          (_) => SuccessRestLocationPermissionEnabledDeveloperCardState(),
-          (error) => ErrorRestLocationPermissionEnabledDeveloperCardState(
-              errorDetails: error.toString())));
+      emit(state);
     });
   }
 }

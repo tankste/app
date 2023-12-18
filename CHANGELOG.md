@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+* 🛠 No longer enforce location permission ([#](https://github.com/tankste/app/issues/))
 * ➕ Add settings option for changing the map provider ([#51](https://github.com/tankste/app/issues/51))
 * ➕ Add sponsor page to settings ([#56](https://github.com/tankste/app/issues/49))
 * 🛠 Use tankste! backend and remove Tankerkoenig usage ([#49](https://github.com/tankste/app/issues/49))

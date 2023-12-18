@@ -12,13 +12,12 @@ class ErrorDeveloperCardState extends DeveloperCardState {
   ErrorDeveloperCardState({required this.errorDetails});
 }
 
-class SuccessRestLocationPermissionEnabledDeveloperCardState
+class SuccessDeleteCacheEnabledDeveloperCardState
     extends EnabledDeveloperCardState {}
 
-class ErrorRestLocationPermissionEnabledDeveloperCardState
+class ErrorDeleteCacheEnabledDeveloperCardState
     extends EnabledDeveloperCardState {
   final String errorDetails;
 
-  ErrorRestLocationPermissionEnabledDeveloperCardState(
-      {required this.errorDetails});
+  ErrorDeleteCacheEnabledDeveloperCardState({required this.errorDetails});
 }

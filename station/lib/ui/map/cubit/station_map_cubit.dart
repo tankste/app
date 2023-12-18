@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:map/di/map_module_factory.dart';
+import 'package:map/model/camera_position_model.dart';
+import 'package:map/repository/camera_position_repository.dart';
 import 'package:map/ui/generic/generic_map.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:navigation/coordinate_model.dart';
@@ -27,6 +30,8 @@ class StationMapCubit extends Cubit<StationMapState>
       StationModuleFactory.createMarkerRepository();
   final PermissionRepository _permissionRepository =
       SettingsModuleFactory.createPermissionRepository();
+  final CameraPositionRepository _cameraPositionRepository =
+      MapModuleFactory.createCameraPositionRepository();
 
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
@@ -36,6 +41,7 @@ class StationMapCubit extends Cubit<StationMapState>
   Filter? _filter;
   DateTime? _lastRequestTime;
   Future? _stationRequest;
+  bool _hasInitialMovementDone = false;
 
   StationMapCubit() : super(LoadingStationMapState()) {
     WidgetsBinding.instance.addObserver(this);
@@ -48,7 +54,9 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void _init() {
-    _fetchGasFilter().then((_) => _moveToOwnLocation(false));
+    _hasInitialMovementDone = false;
+
+    _fetchGasFilter().then((_) => _moveToOwnOrLastLocation());
   }
 
   //TODO: outsource to repository
@@ -156,17 +164,102 @@ class StationMapCubit extends Cubit<StationMapState>
     if (_visibleBounds != null) {
       _fetchStations(_position, _visibleBounds!, true);
     } else if (_filter != null) {
-      _moveToOwnLocation(true);
+      _moveToOwnLocation();
     } else {
       _init();
     }
   }
 
   void onMoveToLocationClicked() {
-    _moveToOwnLocation(true);
+    _moveToOwnLocation();
   }
 
-  void _moveToOwnLocation(bool forcePermissionRequest) {
+  void _moveToOwnOrLastLocation() {
+    StationMapState state = this.state;
+    if (state is MoveToPositionStationMapState) {
+      state = state.underlyingState;
+    }
+    if (state is LoadingMarkersStationMapState) {
+      state = MarkersStationMapState(
+          stationMarkers: state.stationMarkers,
+          isShowingLabelMarkers: state.isShowingLabelMarkers,
+          filter: state.filter);
+    } else if (state is LoadingStationMapState) {
+      state = MarkersStationMapState(
+          stationMarkers: {}, isShowingLabelMarkers: false, filter: _filter!);
+    }
+
+    if (state is MarkersStationMapState) {
+      emit(LoadingMarkersStationMapState(
+          stationMarkers: state.stationMarkers,
+          isShowingLabelMarkers: state.isShowingLabelMarkers,
+          filter: state.filter));
+    } else {
+      emit(LoadingStationMapState());
+    }
+
+    _getOwnPosition(false).then((result) {
+      result.when((position) {
+        _hasInitialMovementDone = true;
+
+        if (position != null) {
+          CameraPosition newPosition = CameraPosition(
+              latLng: LatLng(position.latitude, position.longitude),
+              zoom: 12.5);
+
+          if (newPosition != _position) {
+            _position = newPosition;
+
+            // Stations fetched automatically after map has moved
+            if (state is MarkersStationMapState) {
+              emit(MoveToPositionStationMapState(
+                  cameraPosition: _position,
+                  underlyingState: LoadingMarkersStationMapState(
+                      stationMarkers: state.stationMarkers,
+                      isShowingLabelMarkers: state.isShowingLabelMarkers,
+                      filter: state.filter)));
+            } else {
+              emit(MoveToPositionStationMapState(
+                  cameraPosition: _position,
+                  underlyingState: LoadingStationMapState()));
+            }
+          } else {
+            emit(state);
+          }
+        } else {
+          _cameraPositionRepository.getLast().first.then((result) {
+            if (isClosed) {
+              return;
+            }
+
+            emit(result.when((cameraPosition) {
+              _hasInitialMovementDone = true;
+
+              if (cameraPosition != null) {
+                _position = CameraPosition(
+                    latLng: LatLng(
+                        cameraPosition.latitude, cameraPosition.longitude),
+                    zoom: cameraPosition.zoom);
+
+                return MoveToPositionStationMapState(
+                    cameraPosition: CameraPosition(
+                        latLng: LatLng(
+                            cameraPosition.latitude, cameraPosition.longitude),
+                        zoom: cameraPosition.zoom),
+                    underlyingState: state);
+              } else {
+                return TooFarZoomedOutStationMapState();
+              }
+            }, (error) => ErrorStationMapState(errorDetails: error.toString())));
+          });
+        }
+      }, (error) {
+        emit(ErrorStationMapState(errorDetails: error.toString()));
+      });
+    });
+  }
+
+  void _moveToOwnLocation() {
     StationMapState state = this.state;
     if (state is MoveToPositionStationMapState) {
       state = state.underlyingState;
@@ -181,7 +274,7 @@ class StationMapCubit extends Cubit<StationMapState>
       emit(LoadingStationMapState());
     }
 
-    _getOwnPosition(forcePermissionRequest).then((result) {
+    _getOwnPosition(true).then((result) {
       result.when((position) {
         if (position != null) {
           CameraPosition newPosition = CameraPosition(
@@ -236,6 +329,13 @@ class StationMapCubit extends Cubit<StationMapState>
       CameraPosition cameraPosition, LatLngBounds? bounds) {
     _position = cameraPosition;
     _visibleBounds = bounds;
+
+    if (_hasInitialMovementDone) {
+      _cameraPositionRepository.updateLast(CameraPositionModel(
+          latitude: cameraPosition.latLng.latitude,
+          longitude: cameraPosition.latLng.longitude,
+          zoom: cameraPosition.zoom));
+    }
   }
 
   void onFilterSaved(Filter filter) {
