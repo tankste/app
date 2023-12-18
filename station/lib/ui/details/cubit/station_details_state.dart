@@ -20,12 +20,14 @@ class DetailStationDetailsState extends StationDetailsState {
   final CoordinateModel coordinate;
   final String address;
   final List<Price> prices;
+  final String lastPriceUpdate;
   final List<OpenTime> openTimes;
 
   DetailStationDetailsState(
       {required this.coordinate,
       required this.address,
       required this.prices,
+      required this.lastPriceUpdate,
       required this.openTimes,
       required super.title});
 }

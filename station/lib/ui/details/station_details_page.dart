@@ -7,6 +7,7 @@ import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/model/station_model.dart';
 
 //TODO: extract duplicated layouts to functions / widgets
+//TODO: make price highlighting work again
 class StationDetailsPage extends StatelessWidget {
   final int stationId;
   final String? markerLabel;
@@ -122,6 +123,14 @@ class StationDetailsPage extends StatelessWidget {
                                         ],
                                       )))
                                   .toList()),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 16),
+                                  child: Text(
+                                    "Letzte Preisänderung: ${state.lastPriceUpdate}",
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                    textAlign: TextAlign.center,
+                                  ))
                             ]))),
                 Card(
                     child: Padding(

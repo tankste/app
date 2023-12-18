@@ -43,6 +43,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
                 address:
                     "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
                 prices: _genPricesList(prices),
+                lastPriceUpdate: _genPriceUpdate(prices),
                 openTimes: _genOpenTimeList(openTimes));
           },
               (error) => ErrorStationDetailsState(
@@ -200,5 +201,33 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
             .map((ot) =>
                 "${timeFormat.format(ot.startTime)} - ${timeFormat.format(ot.endTime)}")
             .join("\n"));
+  }
+
+  String _genPriceUpdate(List<PriceModel> prices) {
+    if (prices.isEmpty) {
+      return "-";
+    }
+
+    List<DateTime> priceChangeDates =
+        prices.map((price) => price.lastChangedDate).whereNotNull().toList();
+
+    priceChangeDates.sort((dateA, dateB) =>
+        dateA.millisecondsSinceEpoch.compareTo(dateB.microsecondsSinceEpoch));
+
+    if (priceChangeDates.isEmpty) {
+      return "-";
+    }
+
+    DateTime changeDate = priceChangeDates.first;
+    DateTime today = DateTime.now();
+    if (changeDate.year == today.year &&
+        changeDate.month == today.month &&
+        changeDate.day == today.day) {
+      DateFormat dateFormat = DateFormat('HH:mm');
+      return "${dateFormat.format(changeDate)} Uhr";
+    } else {
+      DateFormat dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
+      return "${dateFormat.format(changeDate)} Uhr";
+    }
   }
 }

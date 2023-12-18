@@ -1,5 +1,4 @@
 import 'package:station/model/price_model.dart';
-import 'package:station/model/station_model.dart';
 
 class PriceDto {
   final int? id;
