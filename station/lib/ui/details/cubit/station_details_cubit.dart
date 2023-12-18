@@ -13,6 +13,7 @@ import 'package:collection/collection.dart';
 class StationDetailsCubit extends Cubit<StationDetailsState> {
   final int stationId;
   final String markerLabel;
+  final String activeGasPriceFilter; //TODO: use repository for filter storage
 
   final StationRepository stationRepository =
       StationModuleFactory.createStationRepository();
@@ -23,7 +24,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   final OpenTimeRepository openTimeRepository =
       StationModuleFactory.createOpenTimeRepository();
 
-  StationDetailsCubit(this.stationId, this.markerLabel)
+  StationDetailsCubit(
+      this.stationId, this.markerLabel, this.activeGasPriceFilter)
       : super(LoadingStationDetailsState(title: markerLabel)) {
     _fetchStation();
   }
@@ -86,15 +88,19 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     }
 
     String fuelLabel = "";
+    bool isSelected = false;
     switch (fuelType) {
       case FuelType.e5:
         fuelLabel = "Super E5";
+        isSelected = activeGasPriceFilter == "e5";
         break;
       case FuelType.e10:
         fuelLabel = "Super E10";
+        isSelected = activeGasPriceFilter == "e10";
         break;
       case FuelType.diesel:
         fuelLabel = "Diesel";
+        isSelected = activeGasPriceFilter == "diesel";
         break;
       default:
         fuelLabel = "Unbekannt";
@@ -102,6 +108,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
 
     return Price(
         fuel: fuelLabel,
+        isHighlighted: isSelected,
         price: _priceText(
             prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ??
                 0));

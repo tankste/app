@@ -35,8 +35,9 @@ class DetailStationDetailsState extends StationDetailsState {
 class Price {
   final String fuel;
   final String price;
+  final bool isHighlighted;
 
-  Price({required this.fuel, required this.price});
+  Price({required this.fuel, required this.price, required this.isHighlighted});
 }
 
 class OpenTime {

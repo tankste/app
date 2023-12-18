@@ -23,7 +23,8 @@ class StationDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => StationDetailsCubit(stationId, markerLabel ?? ""),
+        create: (context) => StationDetailsCubit(
+            stationId, markerLabel ?? "", activeGasPriceFilter ?? ""),
         child: BlocConsumer<StationDetailsCubit, StationDetailsState>(
             listener: (context, state) {},
             builder: (context, state) {
@@ -109,14 +110,16 @@ class StationDetailsPage extends StatelessWidget {
                                               child: Text(price.fuel,
                                                   style: TextStyle(
                                                       fontWeight:
-                                                          FontWeight.normal))),
+                                                          price.isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
                                           Expanded(
                                               flex: 1,
                                               child: Text(price.price,
                                                   style: TextStyle(
                                                       fontWeight:
-                                                          activeGasPriceFilter ==
-                                                                  "diesel"
+                                                          price.isHighlighted
                                                               ? FontWeight.bold
                                                               : FontWeight
                                                                   .normal))),
