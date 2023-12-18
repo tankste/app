@@ -26,6 +26,7 @@ final CameraPosition initialCameraPosition =
 //TODO: continue refactoring
 class StationMapCubit extends Cubit<StationMapState>
     with WidgetsBindingObserver {
+  final double _minZoom = 10.5;
   final MarkerRepository _markerRepository =
       StationModuleFactory.createMarkerRepository();
   final PermissionRepository _permissionRepository =
@@ -85,7 +86,7 @@ class StationMapCubit extends Cubit<StationMapState>
     }
 
     // Zoomed out too far, skip station loading
-    if (position.zoom < 10.5) {
+    if (position.zoom < _minZoom) {
       emit(TooFarZoomedOutStationMapState());
       return;
     }
@@ -174,6 +175,12 @@ class StationMapCubit extends Cubit<StationMapState>
     _moveToOwnLocation();
   }
 
+  void onZoomInfoClicked() {
+    emit(MoveToPositionStationMapState(
+        cameraPosition: CameraPosition(latLng: _position.latLng, zoom: _minZoom),
+        underlyingState: state));
+  }
+
   void _moveToOwnOrLastLocation() {
     StationMapState state = this.state;
     if (state is MoveToPositionStationMapState) {
@@ -250,7 +257,9 @@ class StationMapCubit extends Cubit<StationMapState>
               } else {
                 return TooFarZoomedOutStationMapState();
               }
-            }, (error) => ErrorStationMapState(errorDetails: error.toString())));
+            },
+                (error) =>
+                    ErrorStationMapState(errorDetails: error.toString())));
           });
         }
       }, (error) {

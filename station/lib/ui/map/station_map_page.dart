@@ -72,20 +72,39 @@ class StationMapPageState extends State<StationMapPage> {
               right: 80,
               child: SafeArea(
                   child: Center(
-                      child: Card(
+                      child: InkWell(
+                        onTap: () {
+                          context.read<StationMapCubit>().onZoomInfoClicked();
+                        },
+                          child: Card(
                 color: Theme.of(context).primaryColor,
                 child: Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Zu weit entfernt, bitte näher zoomen",
-                            style:
-                                TextStyle(fontSize: 14, color: Theme.of(context).brightness == Brightness.light ? Colors.white : Colors.black)),
+                        Icon(Icons.search,
+                            size: 14,
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.white
+                                    : Colors.black),
+                        Flexible(
+                            child: Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: Text("Zu weit entfernt, bitte näher zoomen.",
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : Colors.black)),
+                        ))
                       ],
                     )),
-              ))))
+                      )))))
           : Container(),
       state is ErrorStationMapState
           ? Positioned(
