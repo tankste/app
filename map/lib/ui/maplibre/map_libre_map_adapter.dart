@@ -31,6 +31,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   final Set<map_libre_maps.Line> _lines = <map_libre_maps.Line>{};
   map_libre_maps.MaplibreMapController? _mapController;
   bool _isStyleLoaded = false;
+  map_libre_maps.CameraPosition? _lastCameraPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +55,11 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
         }
 
         if (!mapController.isCameraMoving) {
+          if (_lastCameraPosition == cameraPosition) {
+            return;
+          }
+
+          _lastCameraPosition = cameraPosition;
           widget.onCameraMove?.call(CameraPosition(
               latLng: LatLng(cameraPosition.target.latitude,
                   cameraPosition.target.longitude),

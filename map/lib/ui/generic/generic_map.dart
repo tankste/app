@@ -102,6 +102,15 @@ class CameraPosition {
   CameraPosition({required this.latLng, required this.zoom});
 
   @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is CameraPosition &&
+        other.latLng == latLng &&
+        other.zoom == zoom;
+  }
+
+  @override
   String toString() {
     return 'CameraPosition{latLng: $latLng, zoom: $zoom}';
   }
@@ -112,6 +121,15 @@ class LatLng {
   double longitude;
 
   LatLng(this.latitude, this.longitude);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is LatLng &&
+        other.latitude == latitude &&
+        other.longitude == longitude;
+  }
 
   @override
   String toString() {
@@ -149,11 +167,7 @@ class Marker {
       {required this.id, required this.latLng, required this.icon, this.onTap});
 
   Marker withoutIcon() {
-    return Marker(
-        id: id,
-        latLng: latLng,
-        icon: null,
-        onTap: onTap);
+    return Marker(id: id, latLng: latLng, icon: null, onTap: onTap);
   }
 
   @override

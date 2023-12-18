@@ -15,38 +15,63 @@ class DeveloperCard extends StatelessWidget {
     return BlocProvider(
         create: (context) => DeveloperCardCubit(),
         child: BlocConsumer<DeveloperCardCubit, DeveloperCardState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              if (state.isVisible != true) {
-                return Container();
+            listener: (context, state) {
+              if (state is SuccessDeleteCacheEnabledDeveloperCardState) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("App Cache wurde zurückgesetzt!"),
+                ));
+              } else if (state is ErrorDeleteCacheEnabledDeveloperCardState) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Es ist ein Fehler aufgetreten!"),
+                ));
               }
+            },
+            builder: (context, state) => _buildBody(context, state)));
+  }
 
-              return SettingsCard(title: "Entwickler", items: [
-                CustomSwitchListTile(
-                  value: state.isVisible == true,
-                  onChanged: (value) {
-                    context
-                        .read<DeveloperCardCubit>()
-                        .onDeveloperModeChanged(value);
-                  },
-                  minLeadingWidth: 8,
-                  secondary: const Icon(Icons.code),
-                  title: const Text("Entwicklermodus"),
-                  subtitle: const Text("Deaktiviere den Entwicklermodus"),
-                ),
-                ListTile(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const FeatureSettingsPage()));
-                  },
-                  minLeadingWidth: 8,
-                  leading: const Icon(FontAwesomeIcons.wandMagicSparkles),
-                  title: const Text("Experimentelle Funktionen"),
-                  subtitle: const Text("Aktiviere experimentelle Funktionen"),
-                ),
-              ]);
-            }));
+  Widget _buildBody(BuildContext context, DeveloperCardState state) {
+    if (state is LoadingDeveloperCardState) {
+      return Container();
+    } else if (state is DisabledDeveloperCardState) {
+      return Container();
+    } else if (state is EnabledDeveloperCardState) {
+      return SettingsCard(title: "Entwickler", items: [
+        CustomSwitchListTile(
+          value: true,
+          onChanged: (value) {
+            context.read<DeveloperCardCubit>().onDeveloperModeChanged(value);
+          },
+          minLeadingWidth: 8,
+          secondary: const Icon(Icons.code),
+          title: const Text("Entwicklermodus"),
+          subtitle: const Text("Deaktiviere den Entwicklermodus"),
+        ),
+        ListTile(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const FeatureSettingsPage()));
+          },
+          minLeadingWidth: 8,
+          leading: const Icon(FontAwesomeIcons.wandMagicSparkles),
+          title: const Text("Experimentelle Funktionen"),
+          subtitle: const Text("Aktiviere experimentelle Funktionen"),
+        ),
+        ListTile(
+          onTap: () {
+            context.read<DeveloperCardCubit>().onResetCacheClicked();
+          },
+          minLeadingWidth: 8,
+          leading: const Icon(Icons.cookie_outlined),
+          title: const Text("Cache zurücksetzen"),
+          subtitle: const Text("Lösche alle Cache Parameter"),
+        ),
+      ]);
+    } else if (state is ErrorDeveloperCardState) {
+      return Container();
+    }
+
+    return Container();
   }
 }

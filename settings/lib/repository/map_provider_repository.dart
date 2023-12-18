@@ -95,7 +95,6 @@ class LocalMapProviderRepository extends MapProviderRepository {
           .then((provider) => availableProviders
               .firstWhereOrNull((p) => p.provider == provider))
           .then((provider) {
-            print("AAA");
             if (provider == null) {
               return Result.success(_sytemProvider);
             }

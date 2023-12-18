@@ -25,21 +25,28 @@ class StationMapPageState extends State<StationMapPage> {
         create: (context) => StationMapCubit(),
         child: BlocConsumer<StationMapCubit, StationMapState>(
             listener: (context, state) {
-          _mapController?.moveCameraToPosition(state.cameraPosition);
+          if (state is MoveToPositionStationMapState) {
+            _mapController?.moveCameraToPosition(state.cameraPosition);
+          }
         }, builder: (context, state) {
           return Scaffold(body: _buildBody(context, state));
         }));
   }
 
   Widget _buildBody(BuildContext context, StationMapState state) {
+    if (state is MoveToPositionStationMapState) {
+      return _buildBody(context, state.underlyingState);
+    }
+
     return Stack(children: <Widget>[
       GenericMap(
         initialCameraPosition: initialCameraPosition,
         onMapCreated: (mapController) {
-          mapController.moveCameraToPosition(state.cameraPosition);
           setState(() {
             _mapController = mapController;
           });
+
+          context.read<StationMapCubit>().onMapReady();
         },
         onCameraIdle: () {
           context.read<StationMapCubit>().onCameraIdle();
@@ -57,6 +64,47 @@ class StationMapPageState extends State<StationMapPage> {
       ),
       state is LoadingStationMapState || state is LoadingMarkersStationMapState
           ? const SafeArea(child: LinearProgressIndicator())
+          : Container(),
+      state is TooFarZoomedOutStationMapState
+          ? Positioned(
+              top: 8,
+              left: 8,
+              right: 80,
+              child: SafeArea(
+                  child: Center(
+                      child: InkWell(
+                        onTap: () {
+                          context.read<StationMapCubit>().onZoomInfoClicked();
+                        },
+                          child: Card(
+                color: Theme.of(context).primaryColor,
+                child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search,
+                            size: 14,
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.white
+                                    : Colors.black),
+                        Flexible(
+                            child: Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: Text("Zu weit entfernt, bitte näher zoomen.",
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : Colors.black)),
+                        ))
+                      ],
+                    )),
+                      )))))
           : Container(),
       state is ErrorStationMapState
           ? Positioned(
@@ -187,7 +235,7 @@ class StationMapPageState extends State<StationMapPage> {
               onCancel: () {
                 context.read<StationMapCubit>().onCancelFilterSettings();
               })
-          : Container()
+          : Container(),
     ]);
   }
 

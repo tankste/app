@@ -1,19 +1,23 @@
-import 'package:core/cubit/base_state.dart';
+abstract class DeveloperCardState {}
 
-class DeveloperCardState extends BaseState {
-  final bool? isVisible;
+class LoadingDeveloperCardState extends DeveloperCardState {}
 
-  DeveloperCardState(status, this.isVisible, error) : super(status, error);
+class EnabledDeveloperCardState extends DeveloperCardState {}
 
-  static DeveloperCardState loading() {
-    return DeveloperCardState(Status.loading, null, null);
-  }
+class DisabledDeveloperCardState extends DeveloperCardState {}
 
-  static DeveloperCardState success(bool isVisible) {
-    return DeveloperCardState(Status.success, isVisible, null);
-  }
+class ErrorDeveloperCardState extends DeveloperCardState {
+  final String errorDetails;
 
-  static DeveloperCardState failure(Exception exception) {
-    return DeveloperCardState(Status.failure, null, exception);
-  }
+  ErrorDeveloperCardState({required this.errorDetails});
+}
+
+class SuccessDeleteCacheEnabledDeveloperCardState
+    extends EnabledDeveloperCardState {}
+
+class ErrorDeleteCacheEnabledDeveloperCardState
+    extends EnabledDeveloperCardState {
+  final String errorDetails;
+
+  ErrorDeleteCacheEnabledDeveloperCardState({required this.errorDetails});
 }

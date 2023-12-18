@@ -36,6 +36,9 @@ dependencies:
   # Rx Dart - https://pub.dev/packages/rxdart
   rxdart: ^0.27.7
 
+  # Shared Preferences - https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.0.15
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
