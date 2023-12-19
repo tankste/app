@@ -18,7 +18,7 @@ class PriceDto {
       id: parsedJson['id'],
       type: parsedJson['type'],
       price: parsedJson['price'],
-      lastChangedDate: parsedJson['lastChangedDate'],
+      lastChangedDate: parsedJson['lastChangesAt'],
     );
   }
 
