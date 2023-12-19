@@ -1,5 +1,4 @@
 import 'package:station/model/price_model.dart';
-import 'package:station/model/station_model.dart';
 
 class PriceDto {
   final int? id;
@@ -19,7 +18,7 @@ class PriceDto {
       id: parsedJson['id'],
       type: parsedJson['type'],
       price: parsedJson['price'],
-      lastChangedDate: parsedJson['lastChangedDate'],
+      lastChangedDate: parsedJson['lastChangesAt'],
     );
   }
 

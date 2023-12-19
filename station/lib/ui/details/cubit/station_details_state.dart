@@ -20,12 +20,14 @@ class DetailStationDetailsState extends StationDetailsState {
   final CoordinateModel coordinate;
   final String address;
   final List<Price> prices;
+  final String lastPriceUpdate;
   final List<OpenTime> openTimes;
 
   DetailStationDetailsState(
       {required this.coordinate,
       required this.address,
       required this.prices,
+      required this.lastPriceUpdate,
       required this.openTimes,
       required super.title});
 }
@@ -33,13 +35,15 @@ class DetailStationDetailsState extends StationDetailsState {
 class Price {
   final String fuel;
   final String price;
+  final bool isHighlighted;
 
-  Price({required this.fuel, required this.price});
+  Price({required this.fuel, required this.price, required this.isHighlighted});
 }
 
 class OpenTime {
   final String day;
   final String time;
+  final bool isHighlighted;
 
-  OpenTime({required this.day, required this.time});
+  OpenTime({required this.day, required this.time, required this.isHighlighted});
 }

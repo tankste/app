@@ -13,6 +13,7 @@ import 'package:collection/collection.dart';
 class StationDetailsCubit extends Cubit<StationDetailsState> {
   final int stationId;
   final String markerLabel;
+  final String activeGasPriceFilter; //TODO: use repository for filter storage
 
   final StationRepository stationRepository =
       StationModuleFactory.createStationRepository();
@@ -23,7 +24,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   final OpenTimeRepository openTimeRepository =
       StationModuleFactory.createOpenTimeRepository();
 
-  StationDetailsCubit(this.stationId, this.markerLabel)
+  StationDetailsCubit(
+      this.stationId, this.markerLabel, this.activeGasPriceFilter)
       : super(LoadingStationDetailsState(title: markerLabel)) {
     _fetchStation();
   }
@@ -38,11 +40,12 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         return priceResult.when((prices) {
           return openTimesResult.when((openTimes) {
             return DetailStationDetailsState(
-                title: station.name.isNotEmpty ? station.name : station.brand,
+                title: station.brand,
                 coordinate: station.coordinate,
                 address:
                     "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
                 prices: _genPricesList(prices),
+                lastPriceUpdate: _genPriceUpdate(prices),
                 openTimes: _genOpenTimeList(openTimes));
           },
               (error) => ErrorStationDetailsState(
@@ -85,15 +88,19 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     }
 
     String fuelLabel = "";
+    bool isSelected = false;
     switch (fuelType) {
       case FuelType.e5:
         fuelLabel = "Super E5";
+        isSelected = activeGasPriceFilter == "e5";
         break;
       case FuelType.e10:
         fuelLabel = "Super E10";
+        isSelected = activeGasPriceFilter == "e10";
         break;
       case FuelType.diesel:
         fuelLabel = "Diesel";
+        isSelected = activeGasPriceFilter == "diesel";
         break;
       default:
         fuelLabel = "Unbekannt";
@@ -101,6 +108,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
 
     return Price(
         fuel: fuelLabel,
+        isHighlighted: isSelected,
         price: _priceText(
             prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ??
                 0));
@@ -155,50 +163,91 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   }
 
   OpenTime? _genOpenTimeItem(OpenTimeDay day, List<OpenTimeModel> openTimes) {
+    DateTime now = DateTime.now();
     String dayLabel = "";
+    bool isToday = false;
     switch (day) {
       case OpenTimeDay.monday:
         dayLabel = "Montag";
+        isToday = now.weekday == DateTime.monday;
         break;
       case OpenTimeDay.tuesday:
         dayLabel = "Dienstag";
+        isToday = now.weekday == DateTime.tuesday;
         break;
       case OpenTimeDay.wednesday:
         dayLabel = "Mittwoch";
+        isToday = now.weekday == DateTime.wednesday;
         break;
       case OpenTimeDay.thursday:
         dayLabel = "Donnerstag";
+        isToday = now.weekday == DateTime.thursday;
         break;
       case OpenTimeDay.friday:
         dayLabel = "Freitag";
+        isToday = now.weekday == DateTime.friday;
         break;
       case OpenTimeDay.saturday:
         dayLabel = "Samstag";
+        isToday = now.weekday == DateTime.saturday;
         break;
       case OpenTimeDay.sunday:
         dayLabel = "Sonntag";
+        isToday = now.weekday == DateTime.sunday;
         break;
       case OpenTimeDay.publicHoliday:
         dayLabel = "Feiertag";
+        isToday = false; //TODO: find holidays and highlight if match
         break;
       default:
         dayLabel = "Unbekannt";
+        isToday = false;
     }
 
     if (openTimes.isEmpty) {
       if (day == OpenTimeDay.publicHoliday) {
         return null;
       } else {
-        return OpenTime(day: dayLabel, time: "Geschlossen");
+        return OpenTime(
+            day: dayLabel, isHighlighted: isToday, time: "Geschlossen");
       }
     }
 
     DateFormat timeFormat = DateFormat('HH:mm');
     return OpenTime(
         day: dayLabel,
+        isHighlighted: isToday,
         time: openTimes
             .map((ot) =>
                 "${timeFormat.format(ot.startTime)} - ${timeFormat.format(ot.endTime)}")
             .join("\n"));
+  }
+
+  String _genPriceUpdate(List<PriceModel> prices) {
+    if (prices.isEmpty) {
+      return "-";
+    }
+
+    List<DateTime> priceChangeDates =
+        prices.map((price) => price.lastChangedDate).whereNotNull().toList();
+
+    priceChangeDates.sort((dateA, dateB) =>
+        dateA.millisecondsSinceEpoch.compareTo(dateB.microsecondsSinceEpoch));
+
+    if (priceChangeDates.isEmpty) {
+      return "-";
+    }
+
+    DateTime changeDate = priceChangeDates.first;
+    DateTime today = DateTime.now();
+    if (changeDate.year == today.year &&
+        changeDate.month == today.month &&
+        changeDate.day == today.day) {
+      DateFormat dateFormat = DateFormat('HH:mm');
+      return "${dateFormat.format(changeDate)} Uhr";
+    } else {
+      DateFormat dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
+      return "${dateFormat.format(changeDate)} Uhr";
+    }
   }
 }

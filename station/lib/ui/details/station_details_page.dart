@@ -7,6 +7,7 @@ import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/model/station_model.dart';
 
 //TODO: extract duplicated layouts to functions / widgets
+//TODO: make price highlighting work again
 class StationDetailsPage extends StatelessWidget {
   final int stationId;
   final String? markerLabel;
@@ -22,7 +23,8 @@ class StationDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => StationDetailsCubit(stationId, markerLabel ?? ""),
+        create: (context) => StationDetailsCubit(
+            stationId, markerLabel ?? "", activeGasPriceFilter ?? ""),
         child: BlocConsumer<StationDetailsCubit, StationDetailsState>(
             listener: (context, state) {},
             builder: (context, state) {
@@ -108,20 +110,30 @@ class StationDetailsPage extends StatelessWidget {
                                               child: Text(price.fuel,
                                                   style: TextStyle(
                                                       fontWeight:
-                                                          FontWeight.normal))),
+                                                          price.isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
                                           Expanded(
                                               flex: 1,
                                               child: Text(price.price,
                                                   style: TextStyle(
                                                       fontWeight:
-                                                          activeGasPriceFilter ==
-                                                                  "diesel"
+                                                          price.isHighlighted
                                                               ? FontWeight.bold
                                                               : FontWeight
                                                                   .normal))),
                                         ],
                                       )))
                                   .toList()),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 16),
+                                  child: Text(
+                                    "Letzte Preisänderung: ${state.lastPriceUpdate}",
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                    textAlign: TextAlign.center,
+                                  ))
                             ]))),
                 Card(
                     child: Padding(
@@ -144,10 +156,22 @@ class StationDetailsPage extends StatelessWidget {
                                         children: [
                                           Expanded(
                                               flex: 2,
-                                              child: Text(openTime.day)),
+                                              child: Text(openTime.day,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          openTime.isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
                                           Expanded(
                                               flex: 1,
-                                              child: Text(openTime.time)),
+                                              child: Text(openTime.time,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          openTime.isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
                                         ],
                                       )))
                                   .toList()),
