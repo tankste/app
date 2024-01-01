@@ -1,10 +1,9 @@
-import 'package:core/cubit/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/ui/preview/route_preview.dart';
 import 'package:station/ui/details/cubit/station_details_cubit.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
-import 'package:station/model/station_model.dart';
+import 'package:report/ui/form/report_form_page.dart';
 
 //TODO: extract duplicated layouts to functions / widgets
 //TODO: make price highlighting work again
@@ -31,6 +30,17 @@ class StationDetailsPage extends StatelessWidget {
               return Scaffold(
                   appBar: AppBar(
                     title: Text(state.title),
+                    actions: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReportFormPage(
+                                        stationId: this.stationId)));
+                          },
+                          icon: Icon(Icons.report))
+                    ],
                   ),
                   body: SafeArea(child: _buildBody(context, state)));
             }));
