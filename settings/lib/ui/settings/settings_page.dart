@@ -92,6 +92,13 @@ class SettingsPage extends StatelessWidget {
       SettingsCard(title: "Rechtliches", items: [
         ListTile(
             onTap: () {
+              _openUrl("https://tankste.app/datenquellen");
+            },
+            minLeadingWidth: 8,
+            leading: const Icon(Icons.source),
+            title: const Text("Datenquellen")),
+        ListTile(
+            onTap: () {
               _openUrl("https://tankste.app/nutzungsbedingungen");
             },
             minLeadingWidth: 8,
@@ -106,15 +113,15 @@ class SettingsPage extends StatelessWidget {
             title: const Text("Datenschutzbestimmungen"))
       ]),
       const DeveloperCard(),
-      const SettingsCard(title: "Über", items: [
-        // ListTile(
-        //     onTap: () {
-        //       _openUrl("https://status.tankste.app/");
-        //     },
-        //     minLeadingWidth: 8,
-        //     leading: const Icon(Icons.traffic),
-        //     title: const Text("Status")),
-        VersionItem()
+      SettingsCard(title: "Über", items: [
+        ListTile(
+            onTap: () {
+              _openUrl("https://status.tankste.app/");
+            },
+            minLeadingWidth: 8,
+            leading: const Icon(Icons.traffic),
+            title: const Text("Status")),
+        const VersionItem()
       ]),
       Padding(
           padding: const EdgeInsets.only(top: 16, bottom: 8),
