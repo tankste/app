@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+* ➕ Show data source origin ([#55](https://github.com/tankste/app/issues/55))
 * ➕ Add report wrong data form ([#54](https://github.com/tankste/app/issues/54))
 * ➕ Add date of last price change to details ([#2](https://github.com/tankste/app/issues/2))
 * 🛠 No longer enforce location permission ([#6](https://github.com/tankste/app/issues/6))
