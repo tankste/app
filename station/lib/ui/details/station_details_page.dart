@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/ui/preview/route_preview.dart';
 import 'package:station/ui/details/cubit/station_details_cubit.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
+import 'package:station/model/station_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:report/ui/form/report_form_page.dart';
 
 //TODO: extract duplicated layouts to functions / widgets
@@ -116,14 +118,23 @@ class StationDetailsPage extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
-                                              flex: 2,
-                                              child: Text(price.fuel,
+                                            flex: 2,
+                                            child: Row(children: [
+                                              Text(price.fuel,
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          price.isHighlighted
-                                                              ? FontWeight.bold
-                                                              : FontWeight
-                                                                  .normal))),
+                                                      fontWeight: price
+                                                              .isHighlighted
+                                                          ? FontWeight.bold
+                                                          : FontWeight.normal)),
+                                              Padding(
+                                                  padding:
+                                                      EdgeInsets.only(left: 8),
+                                                  child: Image.network(
+                                                      state
+                                                          .openTimesOriginIconUrl,
+                                                      height: 10))
+                                            ]),
+                                          ),
                                           Expanded(
                                               flex: 1,
                                               child: Text(price.price,
@@ -152,11 +163,20 @@ class StationDetailsPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
-                                child: Text("Öffnungszeiten",
-                                    style:
-                                        Theme.of(context).textTheme.headline6),
-                              ),
+                                  padding: const EdgeInsets.only(bottom: 4),
+                                  child: Row(
+                                    children: [
+                                      Text("Öffnungszeiten",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 8),
+                                          child: Image.network(
+                                              state.openTimesOriginIconUrl,
+                                              height: 14))
+                                    ],
+                                  )),
                               ...(state.openTimes
                                   .map((openTime) => Padding(
                                       padding: const EdgeInsets.only(top: 4),
@@ -185,10 +205,57 @@ class StationDetailsPage extends StatelessWidget {
                                         ],
                                       )))
                                   .toList()),
-                            ])))
+                            ]))),
+                Padding(
+                    padding: const EdgeInsets.only(top: 32, bottom: 16, left: 8, right: 8),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Text("Datenquellen",
+                                style: Theme.of(context).textTheme.titleSmall),
+                          ),
+                          ...(state.origins
+                              .map((origin) => InkWell(
+                                  onTap: origin.websiteUrl != null
+                                      ? () {
+                                          _openUrl(origin.websiteUrl!);
+                                        }
+                                      : null,
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 4, bottom: 4),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.network(origin.iconUrl,
+                                              height: 14),
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 8),
+                                              child: Text(
+                                                origin.name,
+                                                style: TextStyle(fontSize: 12),
+                                              ))
+                                        ],
+                                      ))))
+                              .toList()),
+                        ]))
               ])));
     }
 
     return Container();
+  }
+
+  void _openUrl(String url) async {
+    Uri uri = Uri.tryParse(url)!;
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      //TODO: handle this case
+//        throw 'Could not launch $url';
+    }
   }
 }

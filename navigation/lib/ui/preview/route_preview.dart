@@ -66,22 +66,24 @@ class RoutePreview extends StatelessWidget {
                         },
                         child: Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Expanded(flex: 2, child: Text(address)),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(state.formatDistance()),
-                                          Text(state.formatTravelTime())
-                                        ],
-                                      ))
-                                ]))),
+                            child: Column(children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Expanded(flex: 2, child: Text(address)),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(state.formatDistance()),
+                                            Text(state.formatTravelTime())
+                                          ],
+                                        ))
+                                  ]),
+                            ]))),
                   ]));
             }));
   }

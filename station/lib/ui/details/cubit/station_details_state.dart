@@ -19,16 +19,22 @@ class ErrorStationDetailsState extends StationDetailsState {
 class DetailStationDetailsState extends StationDetailsState {
   final CoordinateModel coordinate;
   final String address;
+  final String addressOriginIconUrl;
   final List<Price> prices;
   final String lastPriceUpdate;
   final List<OpenTime> openTimes;
+  final String openTimesOriginIconUrl;
+  final List<Origin> origins;
 
   DetailStationDetailsState(
       {required this.coordinate,
       required this.address,
+      required this.addressOriginIconUrl,
       required this.prices,
       required this.lastPriceUpdate,
       required this.openTimes,
+      required this.openTimesOriginIconUrl,
+      required this.origins,
       required super.title});
 }
 
@@ -36,8 +42,13 @@ class Price {
   final String fuel;
   final String price;
   final bool isHighlighted;
+  final String originIconUrl;
 
-  Price({required this.fuel, required this.price, required this.isHighlighted});
+  Price(
+      {required this.fuel,
+      required this.price,
+      required this.isHighlighted,
+      required this.originIconUrl});
 }
 
 class OpenTime {
@@ -45,5 +56,14 @@ class OpenTime {
   final String time;
   final bool isHighlighted;
 
-  OpenTime({required this.day, required this.time, required this.isHighlighted});
+  OpenTime(
+      {required this.day, required this.time, required this.isHighlighted});
+}
+
+class Origin {
+  final String iconUrl;
+  final String name;
+  final String? websiteUrl;
+
+  Origin({required this.iconUrl, required this.name, this.websiteUrl});
 }

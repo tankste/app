@@ -2,6 +2,7 @@ import 'package:navigation/coordinate_model.dart';
 
 class StationModel {
   final int id;
+  final int originId;
   final String name;
   final String brand;
   final StationAddressModel address;
@@ -9,6 +10,7 @@ class StationModel {
 
   StationModel(
       {required this.id,
+      required this.originId,
       required this.name,
       required this.brand,
       required this.address,
@@ -16,7 +18,7 @@ class StationModel {
 
   @override
   String toString() {
-    return 'StationModel{id: $id, name: $name, brand: $brand, address: $address, coordinate: $coordinate}';
+    return 'StationModel{id: $id, originId: $originId, name: $name, brand: $brand, address: $address, coordinate: $coordinate}';
   }
 }
 

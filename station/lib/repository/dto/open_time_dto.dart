@@ -3,12 +3,14 @@ import 'package:intl/intl.dart';
 
 class OpenTimeDto {
   final int? id;
+  final int? originId;
   final String? day;
   final String? startTime;
   final String? endTime;
 
   OpenTimeDto({
     required this.id,
+    required this.originId,
     required this.day,
     required this.startTime,
     required this.endTime,
@@ -17,6 +19,7 @@ class OpenTimeDto {
   factory OpenTimeDto.fromJson(Map<String, dynamic> parsedJson) {
     return OpenTimeDto(
       id: parsedJson['id'],
+      originId: parsedJson['originId'],
       day: parsedJson['day'],
       startTime: parsedJson['startTime'],
       endTime: parsedJson['endTime'],
@@ -26,6 +29,7 @@ class OpenTimeDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'originId': originId,
       'day': day,
       'startTime': startTime,
       'endTime': endTime,
@@ -35,6 +39,7 @@ class OpenTimeDto {
   factory OpenTimeDto.fromModel(OpenTimeModel model) {
     return OpenTimeDto(
       id: model.id,
+      originId: model.originId,
       day: _dayToJson(model.day),
       startTime: DateFormat('HH:mm:ss').format(model.startTime),
       endTime: DateFormat('HH:mm:ss').format(model.endTime),
@@ -44,6 +49,7 @@ class OpenTimeDto {
   OpenTimeModel toModel() {
     return OpenTimeModel(
       id: id ?? -1,
+      originId: originId ?? -1,
       day: _parseDay(day),
       startTime: startTime != null
           ? DateFormat('HH:mm:ss').parse(startTime!)

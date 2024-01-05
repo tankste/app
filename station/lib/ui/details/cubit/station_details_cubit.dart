@@ -4,6 +4,7 @@ import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/repository/open_time_repository.dart';
+import 'package:station/repository/origin_repository.dart';
 import 'package:station/repository/price_repository.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/repository/station_repository.dart';
@@ -24,6 +25,9 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   final OpenTimeRepository openTimeRepository =
       StationModuleFactory.createOpenTimeRepository();
 
+  final OriginRepository _originRepository =
+      StationModuleFactory.createOriginRepository();
+
   StationDetailsCubit(
       this.stationId, this.markerLabel, this.activeGasPriceFilter)
       : super(LoadingStationDetailsState(title: markerLabel)) {
@@ -33,20 +37,49 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   void _fetchStation() {
     emit(LoadingStationDetailsState(title: markerLabel));
 
-    CombineLatestStream.combine3(stationRepository.get(stationId),
-            priceRepository.list(stationId), openTimeRepository.list(stationId),
-            (stationResult, priceResult, openTimesResult) {
+    CombineLatestStream.combine4(
+            stationRepository.get(stationId),
+            priceRepository.list(stationId),
+            openTimeRepository.list(stationId),
+            _originRepository.list(),
+            (stationResult, priceResult, openTimesResult, originsResult) {
       return stationResult.when((station) {
         return priceResult.when((prices) {
           return openTimesResult.when((openTimes) {
-            return DetailStationDetailsState(
+            return originsResult.when((origins) {
+              return DetailStationDetailsState(
                 title: station.brand,
                 coordinate: station.coordinate,
                 address:
                     "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
+                addressOriginIconUrl: origins
+                        .firstWhereOrNull((o) => o.id == station.originId)
+                        ?.iconImageUrl
+                        .toString() ??
+                    "",
                 prices: _genPricesList(prices),
                 lastPriceUpdate: _genPriceUpdate(prices),
-                openTimes: _genOpenTimeList(openTimes));
+                openTimes: _genOpenTimeList(openTimes),
+                openTimesOriginIconUrl: origins
+                        .firstWhereOrNull(
+                            (o) => o.id == openTimes.firstOrNull?.originId)
+                        ?.iconImageUrl
+                        .toString() ??
+                    "",
+                origins: origins
+                    .where((o) => ([station.originId] +
+                            prices.map((p) => p.originId).toList() +
+                            prices.map((ot) => ot.originId).toList())
+                        .contains(o.id))
+                    .map((o) => Origin(
+                        iconUrl: o.iconImageUrl.toString(),
+                        name: o.name,
+                        websiteUrl: o.websiteUrl.toString()))
+                    .toList(),
+              );
+            },
+                (error) => ErrorStationDetailsState(
+                    errorDetails: error.toString(), title: markerLabel));
           },
               (error) => ErrorStationDetailsState(
                   errorDetails: error.toString(), title: markerLabel));
@@ -110,8 +143,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         fuel: fuelLabel,
         isHighlighted: isSelected,
         price: _priceText(
-            prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ??
-                0));
+            prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ?? 0),
+        originIconUrl: "");
   }
 
   String _priceText(double price) {
