@@ -1,9 +1,9 @@
 import 'package:navigation/coordinate_model.dart';
-import 'package:station/model/marker_model.dart';
 import 'package:station/model/station_model.dart';
 
 class StationDto {
   final int? id;
+  final int? originId;
   final String? name;
   final String? brand;
   final LocationDto location;
@@ -11,6 +11,7 @@ class StationDto {
 
   StationDto({
     required this.id,
+    required this.originId,
     required this.name,
     required this.brand,
     required this.location,
@@ -20,6 +21,7 @@ class StationDto {
   factory StationDto.fromJson(Map<String, dynamic> parsedJson) {
     return StationDto(
       id: parsedJson['id'],
+      originId: parsedJson['originId'],
       name: parsedJson['name'],
       brand: parsedJson['brand'],
       location: LocationDto(
@@ -58,6 +60,7 @@ class StationDto {
   factory StationDto.fromModel(StationModel model) {
     return StationDto(
       id: model.id,
+      originId: model.originId,
       name: model.name,
       brand: model.brand,
       location: LocationDto(
@@ -77,6 +80,7 @@ class StationDto {
   StationModel toModel() {
     return StationModel(
       id: id ?? -1,
+      originId: originId ?? -1,
       name: name ?? "",
       brand: brand ?? "",
       coordinate: CoordinateModel(

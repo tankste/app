@@ -54,6 +54,9 @@ dependencies:
   # Collection - https://pub.dev/packages/collection
   collection: ^1.17.0
 
+  # URL Launcher - https://pub.dev/packages/url_launcher
+  url_launcher: ^6.1.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

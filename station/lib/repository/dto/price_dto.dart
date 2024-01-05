@@ -2,12 +2,14 @@ import 'package:station/model/price_model.dart';
 
 class PriceDto {
   final int? id;
+  final int? originId;
   final String? type;
   final double? price;
   final String? lastChangedDate;
 
   PriceDto({
     required this.id,
+    required this.originId,
     required this.type,
     required this.price,
     required this.lastChangedDate,
@@ -16,6 +18,7 @@ class PriceDto {
   factory PriceDto.fromJson(Map<String, dynamic> parsedJson) {
     return PriceDto(
       id: parsedJson['id'],
+      originId: parsedJson['originId'],
       type: parsedJson['type'],
       price: parsedJson['price'],
       lastChangedDate: parsedJson['lastChangesAt'],
@@ -25,6 +28,7 @@ class PriceDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'originId': originId,
       'type': type,
       'price': price,
       'lastChangedDate': lastChangedDate,
@@ -34,6 +38,7 @@ class PriceDto {
   factory PriceDto.fromModel(PriceModel model) {
     return PriceDto(
       id: model.id,
+      originId: model.originId,
       type: _fuelTypeToJson(model.fuelType),
       price: model.price,
       lastChangedDate: model.lastChangedDate?.toIso8601String(),
@@ -43,6 +48,7 @@ class PriceDto {
   PriceModel toModel() {
     return PriceModel(
       id: id ?? -1,
+      originId: originId ?? -1,
       fuelType: _parseFuelType(type),
       price: price ?? -1,
       lastChangedDate: lastChangedDate != null ? DateTime.parse(lastChangedDate!) : null,
