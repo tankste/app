@@ -70,20 +70,20 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       return stationResult.when((station) {
         return priceResult.when((prices) {
           return openTimesResult.when((openTimes) {
-            _originalName = station.name;
-            _name = station.name;
-            _originalBrand = station.brand;
-            _brand = station.brand;
-            _originalAddressStreet = station.address.street;
-            _addressStreet = station.address.street;
-            _originalAddressHouseNumber = station.address.houseNumber;
-            _addressHouseNumber = station.address.houseNumber;
-            _originalAddressPostCode = station.address.postCode;
-            _addressPostCode = station.address.postCode;
-            _originalAddressCity = station.address.city;
-            _addressCity = station.address.city;
-            _originalAddressCountry = station.address.country;
-            _addressCountry = station.address.country;
+            _originalName = station.name.isNotEmpty ? station.name : "-";
+            _name = station.name.isNotEmpty ? station.name : "-";
+            _originalBrand = station.brand.isNotEmpty ? station.brand : "-";
+            _brand = station.brand.isNotEmpty ? station.brand : "-";
+            _originalAddressStreet = station.address.street.isNotEmpty ? station.address.street : "-";
+            _addressStreet = station.address.street.isNotEmpty ? station.address.street : "-";
+            _originalAddressHouseNumber = station.address.houseNumber.isNotEmpty ? station.address.houseNumber : "-";
+            _addressHouseNumber = station.address.houseNumber.isNotEmpty ? station.address.houseNumber : "-";
+            _originalAddressPostCode = station.address.postCode.isNotEmpty ? station.address.postCode : "-";
+            _addressPostCode = station.address.postCode.isNotEmpty ? station.address.postCode : "-";
+            _originalAddressCity = station.address.city.isNotEmpty ? station.address.city : "-";
+            _addressCity = station.address.city.isNotEmpty ? station.address.city : "-";
+            _originalAddressCountry = station.address.country.isNotEmpty ? station.address.country : "-";
+            _addressCountry = station.address.country.isNotEmpty ? station.address.country : "-";
             _originalLocationLatitude = station.coordinate.latitude.toString();
             _locationLatitude = station.coordinate.latitude.toString();
             _originalLocationLongitude =
@@ -93,34 +93,34 @@ class ReportFormCubit extends Cubit<ReportFormState> {
                     .firstWhereOrNull((p) => p.fuelType == FuelType.e5)
                     ?.price
                     .toString() ??
-                "";
+                "-";
             _priceE5 = prices
                     .firstWhereOrNull((p) => p.fuelType == FuelType.e5)
                     ?.price
                     .toString() ??
-                "";
+                "-";
             _originalPriceE10 = prices
                     .firstWhereOrNull((p) => p.fuelType == FuelType.e10)
                     ?.price
                     .toString() ??
-                "";
+                "-";
             _priceE10 = prices
                     .firstWhereOrNull((p) => p.fuelType == FuelType.e10)
                     ?.price
                     .toString() ??
-                "";
+                "-";
             _originalPriceDiesel = prices
                     .firstWhereOrNull((p) => p.fuelType == FuelType.diesel)
                     ?.price
                     .toString() ??
-                "";
+                "-";
             _priceDiesel = prices
                     .firstWhereOrNull((p) => p.fuelType == FuelType.diesel)
                     ?.price
                     .toString() ??
-                "";
-            _originalOpenTimesState = "";
-            _openTimesState = "";
+                "-";
+            _originalOpenTimesState = "-";
+            _openTimesState = "-";
             _originalOpenTimes = _genOpenTimes(openTimes);
             _openTimes = _genOpenTimes(openTimes);
 
@@ -415,7 +415,7 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       stationId: stationId,
       field: field,
       wrongValue: wrongValue,
-      correctValue: correctValue,
+      correctValue: correctValue.trim().isNotEmpty ? correctValue : "-",
       status: ReportStatus.open,
     );
   }

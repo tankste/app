@@ -36,6 +36,12 @@ class ReportFormPage extends StatelessWidget {
         child: BlocConsumer<ReportFormCubit, ReportFormState>(
             listener: (context, state) {
           if (state is SavedFormReportFormState) {
+            const snackBar = SnackBar(
+              content: Text('Meldung erfolgreich versendet.'),
+            );
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
             Navigator.of(context).pop();
           } else if (state is SaveErrorFormReportFormState) {
             showDialog(
