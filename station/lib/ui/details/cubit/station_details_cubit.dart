@@ -271,7 +271,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
       return "-";
     }
 
-    DateTime changeDate = priceChangeDates.first;
+    DateTime changeDate = priceChangeDates.first.toLocal();
     DateTime today = DateTime.now();
     if (changeDate.year == today.year &&
         changeDate.month == today.month &&
