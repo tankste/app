@@ -6,6 +6,9 @@
     },
     "sponsor": {
       "apiBaseUrl": "http://sponsors.local"
+    },
+    "report": {
+      "apiBaseUrl": "http://reports.local"
     }
   },
   "google": {

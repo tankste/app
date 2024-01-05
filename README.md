@@ -13,6 +13,8 @@ and want to keep them alive! So we create this project.
 | app        | App entry point                 |
 | station    | Station and gas price things    |
 | navigation | Routing utils and widgets       |
+| sponsor    | Sponsor & payment stuff         |
+| report     | Report wrong station data forms |
 | map        | Map utils                       |
 | settings   | User settings page              |
 | core       | Generic core and util functions |

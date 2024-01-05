@@ -1,4 +1,4 @@
-name: station
+name: report
 publish_to: none
 
 environment:
@@ -12,17 +12,8 @@ dependencies:
   core:
     path: '../core'
 
-  map:
-    path: '../map'
-
-  navigation:
-    path: '../navigation'
-
-  settings:
-    path: '../settings'
-
-  report:
-    path: '../report'
+  station:
+    path: '../station'
 
   # BLoC - https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^8.0.1
@@ -32,18 +23,6 @@ dependencies:
 
   # HTTP - https://pub.dev/packages/http
   http: ^0.13.4
-
-  # Google Maps - https://pub.dev/packages/google_maps_flutter
-  google_maps_flutter: ^2.1.8
-
-  # Shared Preferences - https://pub.dev/packages/shared_preferences
-  shared_preferences: ^2.0.15
-
-  # Location - https://pub.dev/packages/geolocator
-  geolocator: ^9.0.0
-
-  # In-App review - https://pub.dev/packages/in_app_review
-  in_app_review: ^2.0.4
 
   # Multiple Result - https://pub.dev/packages/multiple_result
   multiple_result: ^4.0.0
