@@ -1,25 +1,27 @@
-tankste!
-========
+tankste! - App
+==============
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 Your open source gas station mobile app. We love the minimalistic of the Bertha app from Mercedes
 and want to keep them alive! So we create this project.
 
-## Modules ##
+[<img src="https://tankste.app/assets/playstore.png" height="60" alt="Play Store">](https://play.google.com/store/apps/details?id=app.tankste) 
+[<img src="https://tankste.app/assets/appstore.png" height="60" alt="App Store">](https://apps.apple.com/de/app/tankste-deine-tankpreis-app/id1633457177)
 
-| Name       | Description                     |
-|------------|---------------------------------|
-| app        | App entry point                 |
-| station    | Station and gas price things    |
-| navigation | Routing utils and widgets       |
-| sponsor    | Sponsor & payment stuff         |
-| report     | Report wrong station data forms |
-| map        | Map utils                       |
-| settings   | User settings page              |
-| core       | Generic core and util functions |
+<img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-1.jpeg" height="360" alt="iOS Screenshot 1"> <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-2.jpeg" height="360" alt="iOS Screenshot 2"> <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-3.jpeg" height="360" alt="iOS Screenshot 3"> 
 
-## Configuration ##
+## Data sources ##
+
+The gas station data are hosted by our own [backend](https://github.com/tankste/backend). The backend 
+gets the data from multiple data sources. We listing them on our [website](https://tankste.app/datenquellen).
+
+Previously we used the [Tankerkönig](https://creativecommons.tankerkoenig.de/) API. Thanks a lot for your API, 
+without your offer this project will not exists!
+
+## Get started ##
+
+### Configuration ###
 
 All secrets are needs to be defined in `config.json`.
 At this moment we maintain an duplicated configuration for every platform. In future this should be
@@ -29,15 +31,34 @@ auto-generated created by build scripts.
 * Android: `android/app/src/main/res/values/config.xml`
 * iOS: `ios/Config.xcconfig`
 
-## Data source ##
+## Development ##
 
-The gas station data are provided by [Tankerkönig](https://creativecommons.tankerkoenig.de/). Thanks
-for this API! We will replace this by our own API in future days.
+### Modules ###
+
+| Name         | Description                     |
+|--------------|---------------------------------|
+| `app`        | App entry point                 |
+| `station`    | Station and gas price things    |
+| `navigation` | Routing utils and widgets       |
+| `sponsor`    | Sponsor & payment stuff         |
+| `report`     | Report wrong station data forms |
+| `map`        | Map utils                       |
+| `settings`   | User settings page              |
+| `core`       | Generic core and util functions |
+
+### Code quality ###
+
+The tankste! project is based on a prototype code. The quality of the code has improved since then,
+but there is still a lot to do. We are on the right track. So please be patient or help us 
+to improve the code.
 
 ## License ##
 
+> [!IMPORTANT]
+> This license refers to the source code in this repository. The content provided by the app is protected by copyright.
+
 tankste! - Your open source gas station mobile app.
-Copyright (C) 2022 Fabian Keunecke
+Copyright (c) 2023 Fabian Keunecke
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
