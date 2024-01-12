@@ -34,6 +34,7 @@ class StationMapCubit extends Cubit<StationMapState>
   final CameraPositionRepository _cameraPositionRepository =
       MapModuleFactory.createCameraPositionRepository();
 
+  final double _boundaryQueryPadding = 0.03; // ~ 3 kilometers
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
   CameraPosition _position = initialCameraPosition;
@@ -123,11 +124,11 @@ class StationMapCubit extends Cubit<StationMapState>
     _stationRequest = _markerRepository
         .list([
           CoordinateModel(
-              latitude: visibleBounds.southWest.latitude,
-              longitude: visibleBounds.southWest.longitude),
+              latitude: visibleBounds.southWest.latitude - _boundaryQueryPadding,
+              longitude: visibleBounds.southWest.longitude - _boundaryQueryPadding),
           CoordinateModel(
-              latitude: visibleBounds.northEast.latitude,
-              longitude: visibleBounds.northEast.longitude),
+              latitude: visibleBounds.northEast.latitude + _boundaryQueryPadding,
+              longitude: visibleBounds.northEast.longitude + _boundaryQueryPadding),
         ])
         .first //TODO: use stream benefits
         .then((result) {

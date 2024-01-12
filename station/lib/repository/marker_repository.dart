@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:station/model/config_model.dart';
@@ -44,7 +45,6 @@ class TanksteWebMarkerRepository extends MarkerRepository {
       }
       ConfigModel config = configResult.tryGetSuccess()!;
 
-      //TODO: increase boundary by padding
       String boundQuery = coordinates
           .map((c) => "boundary[]=${c.latitude},${c.longitude}")
           .join("&");
