@@ -39,29 +39,32 @@ class StationMapPageState extends State<StationMapPage> {
     }
 
     return Stack(children: <Widget>[
-      GenericMap(
-        initialCameraPosition: initialCameraPosition,
-        onMapCreated: (mapController) {
-          setState(() {
-            _mapController = mapController;
-          });
+      Container(
+          color: Theme.of(context).colorScheme.background,
+          child: GenericMap(
+            initialCameraPosition: initialCameraPosition,
+            onMapCreated: (mapController) {
+              setState(() {
+                _mapController = mapController;
+              });
 
-          context.read<StationMapCubit>().onMapReady();
-        },
-        onCameraIdle: () {
-          context.read<StationMapCubit>().onCameraIdle();
-        },
-        onCameraMove: (position) async {
-          if (_mapController == null) {
-            return;
-          }
+              context.read<StationMapCubit>().onMapReady();
+            },
+            onCameraIdle: () {
+              context.read<StationMapCubit>().onCameraIdle();
+            },
+            onCameraMove: (position) async {
+              if (_mapController == null) {
+                return;
+              }
 
-          context.read<StationMapCubit>().onCameraPositionChanged(
-              position, await _mapController!.getVisibleBounds());
-        },
-        markers:
-            state is MarkersStationMapState ? _genMarkers(context, state) : {},
-      ),
+              context.read<StationMapCubit>().onCameraPositionChanged(
+                  position, await _mapController!.getVisibleBounds());
+            },
+            markers: state is MarkersStationMapState
+                ? _genMarkers(context, state)
+                : {},
+          )),
       state is LoadingStationMapState || state is LoadingMarkersStationMapState
           ? const SafeArea(child: LinearProgressIndicator())
           : Container(),
@@ -73,38 +76,40 @@ class StationMapPageState extends State<StationMapPage> {
               child: SafeArea(
                   child: Center(
                       child: InkWell(
-                        onTap: () {
-                          context.read<StationMapCubit>().onZoomInfoClicked();
-                        },
+                          onTap: () {
+                            context.read<StationMapCubit>().onZoomInfoClicked();
+                          },
                           child: Card(
-                color: Theme.of(context).primaryColor,
-                child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search,
-                            size: 14,
-                            color:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.white
-                                    : Colors.black),
-                        Flexible(
+                            color: Theme.of(context).primaryColor,
                             child: Padding(
-                          padding: EdgeInsets.only(left: 8),
-                          child: Text("Zu weit entfernt, bitte näher zoomen.",
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.light
-                                      ? Colors.white
-                                      : Colors.black)),
-                        ))
-                      ],
-                    )),
-                      )))))
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 16),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.search,
+                                        size: 14,
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? Colors.white
+                                            : Colors.black),
+                                    Flexible(
+                                        child: Padding(
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Text(
+                                          "Zu weit entfernt, bitte näher zoomen.",
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Colors.white
+                                                  : Colors.black)),
+                                    ))
+                                  ],
+                                )),
+                          )))))
           : Container(),
       state is ErrorStationMapState
           ? Positioned(

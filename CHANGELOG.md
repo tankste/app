@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+* 🛠 Add pull-to-refresh action to station details
 * ➕ Show data source origin ([#55](https://github.com/tankste/app/issues/55))
 * ➕ Add report wrong data form ([#54](https://github.com/tankste/app/issues/54))
 * ➕ Add date of last price change to details ([#2](https://github.com/tankste/app/issues/2))

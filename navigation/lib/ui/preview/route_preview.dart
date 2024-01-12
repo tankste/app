@@ -35,10 +35,12 @@ class RoutePreview extends StatelessWidget {
                         height: 180,
                         child: Stack(
                           children: <Widget>[
-                            PreviewMap(
-                              target: target,
-                              routePoints: state.route?.routeCoordinates,
-                            ),
+                            Container(
+                                color: Theme.of(context).colorScheme.surface,
+                                child: PreviewMap(
+                                  target: target,
+                                  routePoints: state.route?.routeCoordinates,
+                                )),
                             // Workaround: clicking FAB over map is triggered twice on iOS
                             GestureDetector(
                                 onTap: () {

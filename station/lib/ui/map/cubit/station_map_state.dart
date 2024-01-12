@@ -1,8 +1,6 @@
-import 'package:core/cubit/base_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:map/ui/generic/generic_map.dart';
 import 'package:station/model/marker_model.dart';
-import 'package:station/model/station_model.dart';
 import 'package:station/ui/map/filter_dialog.dart';
 
 abstract class StationMapState {}
