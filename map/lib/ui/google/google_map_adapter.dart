@@ -112,6 +112,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
                 : google_maps.BitmapDescriptor.defaultMarkerWithHue(
                     google_maps.BitmapDescriptor.hueAzure),
             position: google_maps.LatLng(m.latLng.latitude, m.latLng.longitude),
+            consumeTapEvents: true,
             onTap: () => m.onTap?.call()))
         .toSet();
 

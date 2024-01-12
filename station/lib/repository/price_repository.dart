@@ -3,10 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
 import 'package:station/model/config_model.dart';
 import 'package:station/model/price_model.dart';
-import 'package:station/model/station_model.dart';
 import 'package:station/repository/config_repository.dart';
 import 'package:station/repository/dto/price_dto.dart';
-import 'package:station/repository/dto/station_dto.dart';
 
 abstract class PriceRepository {
   Stream<Result<List<PriceModel>, Exception>> list(int stationId);

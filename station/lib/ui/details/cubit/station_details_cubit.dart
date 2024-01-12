@@ -120,10 +120,6 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
 
   //TODO: should show not available prices, or hide completely?
   Price? _genPriceItem(FuelType fuelType, List<PriceModel> prices) {
-    if (prices.isEmpty) {
-      return null;
-    }
-
     String fuelLabel = "";
     bool isSelected = false;
     switch (fuelType) {

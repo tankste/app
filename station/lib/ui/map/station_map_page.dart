@@ -148,7 +148,7 @@ class StationMapPageState extends State<StationMapPage> {
                                               onPressed: () =>
                                                   Navigator.of(context)
                                                       .pop(true),
-                                              child: const Text('Ok')),
+                                              child: const Text('OK')),
                                         ],
                                       );
                                     });
