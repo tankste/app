@@ -90,7 +90,7 @@ class MarkerDto {
 
   PriceState _parsePriceState(String? value) {
     switch (value) {
-      case "notAvailable":
+      case "not_available":
         return PriceState.notAvailable;
       case "expensive":
         return PriceState.expensive;
