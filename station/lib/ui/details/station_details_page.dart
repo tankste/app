@@ -90,7 +90,12 @@ class StationDetailsPage extends StatelessWidget {
         Spacer(),
       ]));
     } else if (state is DetailStationDetailsState) {
-      return SingleChildScrollView(
+      return RefreshIndicator(
+          onRefresh: () {
+             context.read<StationDetailsCubit>().onRefreshAction();
+              return Future.value();
+          },
+          child: SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(children: <Widget>[
@@ -243,7 +248,7 @@ class StationDetailsPage extends StatelessWidget {
                                       ))))
                               .toList()),
                         ]))
-              ])));
+              ]))));
     }
 
     return Container();

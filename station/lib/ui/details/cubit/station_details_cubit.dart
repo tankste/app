@@ -104,6 +104,10 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     _fetchStation();
   }
 
+  void onRefreshAction() {
+    _fetchStation();
+  }
+
   List<Price> _genPricesList(List<PriceModel> prices) {
     List<Price?> items = [];
 
