@@ -256,7 +256,7 @@ class StationMapPageState extends State<StationMapPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => StationDetailsPage(
-                            stationId: entry.key.id,
+                            stationId: entry.key.stationId,
                             markerLabel: entry.key.label,
                             activeGasPriceFilter: state.filter.gas,
                           )));

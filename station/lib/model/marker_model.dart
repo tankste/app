@@ -2,6 +2,7 @@ import 'package:navigation/coordinate_model.dart';
 
 class MarkerModel {
   int id;
+  int stationId;
   String label;
   CoordinateModel coordinate;
   double e5Price;
@@ -13,6 +14,7 @@ class MarkerModel {
 
   MarkerModel({
     required this.id,
+    required this.stationId,
     required this.label,
     required this.coordinate,
     required this.e5Price,
@@ -25,7 +27,7 @@ class MarkerModel {
 
   @override
   String toString() {
-    return 'MarkerModel(id: $id, label: $label, coordinate: $coordinate, e5Price: $e5Price, e5PriceState: $e5PriceState, e10Price: $e10Price, e10PriceState: $e10PriceState, dieselPrice: $dieselPrice, dieselPriceState: $dieselPriceState)';
+    return 'MarkerModel(id: $id, stationId: $stationId, label: $label, coordinate: $coordinate, e5Price: $e5Price, e5PriceState: $e5PriceState, e10Price: $e10Price, e10PriceState: $e10PriceState, dieselPrice: $dieselPrice, dieselPriceState: $dieselPriceState)';
   }
 }
 

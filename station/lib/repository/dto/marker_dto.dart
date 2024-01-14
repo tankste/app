@@ -3,6 +3,7 @@ import 'package:station/model/marker_model.dart';
 
 class MarkerDto {
   final int? id;
+  final int? stationId;
   final String? label;
   final double? latitude;
   final double? longitude;
@@ -15,6 +16,7 @@ class MarkerDto {
 
   MarkerDto({
     this.id,
+    this.stationId,
     this.label,
     this.latitude,
     this.longitude,
@@ -29,6 +31,7 @@ class MarkerDto {
   factory MarkerDto.fromJson(Map<String, dynamic> parsedJson) {
     return MarkerDto(
       id: parsedJson['id'],
+      stationId: parsedJson['stationId'],
       label: parsedJson['label'],
       latitude: parsedJson['latitude'],
       longitude: parsedJson['longitude'],
@@ -44,6 +47,7 @@ class MarkerDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'stationId': stationId,
       'label': label,
       'latitude': latitude,
       'longitude': longitude,
@@ -59,6 +63,7 @@ class MarkerDto {
   factory MarkerDto.fromModel(MarkerModel model) {
     return MarkerDto(
       id: model.id,
+      stationId: model.stationId,
       label: model.label,
       latitude: model.coordinate.latitude,
       longitude: model.coordinate.longitude,
@@ -74,6 +79,7 @@ class MarkerDto {
   MarkerModel toModel() {
     return MarkerModel(
       id: id ?? -1,
+      stationId: stationId ?? -1,
       label: label ?? "",
       coordinate: CoordinateModel(
         latitude: latitude ?? 0.0,
@@ -105,6 +111,6 @@ class MarkerDto {
 
   @override
   String toString() {
-    return 'MarkerDto{id: $id, label: $label, latitude: $latitude, longitude: $longitude, e5Price: $e5Price, e5PriceState: $e5PriceState, e10Price: $e10Price, e10PriceState: $e10PriceState, dieselPrice: $dieselPrice, dieselPriceState: $dieselPriceState}';
+    return 'MarkerDto{id: $id, stationId: $stationId, label: $label, latitude: $latitude, longitude: $longitude, e5Price: $e5Price, e5PriceState: $e5PriceState, e10Price: $e10Price, e10PriceState: $e10PriceState, dieselPrice: $dieselPrice, dieselPriceState: $dieselPriceState}';
   }
 }
