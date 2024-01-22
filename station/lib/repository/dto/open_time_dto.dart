@@ -7,6 +7,7 @@ class OpenTimeDto {
   final String? day;
   final String? startTime;
   final String? endTime;
+  final bool? isToday;
 
   OpenTimeDto({
     required this.id,
@@ -14,6 +15,7 @@ class OpenTimeDto {
     required this.day,
     required this.startTime,
     required this.endTime,
+    required this.isToday,
   });
 
   factory OpenTimeDto.fromJson(Map<String, dynamic> parsedJson) {
@@ -23,6 +25,7 @@ class OpenTimeDto {
       day: parsedJson['day'],
       startTime: parsedJson['startTime'],
       endTime: parsedJson['endTime'],
+      isToday: parsedJson['isToday'],
     );
   }
 
@@ -33,6 +36,7 @@ class OpenTimeDto {
       'day': day,
       'startTime': startTime,
       'endTime': endTime,
+      'isToday': isToday,
     };
   }
 
@@ -43,6 +47,7 @@ class OpenTimeDto {
       day: _dayToJson(model.day),
       startTime: DateFormat('HH:mm:ss').format(model.startTime),
       endTime: DateFormat('HH:mm:ss').format(model.endTime),
+      isToday: model.isToday,
     );
   }
 
@@ -57,6 +62,7 @@ class OpenTimeDto {
       endTime: endTime != null
           ? DateFormat('HH:mm:ss').parse(endTime!)
           : DateTime(0),
+      isToday: isToday ?? false,
     );
   }
 

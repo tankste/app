@@ -198,43 +198,43 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   OpenTime? _genOpenTimeItem(OpenTimeDay day, List<OpenTimeModel> openTimes) {
     DateTime now = DateTime.now();
     String dayLabel = "";
-    bool isToday = false;
+    bool isTodayFallback = false;
     switch (day) {
       case OpenTimeDay.monday:
         dayLabel = "Montag";
-        isToday = now.weekday == DateTime.monday;
+        isTodayFallback = now.weekday == DateTime.monday;
         break;
       case OpenTimeDay.tuesday:
         dayLabel = "Dienstag";
-        isToday = now.weekday == DateTime.tuesday;
+        isTodayFallback = now.weekday == DateTime.tuesday;
         break;
       case OpenTimeDay.wednesday:
         dayLabel = "Mittwoch";
-        isToday = now.weekday == DateTime.wednesday;
+        isTodayFallback = now.weekday == DateTime.wednesday;
         break;
       case OpenTimeDay.thursday:
         dayLabel = "Donnerstag";
-        isToday = now.weekday == DateTime.thursday;
+        isTodayFallback = now.weekday == DateTime.thursday;
         break;
       case OpenTimeDay.friday:
         dayLabel = "Freitag";
-        isToday = now.weekday == DateTime.friday;
+        isTodayFallback = now.weekday == DateTime.friday;
         break;
       case OpenTimeDay.saturday:
         dayLabel = "Samstag";
-        isToday = now.weekday == DateTime.saturday;
+        isTodayFallback = now.weekday == DateTime.saturday;
         break;
       case OpenTimeDay.sunday:
         dayLabel = "Sonntag";
-        isToday = now.weekday == DateTime.sunday;
+        isTodayFallback = now.weekday == DateTime.sunday;
         break;
       case OpenTimeDay.publicHoliday:
         dayLabel = "Feiertag";
-        isToday = false; //TODO: find holidays and highlight if match
+        isTodayFallback = false;
         break;
       default:
         dayLabel = "Unbekannt";
-        isToday = false;
+        isTodayFallback = false;
     }
 
     if (openTimes.isEmpty) {
@@ -242,14 +242,14 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         return null;
       } else {
         return OpenTime(
-            day: dayLabel, isHighlighted: isToday, time: "Geschlossen");
+            day: dayLabel, isHighlighted: isTodayFallback, time: "Geschlossen");
       }
     }
 
     DateFormat timeFormat = DateFormat('HH:mm');
     return OpenTime(
         day: dayLabel,
-        isHighlighted: isToday,
+        isHighlighted: openTimes.first.isToday,
         time: openTimes
             .map((ot) =>
                 "${timeFormat.format(ot.startTime)} - ${timeFormat.format(ot.endTime)}")
