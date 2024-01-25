@@ -20,60 +20,86 @@ class OfferCubit extends Cubit<OfferState> {
   void _fetchItems() {
     emit(LoadingOfferState());
 
-    CombineLatestStream.combine4(
+    CombineLatestStream.combine6(
         _sponsorshipRepository.get(),
         _productRepository.get('app.tankste.sponsor.sub.yearly.12'),
         _productRepository.get('app.tankste.sponsor.sub.monthly.2'),
         _productRepository.get('app.tankste.sponsor.product.10'),
-        (sponsorshipResult, yearlySubscriptionProductResult,
-            monthlySubscriptionProductResult, onceTenProductResult) {
+        _productRepository.get('app.tankste.sponsor.product.2'),
+        _productRepository.get('app.tankste.sponsor.product.1'),
+        (sponsorshipResult,
+            yearlySubscriptionProductResult,
+            monthlySubscriptionProductResult,
+            onceTenProductResult,
+            onceTwoProductResult,
+            onceOneProductResult) {
       return sponsorshipResult.when((sponsorship) {
         return yearlySubscriptionProductResult.when(
             (yearlySubscriptionProduct) {
           return monthlySubscriptionProductResult.when(
               (monthlySubscriptionProduct) {
             return onceTenProductResult.when((onceTenProduct) {
-              List<OfferItem> items = [];
-              if (sponsorship.activeSubscriptionId == null) {
-                items.add(OfferItem(
-                    id: yearlySubscriptionProduct.id,
-                    labelPrice: yearlySubscriptionProduct.priceLabel,
-                    labelType: "/ Jährlich",
-                    hint:
-                        "Unterstütze tankste! mit einer jährlichen Zahlung von ${yearlySubscriptionProduct.priceLabel}."));
+              return onceTwoProductResult.when((onceTwoProduct) {
+                return onceOneProductResult.when((onceOneProduct) {
+                  List<OfferItem> items = [];
+                  if (sponsorship.activeSubscriptionId == null) {
+                    items.add(OfferItem(
+                        id: yearlySubscriptionProduct.id,
+                        labelPrice: yearlySubscriptionProduct.priceLabel,
+                        labelType: "/ Jährlich",
+                        hint:
+                            "Unterstütze tankste! mit einer jährlichen Zahlung von ${yearlySubscriptionProduct.priceLabel}."));
 
-                items.add(OfferItem(
-                    id: monthlySubscriptionProduct.id,
-                    labelPrice: monthlySubscriptionProduct.priceLabel,
-                    labelType: "/ Monatlich",
-                    hint:
-                        "Unterstütze tankste! mit einer monatlichen Zahlung von ${monthlySubscriptionProduct.priceLabel}."));
-              }
+                    items.add(OfferItem(
+                        id: monthlySubscriptionProduct.id,
+                        labelPrice: monthlySubscriptionProduct.priceLabel,
+                        labelType: "/ Monatlich",
+                        hint:
+                            "Unterstütze tankste! mit einer monatlichen Zahlung von ${monthlySubscriptionProduct.priceLabel}."));
+                  }
 
-              items.add(OfferItem(
-                  id: onceTenProduct.id,
-                  labelPrice: onceTenProduct.priceLabel,
-                  labelType: "/ Einmalig",
-                  hint:
-                      "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTenProduct.priceLabel}."));
+                  items.add(OfferItem(
+                      id: onceTenProduct.id,
+                      labelPrice: onceTenProduct.priceLabel,
+                      labelType: "/ Einmalig",
+                      hint:
+                          "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTenProduct.priceLabel}."));
 
-              return OffersOfferState(
-                  title: sponsorship.activeSubscriptionId != null
-                      ? "Zusätzliche Optionen"
-                      : "Optionen",
-                  isSponsorshipInfoVisible: sponsorship.value > 0,
-                  sponsoredValue: "${sponsorship.value.round()} €",
-                  activeSubscription: sponsorship.activeSubscriptionId != null
-                      ? [
-                          yearlySubscriptionProduct,
-                          monthlySubscriptionProduct,
-                          onceTenProduct
-                        ]
-                          .firstWhereOrNull((element) =>
-                              element.id == sponsorship.activeSubscriptionId)
-                          ?.title
-                      : null,
-                  items: items);
+                  items.add(OfferItem(
+                      id: onceTwoProduct.id,
+                      labelPrice: onceTwoProduct.priceLabel,
+                      labelType: "/ Einmalig",
+                      hint:
+                          "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTwoProduct.priceLabel}."));
+
+                  items.add(OfferItem(
+                      id: onceOneProduct.id,
+                      labelPrice: onceOneProduct.priceLabel,
+                      labelType: "/ Einmalig",
+                      hint:
+                          "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceOneProduct.priceLabel}."));
+
+                  return OffersOfferState(
+                      title: sponsorship.activeSubscriptionId != null
+                          ? "Zusätzliche Optionen"
+                          : "Optionen",
+                      isSponsorshipInfoVisible: sponsorship.value > 0,
+                      sponsoredValue: "${sponsorship.value.round()} €",
+                      activeSubscription:
+                          sponsorship.activeSubscriptionId != null
+                              ? [
+                                  yearlySubscriptionProduct,
+                                  monthlySubscriptionProduct,
+                                  onceTenProduct
+                                ]
+                                  .firstWhereOrNull((element) =>
+                                      element.id ==
+                                      sponsorship.activeSubscriptionId)
+                                  ?.title
+                              : null,
+                      items: items);
+                }, (error) => ErrorOfferState(errorDetails: error.toString()));
+              }, (error) => ErrorOfferState(errorDetails: error.toString()));
             }, (error) => ErrorOfferState(errorDetails: error.toString()));
           }, (error) => ErrorOfferState(errorDetails: error.toString()));
         }, (error) => ErrorOfferState(errorDetails: error.toString()));

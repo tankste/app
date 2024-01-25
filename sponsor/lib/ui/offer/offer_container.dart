@@ -107,7 +107,7 @@ class OfferContainer extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.only(top: 4),
                           child: Text(
-                              "Du wirst weiter unten als Sponsor gelistet. Du kannst einen Namen angeben, und zusätzlich einen Kommentar hinterlassen. Diese Angbaen sind für alle Nutzer sichtbar.",
+                              "Du wirst weiter unten als Sponsor gelistet. Du kannst einen Namen angeben, und zusätzlich einen Kommentar hinterlassen. Diese Angaben sind für alle Nutzer sichtbar.",
                               style: TextStyle(fontSize: 16))),
                     ]))
             : Column(
@@ -122,7 +122,7 @@ class OfferContainer extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 8, left: 16, right: 16),
                     child: Text(
-                        "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft werbefrei!",
+                        "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft kostenlos und werbefrei!",
                         style: TextStyle(fontSize: 16)),
                   ),
                   //TODO: add more information link
