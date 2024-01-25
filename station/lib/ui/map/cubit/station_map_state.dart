@@ -22,7 +22,7 @@ class ErrorStationMapState extends StationMapState {
 }
 
 class MarkersStationMapState extends StationMapState {
-  Map<MarkerModel, ByteData> stationMarkers;
+  List<MarkerAnnotation> stationMarkers;
   bool isShowingLabelMarkers;
   Filter filter;
 
@@ -46,4 +46,12 @@ class FilterMarkersStationMapState extends MarkersStationMapState {
       {required super.stationMarkers,
       required super.isShowingLabelMarkers,
       required super.filter});
+}
+
+class MarkerAnnotation {
+  final String id;
+  final MarkerModel marker;
+  final ByteData icon;
+
+  MarkerAnnotation({required this.id, required this.marker, required this.icon});
 }

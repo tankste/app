@@ -44,6 +44,7 @@ class StationMapCubit extends Cubit<StationMapState>
   DateTime? _lastRequestTime;
   Future? _stationRequest;
   bool _hasInitialMovementDone = false;
+  int _requestNumber = 0;
 
   StationMapCubit() : super(LoadingStationMapState()) {
     WidgetsBinding.instance.addObserver(this);
@@ -71,6 +72,7 @@ class StationMapCubit extends Cubit<StationMapState>
   void _fetchStations(
       CameraPosition position, LatLngBounds visibleBounds, bool force) {
     StationMapState state = this.state;
+
     if (state is MoveToPositionStationMapState) {
       state = state.underlyingState;
     }
@@ -85,6 +87,9 @@ class StationMapCubit extends Cubit<StationMapState>
       }
       return;
     }
+    Filter filter = _filter!;
+
+    int requestNumber = ++_requestNumber;
 
     // Zoomed out too far, skip station loading
     if (position.zoom < _minZoom) {
@@ -124,11 +129,15 @@ class StationMapCubit extends Cubit<StationMapState>
     _stationRequest = _markerRepository
         .list([
           CoordinateModel(
-              latitude: visibleBounds.southWest.latitude - _boundaryQueryPadding,
-              longitude: visibleBounds.southWest.longitude - _boundaryQueryPadding),
+              latitude:
+                  visibleBounds.southWest.latitude - _boundaryQueryPadding,
+              longitude:
+                  visibleBounds.southWest.longitude - _boundaryQueryPadding),
           CoordinateModel(
-              latitude: visibleBounds.northEast.latitude + _boundaryQueryPadding,
-              longitude: visibleBounds.northEast.longitude + _boundaryQueryPadding),
+              latitude:
+                  visibleBounds.northEast.latitude + _boundaryQueryPadding,
+              longitude:
+                  visibleBounds.northEast.longitude + _boundaryQueryPadding),
         ])
         .first //TODO: use stream benefits
         .then((result) {
@@ -136,17 +145,22 @@ class StationMapCubit extends Cubit<StationMapState>
             return;
           }
 
+          // Ignore this request, when other one is already in progress
+          if (requestNumber < _requestNumber) {
+            return;
+          }
+
           result.when((markers) {
-            Future.wait(markers.map((marker) async => MapEntry(
-                    marker, await _genMarkerBitmap(marker, showLabelMarkers))))
-                .then((entries) {
+            Future.wait(markers.map((marker) async => MarkerAnnotation(
+                id:
+                    "${marker.id}-${filter.gas}#${Object.hash(marker.e5Price, marker.e5PriceState, marker.e10Price, marker.e10PriceState, marker.dieselPrice, marker.dieselPriceState, showLabelMarkers ? "label" : "dot")}",
+                marker: marker,
+                icon: await _genMarkerBitmap(
+                    marker, showLabelMarkers))))
+                .then((markers) {
               if (isClosed) {
                 return;
               }
-
-              Map<MarkerModel, ByteData> markers = {
-                for (var entry in entries) entry.key: entry.value
-              };
 
               _lastRequestTime = DateTime.now();
               _lastRequestPosition = position;
@@ -178,7 +192,8 @@ class StationMapCubit extends Cubit<StationMapState>
 
   void onZoomInfoClicked() {
     emit(MoveToPositionStationMapState(
-        cameraPosition: CameraPosition(latLng: _position.latLng, zoom: _minZoom),
+        cameraPosition:
+            CameraPosition(latLng: _position.latLng, zoom: _minZoom),
         underlyingState: state));
   }
 
@@ -194,7 +209,7 @@ class StationMapCubit extends Cubit<StationMapState>
           filter: state.filter);
     } else if (state is LoadingStationMapState) {
       state = MarkersStationMapState(
-          stationMarkers: {}, isShowingLabelMarkers: false, filter: _filter!);
+          stationMarkers: [], isShowingLabelMarkers: false, filter: _filter!);
     }
 
     if (state is MarkersStationMapState) {

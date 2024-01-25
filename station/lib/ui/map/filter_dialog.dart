@@ -173,4 +173,9 @@ class Filter {
   final String gas;
 
   Filter(this.gas);
+
+  @override
+  String toString() {
+    return 'Filter{gas: $gas}';
+  }
 }

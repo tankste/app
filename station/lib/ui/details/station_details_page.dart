@@ -92,163 +92,172 @@ class StationDetailsPage extends StatelessWidget {
     } else if (state is DetailStationDetailsState) {
       return RefreshIndicator(
           onRefresh: () {
-             context.read<StationDetailsCubit>().onRefreshAction();
-              return Future.value();
+            context.read<StationDetailsCubit>().onRefreshAction();
+            return Future.value();
           },
           child: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(children: <Widget>[
-                RoutePreview(
-                    target: state.coordinate,
-                    address: state.address,
-                    label: state.title),
-                Card(
-                    child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(children: <Widget>[
+                    RoutePreview(
+                        target: state.coordinate,
+                        address: state.address,
+                        label: state.title),
+                    Card(
+                        child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 4),
+                                    child: Text("Spritpreise",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
+                                  ),
+                                  ...(state.prices
+                                      .map((price) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Row(children: [
+                                                  Text(price.fuel,
+                                                      style: TextStyle(
+                                                          fontWeight: price
+                                                                  .isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal)),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 8),
+                                                      child: Image.network(
+                                                          state
+                                                              .openTimesOriginIconUrl,
+                                                          height: 10))
+                                                ]),
+                                              ),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: Text(price.price,
+                                                      style: TextStyle(
+                                                          fontWeight: price
+                                                                  .isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
+                                            ],
+                                          )))
+                                      .toList()),
+                                  Padding(
+                                      padding: EdgeInsets.only(top: 16),
+                                      child: Text(
+                                        "Letzte Preisänderung: ${state.lastPriceUpdate}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                        textAlign: TextAlign.center,
+                                      ))
+                                ]))),
+                    Card(
+                        child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Padding(
+                                      padding: const EdgeInsets.only(bottom: 4),
+                                      child: Row(
+                                        children: [
+                                          Text("Öffnungszeiten",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                          Padding(
+                                              padding: EdgeInsets.only(left: 8),
+                                              child: Image.network(
+                                                  state.openTimesOriginIconUrl,
+                                                  height: 14))
+                                        ],
+                                      )),
+                                  ...(state.openTimes
+                                      .map((openTime) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                  flex: 2,
+                                                  child: Text(openTime.day,
+                                                      style: TextStyle(
+                                                          fontWeight: openTime
+                                                                  .isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: Text(openTime.time,
+                                                      style: TextStyle(
+                                                          fontWeight: openTime
+                                                                  .isHighlighted
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal))),
+                                            ],
+                                          )))
+                                      .toList()),
+                                ]))),
+                    Padding(
+                        padding: const EdgeInsets.only(
+                            top: 32, bottom: 16, left: 8, right: 8),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 4),
-                                child: Text("Spritpreise",
+                                child: Text("Datenquellen",
                                     style:
-                                        Theme.of(context).textTheme.headline6),
+                                        Theme.of(context).textTheme.titleSmall),
                               ),
-                              ...(state.prices
-                                  .map((price) => Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Row(children: [
-                                              Text(price.fuel,
-                                                  style: TextStyle(
-                                                      fontWeight: price
-                                                              .isHighlighted
-                                                          ? FontWeight.bold
-                                                          : FontWeight.normal)),
+                              ...(state.origins
+                                  .map((origin) => InkWell(
+                                      onTap: origin.websiteUrl != null
+                                          ? () {
+                                              _openUrl(origin.websiteUrl!);
+                                            }
+                                          : null,
+                                      child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 4, bottom: 4),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Image.network(origin.iconUrl,
+                                                  height: 14),
                                               Padding(
                                                   padding:
                                                       EdgeInsets.only(left: 8),
-                                                  child: Image.network(
-                                                      state
-                                                          .openTimesOriginIconUrl,
-                                                      height: 10))
-                                            ]),
-                                          ),
-                                          Expanded(
-                                              flex: 1,
-                                              child: Text(price.price,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          price.isHighlighted
-                                                              ? FontWeight.bold
-                                                              : FontWeight
-                                                                  .normal))),
-                                        ],
-                                      )))
+                                                  child: Text(
+                                                    origin.name,
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ))
+                                            ],
+                                          ))))
                                   .toList()),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 16),
-                                  child: Text(
-                                    "Letzte Preisänderung: ${state.lastPriceUpdate}",
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                    textAlign: TextAlign.center,
-                                  ))
-                            ]))),
-                Card(
-                    child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Padding(
-                                  padding: const EdgeInsets.only(bottom: 4),
-                                  child: Row(
-                                    children: [
-                                      Text("Öffnungszeiten",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
-                                      Padding(
-                                          padding: EdgeInsets.only(left: 8),
-                                          child: Image.network(
-                                              state.openTimesOriginIconUrl,
-                                              height: 14))
-                                    ],
-                                  )),
-                              ...(state.openTimes
-                                  .map((openTime) => Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                              flex: 2,
-                                              child: Text(openTime.day,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          openTime.isHighlighted
-                                                              ? FontWeight.bold
-                                                              : FontWeight
-                                                                  .normal))),
-                                          Expanded(
-                                              flex: 1,
-                                              child: Text(openTime.time,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          openTime.isHighlighted
-                                                              ? FontWeight.bold
-                                                              : FontWeight
-                                                                  .normal))),
-                                        ],
-                                      )))
-                                  .toList()),
-                            ]))),
-                Padding(
-                    padding: const EdgeInsets.only(top: 32, bottom: 16, left: 8, right: 8),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Text("Datenquellen",
-                                style: Theme.of(context).textTheme.titleSmall),
-                          ),
-                          ...(state.origins
-                              .map((origin) => InkWell(
-                                  onTap: origin.websiteUrl != null
-                                      ? () {
-                                          _openUrl(origin.websiteUrl!);
-                                        }
-                                      : null,
-                                  child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 4, bottom: 4),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Image.network(origin.iconUrl,
-                                              height: 14),
-                                          Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 8),
-                                              child: Text(
-                                                origin.name,
-                                                style: TextStyle(fontSize: 12),
-                                              ))
-                                        ],
-                                      ))))
-                              .toList()),
-                        ]))
-              ]))));
+                            ]))
+                  ]))));
     }
 
     return Container();

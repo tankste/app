@@ -245,23 +245,22 @@ class StationMapPageState extends State<StationMapPage> {
   }
 
   Set<Marker> _genMarkers(BuildContext context, MarkersStationMapState state) {
-    List<Marker> markers = state.stationMarkers.entries
-        .map((entry) => Marker(
-            id:
-                "${entry.key.id}#${Object.hash(entry.key.e5Price, entry.key.e5PriceState, entry.key.e10Price, entry.key.e10PriceState, entry.key.dieselPrice, entry.key.dieselPriceState, state.isShowingLabelMarkers ? "label" : "dot")}",
-            latLng: LatLng(
-                entry.key.coordinate.latitude, entry.key.coordinate.longitude),
+    List<Marker> markers = state.stationMarkers
+        .map((annotation) => Marker(
+            id: annotation.id,
+            latLng: LatLng(annotation.marker.coordinate.latitude,
+                annotation.marker.coordinate.longitude),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => StationDetailsPage(
-                            stationId: entry.key.stationId,
-                            markerLabel: entry.key.label,
+                            stationId: annotation.marker.stationId,
+                            markerLabel: annotation.marker.label,
                             activeGasPriceFilter: state.filter.gas,
                           )));
             },
-            icon: entry.value))
+            icon: annotation.icon))
         .toList();
     return markers.toSet();
   }
