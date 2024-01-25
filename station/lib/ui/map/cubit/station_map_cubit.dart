@@ -88,7 +88,6 @@ class StationMapCubit extends Cubit<StationMapState>
       return;
     }
     Filter filter = _filter!;
-
     int requestNumber = ++_requestNumber;
 
     // Zoomed out too far, skip station loading

@@ -23,6 +23,7 @@ class GoogleMapAdapter extends MapAdapter {
 class GoogleMapAdapterState extends State<GoogleMapAdapter> {
   Set<google_maps.Marker> _markers = <google_maps.Marker>{};
   google_maps.GoogleMapController? _mapController;
+  google_maps.CameraPosition? _lastPosition;
   bool? _isDark;
 
   @override
@@ -34,10 +35,31 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onCameraIdle: () => widget.onCameraIdle?.call(),
-      onCameraMove: (position) => widget.onCameraMove?.call(CameraPosition(
-          latLng: LatLng(position.target.latitude, position.target.longitude),
-          zoom: position.zoom)),
+      onCameraIdle: () async {
+        google_maps.GoogleMapController? mapController = _mapController;
+        google_maps.CameraPosition? lastPosition = _lastPosition;
+        if (mapController != null && lastPosition != null) {
+          CameraPosition cameraPosition = CameraPosition(
+              latLng: LatLng(
+                  lastPosition.target.latitude, lastPosition.target.longitude),
+              zoom: lastPosition.zoom);
+
+          LatLngBounds visibleBounds = await mapController
+              .getVisibleRegion()
+              .then((bounds) => LatLngBounds(
+                  northEast: LatLng(
+                      bounds.northeast.latitude, bounds.northeast.longitude),
+                  southWest: LatLng(
+                      bounds.southwest.latitude, bounds.southwest.longitude)));
+
+          widget.onCameraMove?.call(cameraPosition, visibleBounds);
+        }
+
+        widget.onCameraIdle?.call();
+      },
+      onCameraMove: (position) {
+        _lastPosition = position;
+      },
       markers: _markers,
       polylines: widget.polylines
           .map((p) => google_maps.Polyline(

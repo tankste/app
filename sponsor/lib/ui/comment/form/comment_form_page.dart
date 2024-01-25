@@ -49,7 +49,6 @@ class CommentFormPage extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, CommentFormState state) {
-    print("state: $state");
     if (state is LoadingCommentFormState) {
       return const Center(
           child: Padding(

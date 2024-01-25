@@ -42,28 +42,36 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onMapIdle: () {
+      onMapIdle: () async {
         map_libre_maps.MaplibreMapController? mapController = _mapController;
         if (mapController == null) {
           return;
         }
 
-        map_libre_maps.CameraPosition? cameraPosition =
+        map_libre_maps.CameraPosition? mapLibreCameraPosition =
             _mapController?.cameraPosition;
-        if (cameraPosition == null) {
+        if (mapLibreCameraPosition == null) {
           return;
         }
 
         if (!mapController.isCameraMoving) {
-          if (_lastCameraPosition == cameraPosition) {
+          if (_lastCameraPosition == mapLibreCameraPosition) {
             return;
           }
 
-          _lastCameraPosition = cameraPosition;
-          widget.onCameraMove?.call(CameraPosition(
-              latLng: LatLng(cameraPosition.target.latitude,
-                  cameraPosition.target.longitude),
-              zoom: cameraPosition.zoom));
+          _lastCameraPosition = mapLibreCameraPosition;
+          CameraPosition cameraPosition = CameraPosition(
+              latLng: LatLng(mapLibreCameraPosition.target.latitude,
+                  mapLibreCameraPosition.target.longitude),
+              zoom: mapLibreCameraPosition.zoom);
+          LatLngBounds visibleBounds = await mapController
+              .getVisibleRegion()
+              .then((mapLibreBounds) => LatLngBounds(
+                  northEast: LatLng(mapLibreBounds.northeast.latitude,
+                      mapLibreBounds.northeast.longitude),
+                  southWest: LatLng(mapLibreBounds.southwest.latitude,
+                      mapLibreBounds.southwest.longitude)));
+          widget.onCameraMove?.call(cameraPosition, visibleBounds);
 
           widget.onCameraIdle?.call();
         }
@@ -118,6 +126,8 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       Marker? marker = symbol.data?["marker"] as Marker?;
       marker?.onTap?.call();
     });
+
+    mapController.setSymbolIconAllowOverlap(true);
 
     _updateMarkers();
     _updatePolylines();

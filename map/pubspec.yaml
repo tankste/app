@@ -22,7 +22,7 @@ dependencies:
   google_maps_flutter: ^2.1.8
 
   # Apple Maps - https://pub.dev/packages/apple_maps_flutter
-  apple_maps_flutter: ^1.2.0
+  apple_maps_flutter: ^1.3.0
 
   # MapLibre - https://github.com/maplibre/flutter-maplibre-gl
   maplibre_gl:

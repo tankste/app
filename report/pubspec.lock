@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: apple_maps_flutter
-      sha256: "3785518d2bf37066e920b055b171f76258e8937d9182946e5c3ba63614f28285"
+      sha256: "96b672d8fa5c99ef91dc16973adf646faed9c87d52729a16583275475d6c2aa4"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.0"
   archive:
     dependency: transitive
     description:

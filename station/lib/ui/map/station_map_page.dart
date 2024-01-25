@@ -53,13 +53,12 @@ class StationMapPageState extends State<StationMapPage> {
             onCameraIdle: () {
               context.read<StationMapCubit>().onCameraIdle();
             },
-            onCameraMove: (position) async {
+            onCameraMove: (position, visibleBounds) async {
               if (_mapController == null) {
                 return;
               }
 
-              context.read<StationMapCubit>().onCameraPositionChanged(
-                  position, await _mapController!.getVisibleBounds());
+              context.read<StationMapCubit>().onCameraPositionChanged(position, visibleBounds);
             },
             markers: state is MarkersStationMapState
                 ? _genMarkers(context, state)
