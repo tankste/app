@@ -7,6 +7,7 @@ class StationModel {
   final String brand;
   final StationAddressModel address;
   final CoordinateModel coordinate;
+  final bool isOpen;
 
   StationModel(
       {required this.id,
@@ -14,11 +15,12 @@ class StationModel {
       required this.name,
       required this.brand,
       required this.address,
-      required this.coordinate});
+      required this.coordinate,
+      required this.isOpen});
 
   @override
   String toString() {
-    return 'StationModel{id: $id, originId: $originId, name: $name, brand: $brand, address: $address, coordinate: $coordinate}';
+    return 'StationModel{id: $id, originId: $originId, name: $name, brand: $brand, address: $address, coordinate: $coordinate, isOpen: $isOpen}';
   }
 }
 

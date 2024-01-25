@@ -25,6 +25,7 @@ enum ReportField {
   unknown,
   name,
   brand,
+  availability,
   addressStreet,
   addressHouseNumber,
   addressPostCode,
@@ -36,7 +37,8 @@ enum ReportField {
   priceE10,
   priceDiesel,
   openTimesState,
-  openTimes
+  openTimes,
+  note
 }
 
 enum ReportStatus { unknown, open, corrected, invalid, ignored }

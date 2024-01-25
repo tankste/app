@@ -8,6 +8,7 @@ class StationDto {
   final String? brand;
   final LocationDto location;
   final AddressDto address;
+  final bool? isOpen;
 
   StationDto({
     required this.id,
@@ -16,6 +17,7 @@ class StationDto {
     required this.brand,
     required this.location,
     required this.address,
+    required this.isOpen,
   });
 
   factory StationDto.fromJson(Map<String, dynamic> parsedJson) {
@@ -35,6 +37,7 @@ class StationDto {
         addressCity: parsedJson['address']['city'],
         addressCountry: parsedJson['address']['country'],
       ),
+      isOpen: parsedJson['isOpen'],
     );
   }
 
@@ -54,6 +57,7 @@ class StationDto {
         'city': address.addressCity,
         'country': address.addressCountry,
       },
+      'isOpen': isOpen,
     };
   }
 
@@ -74,6 +78,7 @@ class StationDto {
         addressCity: model.address.city,
         addressCountry: model.address.country,
       ),
+      isOpen: model.isOpen,
     );
   }
 
@@ -94,12 +99,13 @@ class StationDto {
         city: address.addressCity ?? "",
         country: address.addressCountry ?? "",
       ),
+      isOpen: isOpen ?? false,
     );
   }
 
   @override
   String toString() {
-    return 'StationDto{id: $id, name: $name, brand: $brand, location: $location, address: $address}';
+    return 'StationDto{id: $id, name: $name, brand: $brand, location: $location, address: $address, isOpen: $isOpen}';
   }
 }
 

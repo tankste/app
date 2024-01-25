@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:report/ui/form/availability_selection_dialog.dart';
 import 'package:report/ui/form/cubit/report_form_cubit.dart';
 import 'package:report/ui/form/cubit/report_form_state.dart';
+import 'package:report/ui/form/open_time_state_selection_dialog.dart';
 
 class ReportFormPage extends StatelessWidget {
   final int stationId;
   final TextEditingController _nameTextController = TextEditingController();
   final TextEditingController _brandTextController = TextEditingController();
+  final TextEditingController _availabilityTextController =
+      TextEditingController();
   final TextEditingController _streetTextController = TextEditingController();
   final TextEditingController _houseNumberTextController =
       TextEditingController();
@@ -20,8 +24,11 @@ class ReportFormPage extends StatelessWidget {
   final TextEditingController _priceE10TextController = TextEditingController();
   final TextEditingController _priceDieselTextController =
       TextEditingController();
+  final TextEditingController _openTimeStateTextController =
+      TextEditingController();
   final TextEditingController _openTimesTextController =
       TextEditingController();
+  final TextEditingController _noteTextController = TextEditingController();
   bool _hasInit = false;
 
   ReportFormPage({
@@ -37,7 +44,7 @@ class ReportFormPage extends StatelessWidget {
             listener: (context, state) {
           if (state is SavedFormReportFormState) {
             const snackBar = SnackBar(
-              content: Text('Meldung erfolgreich versendet.'),
+              content: Text('Meldung erfolgreich gesendet.'),
             );
 
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -77,6 +84,9 @@ class ReportFormPage extends StatelessWidget {
               _openTimesTextController.text = state.openTimes;
               _hasInit = true;
             }
+
+            _availabilityTextController.text = state.availabilityLabel;
+            _openTimeStateTextController.text = state.openTimesStateLabel;
           }
         }, builder: (context, state) {
           return Scaffold(
@@ -162,6 +172,33 @@ class ReportFormPage extends StatelessWidget {
                     context.read<ReportFormCubit>().onBrandChanged(text);
                   },
                 )),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                    labelText: "Verfügbarkeit",
+                    errorText: null,
+                    border: OutlineInputBorder(),
+                    alignLabelWithHint: true,
+                    suffixIcon: Icon(Icons.arrow_drop_down)),
+                readOnly: true,
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AvailabilitySelectionDialog(
+                            selection: state.availability);
+                      }).then((availability) {
+                    if (availability != null) {
+                      context
+                          .read<ReportFormCubit>()
+                          .onAvailabilityChanged(availability);
+                    }
+                  });
+                },
+                controller: _availabilityTextController,
+              ),
+            ),
             Padding(
                 padding: const EdgeInsets.only(top: 24),
                 child: Text("Addresse",
@@ -342,20 +379,33 @@ class ReportFormPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 24),
                 child: Text("Öffnungszeiten",
                     style: Theme.of(context).textTheme.titleLarge)),
-            // Padding(
-            //     padding: const EdgeInsets.only(top: 16),
-            //     child: TextFormField(
-            //       decoration: InputDecoration(
-            //         labelText: "Aktuell geöffnet",
-            //         border: const OutlineInputBorder(),
-            //         alignLabelWithHint: true,
-            //         errorText: null,
-            //       ),
-            //       controller: _openTimesTextController,
-            //       onChanged: (String text) {
-            //         // context.read<ReportFormCubit>().onOpenTimesStateChanged(text);
-            //       },
-            //     )),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                    labelText: "Aktuell geöffnet?",
+                    errorText: null,
+                    border: OutlineInputBorder(),
+                    alignLabelWithHint: true,
+                    suffixIcon: Icon(Icons.arrow_drop_down)),
+                readOnly: true,
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return OpenTimeStateSelectionDialog(
+                            selection: state.openTimesState);
+                      }).then((openTimeState) {
+                    if (openTimeState != null) {
+                      context
+                          .read<ReportFormCubit>()
+                          .onOpenTimesStateChanged(openTimeState);
+                    }
+                  });
+                },
+                controller: _openTimeStateTextController,
+              ),
+            ),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
@@ -369,6 +419,27 @@ class ReportFormPage extends StatelessWidget {
                   controller: _openTimesTextController,
                   onChanged: (String text) {
                     context.read<ReportFormCubit>().onOpenTimesChanged(text);
+                  },
+                )),
+            Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Text("Sonstiges",
+                    style: Theme.of(context).textTheme.titleLarge)),
+            Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: "Anmerkungen",
+                    border: OutlineInputBorder(),
+                    alignLabelWithHint: true,
+                    helperText:
+                        "Teile uns mit, was bei der Tankstelle das Problem ist.",
+                    errorText: null,
+                  ),
+                  maxLines: 7,
+                  controller: _noteTextController,
+                  onChanged: (String text) {
+                    context.read<ReportFormCubit>().onNoteChanged(text);
                   },
                 )),
             Padding(

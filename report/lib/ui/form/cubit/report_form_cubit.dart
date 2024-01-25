@@ -54,8 +54,12 @@ class ReportFormCubit extends Cubit<ReportFormState> {
   String _priceDiesel = "";
   String _originalOpenTimesState = "";
   String _openTimesState = "";
+  String _openTimesStateLabel = "";
   String _originalOpenTimes = "";
   String _openTimes = "";
+  String _availability = "";
+  String _availabilityLabel = "";
+  String _note = "";
 
   ReportFormCubit(this.stationId) : super(LoadingReportFormState()) {
     _fetchStation();
@@ -74,16 +78,34 @@ class ReportFormCubit extends Cubit<ReportFormState> {
             _name = station.name.isNotEmpty ? station.name : "-";
             _originalBrand = station.brand.isNotEmpty ? station.brand : "-";
             _brand = station.brand.isNotEmpty ? station.brand : "-";
-            _originalAddressStreet = station.address.street.isNotEmpty ? station.address.street : "-";
-            _addressStreet = station.address.street.isNotEmpty ? station.address.street : "-";
-            _originalAddressHouseNumber = station.address.houseNumber.isNotEmpty ? station.address.houseNumber : "-";
-            _addressHouseNumber = station.address.houseNumber.isNotEmpty ? station.address.houseNumber : "-";
-            _originalAddressPostCode = station.address.postCode.isNotEmpty ? station.address.postCode : "-";
-            _addressPostCode = station.address.postCode.isNotEmpty ? station.address.postCode : "-";
-            _originalAddressCity = station.address.city.isNotEmpty ? station.address.city : "-";
-            _addressCity = station.address.city.isNotEmpty ? station.address.city : "-";
-            _originalAddressCountry = station.address.country.isNotEmpty ? station.address.country : "-";
-            _addressCountry = station.address.country.isNotEmpty ? station.address.country : "-";
+            _originalAddressStreet = station.address.street.isNotEmpty
+                ? station.address.street
+                : "-";
+            _addressStreet = station.address.street.isNotEmpty
+                ? station.address.street
+                : "-";
+            _originalAddressHouseNumber = station.address.houseNumber.isNotEmpty
+                ? station.address.houseNumber
+                : "-";
+            _addressHouseNumber = station.address.houseNumber.isNotEmpty
+                ? station.address.houseNumber
+                : "-";
+            _originalAddressPostCode = station.address.postCode.isNotEmpty
+                ? station.address.postCode
+                : "-";
+            _addressPostCode = station.address.postCode.isNotEmpty
+                ? station.address.postCode
+                : "-";
+            _originalAddressCity =
+                station.address.city.isNotEmpty ? station.address.city : "-";
+            _addressCity =
+                station.address.city.isNotEmpty ? station.address.city : "-";
+            _originalAddressCountry = station.address.country.isNotEmpty
+                ? station.address.country
+                : "-";
+            _addressCountry = station.address.country.isNotEmpty
+                ? station.address.country
+                : "-";
             _originalLocationLatitude = station.coordinate.latitude.toString();
             _locationLatitude = station.coordinate.latitude.toString();
             _originalLocationLongitude =
@@ -119,27 +141,34 @@ class ReportFormCubit extends Cubit<ReportFormState> {
                     ?.price
                     .toString() ??
                 "-";
-            _originalOpenTimesState = "-";
-            _openTimesState = "-";
+            _originalOpenTimesState = station.isOpen.toString();
+            _openTimesState = station.isOpen.toString();
+            _openTimesStateLabel = station.isOpen ? "Geöffnet" : "Geschlossen";
             _originalOpenTimes = _genOpenTimes(openTimes);
             _openTimes = _genOpenTimes(openTimes);
+            _availability = "available";
+            _availabilityLabel = "Verfügbar";
+            _note = "";
 
             return FormReportFormState(
-              name: _name,
-              brand: _brand,
-              addressStreet: _addressStreet,
-              addressHouseNumber: _addressHouseNumber,
-              addressPostCode: _addressPostCode,
-              addressCity: _addressCity,
-              addressCountry: _addressCountry,
-              locationLatitude: _locationLatitude,
-              locationLongitude: _locationLongitude,
-              priceE5: _priceE5,
-              priceE10: _priceE10,
-              priceDiesel: _priceDiesel,
-              openTimesState: _openTimesState,
-              openTimes: _openTimes,
-            );
+                name: _name,
+                brand: _brand,
+                availability: _availability,
+                availabilityLabel: _availabilityLabel,
+                addressStreet: _addressStreet,
+                addressHouseNumber: _addressHouseNumber,
+                addressPostCode: _addressPostCode,
+                addressCity: _addressCity,
+                addressCountry: _addressCountry,
+                locationLatitude: _locationLatitude,
+                locationLongitude: _locationLongitude,
+                priceE5: _priceE5,
+                priceE10: _priceE10,
+                priceDiesel: _priceDiesel,
+                openTimesState: _openTimesState,
+                openTimesStateLabel: _openTimesStateLabel,
+                openTimes: _openTimes,
+                note: _note);
           }, (error) {
             return ErrorReportFormState(errorDetails: error.toString());
           });
@@ -236,6 +265,38 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     _brand = value;
   }
 
+  void onAvailabilityChanged(String value) {
+    _availability = value;
+    if (value == "available") {
+      _availabilityLabel = "Verfügbar";
+    } else if (value == "temporary_closed") {
+      _availabilityLabel = "Temporär geschlossen";
+    } else {
+      _availabilityLabel = "Dauerhaft geschlossen";
+    }
+
+    emit(FormReportFormState(
+      brand: _brand,
+      name: _name,
+      availability: _availability,
+      availabilityLabel: _availabilityLabel,
+      addressStreet: _addressStreet,
+      addressHouseNumber: _addressHouseNumber,
+      addressPostCode: _addressPostCode,
+      addressCity: _addressCity,
+      addressCountry: _addressCountry,
+      locationLatitude: _locationLatitude,
+      locationLongitude: _locationLongitude,
+      priceE5: _priceE5,
+      priceE10: _priceE10,
+      priceDiesel: _priceDiesel,
+      openTimesState: _openTimesState,
+      openTimesStateLabel: _openTimesStateLabel,
+      openTimes: _openTimes,
+      note: _note,
+    ));
+  }
+
   void onAddressStreetChanged(String value) {
     _addressStreet = value;
   }
@@ -272,26 +333,23 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     _priceE10 = value;
   }
 
-  void onOpenTimesStateChanged(String value) {
-    _openTimesState = value;
-  }
-
   void onPriceDieselChanged(String value) {
     _priceDiesel = value;
   }
 
-  void onOpenTimesChanged(String value) {
-    _openTimes = value;
-  }
+  void onOpenTimesStateChanged(String value) {
+    _openTimesState = value;
+    if (value == "true") {
+      _openTimesStateLabel = "Geöffnet";
+    } else {
+      _openTimesStateLabel = "Geschlossen";
+    }
 
-  void onSaveClicked() {
-    _submit();
-  }
-
-  void _submit() {
-    emit(SavingFormReportFormState(
+    emit(FormReportFormState(
       brand: _brand,
       name: _name,
+      availability: _availability,
+      availabilityLabel: _availabilityLabel,
       addressStreet: _addressStreet,
       addressHouseNumber: _addressHouseNumber,
       addressPostCode: _addressPostCode,
@@ -303,13 +361,52 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       priceE10: _priceE10,
       priceDiesel: _priceDiesel,
       openTimesState: _openTimesState,
+      openTimesStateLabel: _openTimesStateLabel,
       openTimes: _openTimes,
+      note: _note,
+    ));
+  }
+
+  void onOpenTimesChanged(String value) {
+    _openTimes = value;
+  }
+
+  void onNoteChanged(String value) {
+    _note = value;
+  }
+
+  void onSaveClicked() {
+    _submit();
+  }
+
+  void _submit() {
+    emit(SavingFormReportFormState(
+      brand: _brand,
+      name: _name,
+      availability: _availability,
+      availabilityLabel: _availabilityLabel,
+      addressStreet: _addressStreet,
+      addressHouseNumber: _addressHouseNumber,
+      addressPostCode: _addressPostCode,
+      addressCity: _addressCity,
+      addressCountry: _addressCountry,
+      locationLatitude: _locationLatitude,
+      locationLongitude: _locationLongitude,
+      priceE5: _priceE5,
+      priceE10: _priceE10,
+      priceDiesel: _priceDiesel,
+      openTimesState: _openTimesState,
+      openTimesStateLabel: _openTimesStateLabel,
+      openTimes: _openTimes,
+      note: _note,
     ));
 
     List<ReportModel?> newReports = [];
 
     newReports.add(_createReport(ReportField.name, _originalName, _name));
     newReports.add(_createReport(ReportField.brand, _originalBrand, _brand));
+    newReports.add(
+        _createReport(ReportField.availability, "available", _availability));
     newReports.add(_createReport(
         ReportField.addressStreet, _originalAddressStreet, _addressStreet));
     newReports.add(_createReport(ReportField.addressHouseNumber,
@@ -334,11 +431,14 @@ class ReportFormCubit extends Cubit<ReportFormState> {
         ReportField.openTimesState, _originalOpenTimesState, _openTimesState));
     newReports.add(
         _createReport(ReportField.openTimes, _originalOpenTimes, _openTimes));
+    newReports.add(_createReport(ReportField.note, "", _note));
 
     if (newReports.whereNotNull().isEmpty) {
       emit(SavedFormReportFormState(
         brand: _brand,
         name: _name,
+        availability: _availability,
+        availabilityLabel: _availabilityLabel,
         addressStreet: _addressStreet,
         addressHouseNumber: _addressHouseNumber,
         addressPostCode: _addressPostCode,
@@ -350,7 +450,9 @@ class ReportFormCubit extends Cubit<ReportFormState> {
         priceE10: _priceE10,
         priceDiesel: _priceDiesel,
         openTimesState: _openTimesState,
+        openTimesStateLabel: _openTimesStateLabel,
         openTimes: _openTimes,
+        note: _note,
       ));
       return;
     }
@@ -369,6 +471,8 @@ class ReportFormCubit extends Cubit<ReportFormState> {
           errorDetails: failedResults.first.tryGetError().toString(),
           brand: _brand,
           name: _name,
+          availability: _availability,
+          availabilityLabel: _availabilityLabel,
           addressStreet: _addressStreet,
           addressHouseNumber: _addressHouseNumber,
           addressPostCode: _addressPostCode,
@@ -380,7 +484,9 @@ class ReportFormCubit extends Cubit<ReportFormState> {
           priceE10: _priceE10,
           priceDiesel: _priceDiesel,
           openTimesState: _openTimesState,
+          openTimesStateLabel: _openTimesStateLabel,
           openTimes: _openTimes,
+          note: _note,
         ));
         return;
       }
@@ -388,6 +494,8 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       emit(SavedFormReportFormState(
         brand: _brand,
         name: _name,
+        availability: _availability,
+        availabilityLabel: _availabilityLabel,
         addressStreet: _addressStreet,
         addressHouseNumber: _addressHouseNumber,
         addressPostCode: _addressPostCode,
@@ -399,7 +507,9 @@ class ReportFormCubit extends Cubit<ReportFormState> {
         priceE10: _priceE10,
         priceDiesel: _priceDiesel,
         openTimesState: _openTimesState,
+        openTimesStateLabel: _openTimesStateLabel,
         openTimes: _openTimes,
+        note: _note,
       ));
     });
   }

@@ -113,6 +113,8 @@ class ReportDto {
         return "name";
       case ReportField.brand:
         return "brand";
+      case ReportField.availability:
+        return "availability";
       case ReportField.locationLatitude:
         return "location_latitude";
       case ReportField.locationLongitude:
@@ -131,12 +133,14 @@ class ReportDto {
         return "open_times_state";
       case ReportField.openTimes:
         return "open_times";
-        case ReportField.priceE5:
+      case ReportField.priceE5:
         return "price_e5";
-        case ReportField.priceE10:
+      case ReportField.priceE10:
         return "price_e10";
-        case ReportField.priceDiesel:
+      case ReportField.priceDiesel:
         return "price_diesel";
+      case ReportField.note:
+        return "note";
       default:
         return "unknown";
     }

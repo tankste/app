@@ -5,6 +5,8 @@ class LoadingReportFormState extends ReportFormState {}
 class FormReportFormState extends ReportFormState {
   String name;
   String brand;
+  String availability;
+  String availabilityLabel;
   String addressStreet;
   String addressHouseNumber;
   String addressCity;
@@ -16,11 +18,15 @@ class FormReportFormState extends ReportFormState {
   String priceE10;
   String priceDiesel;
   String openTimesState;
+  String openTimesStateLabel;
   String openTimes;
+  String note;
 
   FormReportFormState({
     required this.name,
     required this.brand,
+    required this.availability,
+    required this.availabilityLabel,
     required this.addressStreet,
     required this.addressHouseNumber,
     required this.addressCity,
@@ -32,7 +38,9 @@ class FormReportFormState extends ReportFormState {
     required this.priceE10,
     required this.priceDiesel,
     required this.openTimesState,
+    required this.openTimesStateLabel,
     required this.openTimes,
+    required this.note
   });
 }
 
@@ -46,6 +54,8 @@ class SavingFormReportFormState extends FormReportFormState {
   SavingFormReportFormState({
     required super.name,
     required super.brand,
+    required super.availability,
+    required super.availabilityLabel,
     required super.addressStreet,
     required super.addressHouseNumber,
     required super.addressCity,
@@ -57,7 +67,9 @@ class SavingFormReportFormState extends FormReportFormState {
     required super.priceE10,
     required super.priceDiesel,
     required super.openTimesState,
+    required super.openTimesStateLabel,
     required super.openTimes,
+    required super.note
   });
 }
 
@@ -68,6 +80,8 @@ class SaveErrorFormReportFormState extends FormReportFormState {
     required this.errorDetails,
     required super.name,
     required super.brand,
+    required super.availability,
+    required super.availabilityLabel,
     required super.addressStreet,
     required super.addressHouseNumber,
     required super.addressCity,
@@ -79,7 +93,9 @@ class SaveErrorFormReportFormState extends FormReportFormState {
     required super.priceE10,
     required super.priceDiesel,
     required super.openTimesState,
+    required super.openTimesStateLabel,
     required super.openTimes,
+    required super.note
   });
 }
 
@@ -87,6 +103,8 @@ class SavedFormReportFormState extends FormReportFormState {
   SavedFormReportFormState({
     required super.name,
     required super.brand,
+    required super.availability,
+    required super.availabilityLabel,
     required super.addressStreet,
     required super.addressHouseNumber,
     required super.addressCity,
@@ -98,6 +116,8 @@ class SavedFormReportFormState extends FormReportFormState {
     required super.priceE10,
     required super.priceDiesel,
     required super.openTimesState,
+    required super.openTimesStateLabel,
     required super.openTimes,
+    required super.note
   });
 }
