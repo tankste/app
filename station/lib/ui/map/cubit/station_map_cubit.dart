@@ -193,7 +193,7 @@ class StationMapCubit extends Cubit<StationMapState>
   void onZoomInfoClicked() {
     emit(MoveToPositionStationMapState(
         cameraPosition:
-            CameraPosition(latLng: _position.latLng, zoom: _minZoom),
+            CameraPosition(latLng: _position.latLng, zoom: 12.5),
         underlyingState: state));
   }
 
