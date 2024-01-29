@@ -4,15 +4,17 @@ import 'package:sponsor/model/purchase_model.dart';
 class ApplePurchaseDto {
   final String? provider;
   final String? productId;
+  final String? transactionId;
   final String? data;
   final String? deviceId;
 
-  ApplePurchaseDto({this.provider, this.productId, this.data, this.deviceId});
+  ApplePurchaseDto({this.provider, this.productId, this.transactionId, this.data, this.deviceId});
 
   factory ApplePurchaseDto.fromJson(Map<String, dynamic> parsedJson) {
     return ApplePurchaseDto(
       provider: parsedJson['provider'],
       productId: parsedJson['productId'],
+      transactionId: parsedJson['transactionId'],
       data: parsedJson['data'],
       deviceId: parsedJson['deviceId'],
     );
@@ -22,6 +24,7 @@ class ApplePurchaseDto {
     return {
       'provider': provider,
       'productId': productId,
+      'transactionId': transactionId,
       'data': data,
       'deviceId': deviceId,
     };
@@ -36,6 +39,7 @@ class ApplePurchaseDto {
               ? 'apple_store'
               : null,
       productId: model.productId,
+      transactionId: model.transactionId,
       data: model.data,
       deviceId: deviceId,
     );
@@ -49,11 +53,12 @@ class ApplePurchaseDto {
                 ? PurchaseProvider.appleStore
                 : PurchaseProvider.unknown,
         productId: productId ?? "",
+        transactionId: transactionId ?? "",
         data: data ?? "");
   }
 
   @override
   String toString() {
-    return 'ApplePurchaseDto{provider: $provider, productId: $productId, data: $data, deviceId: $deviceId}';
+    return 'ApplePurchaseDto{provider: $provider, productId: $productId, transactionId: $transactionId, data: $data, deviceId: $deviceId}';
   }
 }

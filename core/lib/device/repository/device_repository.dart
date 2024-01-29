@@ -7,6 +7,8 @@ import 'package:uuid/uuid.dart';
 
 abstract class DeviceRepository {
   Stream<Result<DeviceModel, Exception>> get();
+
+  Stream<Result<DeviceModel, Exception>> update(DeviceModel device);
 }
 
 class LocalDeviceRepository extends DeviceRepository {
@@ -39,6 +41,27 @@ class LocalDeviceRepository extends DeviceRepository {
       }
 
       return Result.success(DeviceModel(id: id));
+    } on Exception catch (e) {
+      return Result.error(e);
+    }
+  }
+
+  @override
+  Stream<Result<DeviceModel, Exception>> update(DeviceModel device) {
+    StreamController<Result<DeviceModel, Exception>> streamController =
+        StreamController.broadcast();
+
+    _updateAsync(device).then((result) => streamController.add(result));
+
+    return streamController.stream;
+  }
+
+  Future<Result<DeviceModel, Exception>> _updateAsync(DeviceModel device) async {
+    try {
+      SharedPreferences preferences = await _getPreferences();
+      await preferences.setString("device_id", device.id);
+
+      return Result.success(device);
     } on Exception catch (e) {
       return Result.error(e);
     }

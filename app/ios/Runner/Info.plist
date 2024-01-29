@@ -47,6 +47,8 @@
 	<string>Use location for find gas stations in your near.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Use location for find gas stations in your near.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Use location for find gas stations in your near.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

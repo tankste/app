@@ -15,6 +15,7 @@ import 'package:sponsor/repository/balance_repository.dart';
 import 'package:sponsor/repository/comment_repository.dart';
 import 'package:sponsor/repository/purchase_repository.dart';
 import 'package:sponsor/repository/sponsorship_repository.dart';
+import 'package:sponsor/repository/transaction_device_repository.dart';
 
 abstract class ProductRepository {
   Stream<Result<ProductModel, Exception>> get(String id);
@@ -33,6 +34,7 @@ class MobileProductRepository extends ProductRepository {
   late BalanceRepository _balanceRepository;
   late CommentRepository _commentRepository;
   late SponsorshipRepository _sponsorshipRepository;
+  late TransactionDeviceRepository _transactionDeviceRepository;
 
   factory MobileProductRepository(
     PurchaseRepository purchaseRepository,
@@ -40,12 +42,14 @@ class MobileProductRepository extends ProductRepository {
     BalanceRepository balanceRepository,
     CommentRepository commentRepository,
     SponsorshipRepository sponsorshipRepository,
+    TransactionDeviceRepository transactionDeviceRepository,
   ) {
     _instance._purchaseRepository = purchaseRepository;
     _instance._deviceRepository = deviceRepository;
     _instance._balanceRepository = balanceRepository;
     _instance._commentRepository = commentRepository;
     _instance._sponsorshipRepository = sponsorshipRepository;
+    _instance._transactionDeviceRepository = transactionDeviceRepository;
     return _instance;
   }
 
@@ -156,6 +160,7 @@ class MobileProductRepository extends ProductRepository {
       } else if (purchaseDetails is AppStorePurchaseDetails) {
         return _purchaseRepository
             .create(ApplePurchaseModel(
+                transactionId: purchaseDetails.skPaymentTransaction.transactionIdentifier ?? "",
                 data: purchaseDetails.verificationData.serverVerificationData,
                 productId: purchaseDetails.productID,
                 provider: PurchaseProvider.appleStore))
@@ -194,12 +199,15 @@ class MobileProductRepository extends ProductRepository {
 
       PurchaseDetails purchaseDetails = purchaseDetailsResult.tryGetSuccess()!;
       if (purchaseDetails is GooglePlayPurchaseDetails) {
-        return _purchaseRepository
-            .create(PlayPurchaseModel(
-                token: purchaseDetails.billingClientPurchase.orderId,
-                secret: purchaseDetails.billingClientPurchase.purchaseToken,
-                productId: purchaseDetails.productID,
-                provider: PurchaseProvider.playStore))
+        // TODO
+        // This is not required for Google. But be fair and add this later :-)
+        return Result.error(Exception("Unsupported purchase details!"));
+      } else if (purchaseDetails is AppStorePurchaseDetails) {
+        String transactionId = purchaseDetails.skPaymentTransaction
+                .originalTransaction?.transactionIdentifier ??
+            "";
+        return _transactionDeviceRepository
+            .registerByAppleTransactionId(transactionId)
             .first;
       } else {
         return Result.error(Exception("Unsupported purchase details!"));
@@ -214,6 +222,7 @@ class MobileProductRepository extends ProductRepository {
     try {
       final List<PurchaseDetails> purchaseDetailsList =
           await InAppPurchase.instance.purchaseStream.first;
+
       final PurchaseDetails purchaseDetails = purchaseDetailsList.first;
       switch (purchaseDetails.status) {
         case PurchaseStatus.pending:

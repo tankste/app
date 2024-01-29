@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -95,7 +97,7 @@ class OfferContainer extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.only(top: 8),
                           child: Text(
-                              "Ein großes Dankeschön an dich, dass du mir hilft das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit ${state.sponsoredValue} ausgeholfen, und somit die Weiterentwicklung voran getrieben.",
+                              "Ein großes Dankeschön an dich, dass du mir hilfst das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit ${state.sponsoredValue} ausgeholfen, und somit die Weiterentwicklung voran getrieben.",
                               style: TextStyle(fontSize: 16))),
                       state.activeSubscription != null
                           ? Padding(
@@ -128,12 +130,14 @@ class OfferContainer extends StatelessWidget {
                   //TODO: add more information link
                 ],
               ),
-        Padding(
-          padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-          child: Text(state.title,
-              textAlign: TextAlign.start,
-              style: Theme.of(context).textTheme.titleLarge),
-        ),
+        state.items.isNotEmpty
+            ? Padding(
+                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Text(state.title,
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.titleLarge),
+              )
+            : Container(),
         ...state.items.map((item) => Padding(
             padding: EdgeInsets.only(top: 8, left: 16, right: 16),
             child: Column(
@@ -167,6 +171,16 @@ class OfferContainer extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodySmall)),
               ],
             ))),
+        state.items.isNotEmpty && Platform.isIOS
+            ? Center(
+                child: Padding(
+                    padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: TextButton(
+                        onPressed: () {
+                          context.read<OfferCubit>().onRestoreClicked();
+                        },
+                        child: Text("Restore purchases"))))
+            : Container(),
         //TODO: add later more options to sponsor
         // Center(
         //     child: Padding(

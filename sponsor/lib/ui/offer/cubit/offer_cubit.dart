@@ -56,28 +56,28 @@ class OfferCubit extends Cubit<OfferState> {
                         labelType: "/ Monatlich",
                         hint:
                             "Unterstütze tankste! mit einer monatlichen Zahlung von ${monthlySubscriptionProduct.priceLabel}."));
+
+                    items.add(OfferItem(
+                        id: onceTenProduct.id,
+                        labelPrice: onceTenProduct.priceLabel,
+                        labelType: "/ Einmalig",
+                        hint:
+                            "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTenProduct.priceLabel}."));
+
+                    items.add(OfferItem(
+                        id: onceTwoProduct.id,
+                        labelPrice: onceTwoProduct.priceLabel,
+                        labelType: "/ Einmalig",
+                        hint:
+                            "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTwoProduct.priceLabel}."));
+
+                    items.add(OfferItem(
+                        id: onceOneProduct.id,
+                        labelPrice: onceOneProduct.priceLabel,
+                        labelType: "/ Einmalig",
+                        hint:
+                            "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceOneProduct.priceLabel}."));
                   }
-
-                  items.add(OfferItem(
-                      id: onceTenProduct.id,
-                      labelPrice: onceTenProduct.priceLabel,
-                      labelType: "/ Einmalig",
-                      hint:
-                          "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTenProduct.priceLabel}."));
-
-                  items.add(OfferItem(
-                      id: onceTwoProduct.id,
-                      labelPrice: onceTwoProduct.priceLabel,
-                      labelType: "/ Einmalig",
-                      hint:
-                          "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTwoProduct.priceLabel}."));
-
-                  items.add(OfferItem(
-                      id: onceOneProduct.id,
-                      labelPrice: onceOneProduct.priceLabel,
-                      labelType: "/ Einmalig",
-                      hint:
-                          "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceOneProduct.priceLabel}."));
 
                   return OffersOfferState(
                       title: sponsorship.activeSubscriptionId != null
@@ -89,8 +89,7 @@ class OfferCubit extends Cubit<OfferState> {
                           sponsorship.activeSubscriptionId != null
                               ? [
                                   yearlySubscriptionProduct,
-                                  monthlySubscriptionProduct,
-                                  onceTenProduct
+                                  monthlySubscriptionProduct
                                 ]
                                   .firstWhereOrNull((element) =>
                                       element.id ==
@@ -120,9 +119,37 @@ class OfferCubit extends Cubit<OfferState> {
       }
 
       if (result.isError()) {
+        print("Error: ${result.tryGetError()?.toString()}");
         emit(ErrorPurchaseLoadingOfferState(
             errorDetails: result.tryGetError()?.toString()));
         _fetchItems();
+        return;
+      }
+
+      OfferState state = this.state;
+      if (state is OffersOfferState) {
+        emit(PurchasedOffersOfferState(
+            title: state.title,
+            items: state.items,
+            sponsoredValue: state.sponsoredValue,
+            activeSubscription: state.activeSubscription,
+            isSponsorshipInfoVisible: state.isSponsorshipInfoVisible));
+      }
+    });
+  }
+
+  void onRestoreClicked() {
+    _productRepository.restore().listen((result) {
+      if (isClosed) {
+        return;
+      }
+
+      if (result.isError()) {
+        print("Error: ${result.tryGetError()?.toString()}");
+        emit(ErrorPurchaseLoadingOfferState(
+            errorDetails: result.tryGetError()?.toString()));
+        _fetchItems();
+        return;
       }
 
       OfferState state = this.state;

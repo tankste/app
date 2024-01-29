@@ -5,6 +5,7 @@ import 'package:sponsor/repository/config_repository.dart';
 import 'package:sponsor/repository/product_repository.dart';
 import 'package:sponsor/repository/purchase_repository.dart';
 import 'package:sponsor/repository/sponsorship_repository.dart';
+import 'package:sponsor/repository/transaction_device_repository.dart';
 
 class SponsorModuleFactory {
   static BalanceRepository createBalanceRepository() {
@@ -17,7 +18,8 @@ class SponsorModuleFactory {
         CoreModuleFactory.createDeviceRepository(),
         createBalanceRepository(),
         createCommentRepository(),
-        createSponsorshipRepository());
+        createSponsorshipRepository(),
+        createTransactionDeviceRepository());
   }
 
   static PurchaseRepository createPurchaseRepository() {
@@ -32,6 +34,11 @@ class SponsorModuleFactory {
 
   static CommentRepository createCommentRepository() {
     return TanksteWebCommentRepository(
+        CoreModuleFactory.createDeviceRepository(), createConfigRepository());
+  }
+
+  static TransactionDeviceRepository createTransactionDeviceRepository() {
+    return TanksteWebTransactionDeviceRepository(
         CoreModuleFactory.createDeviceRepository(), createConfigRepository());
   }
 
