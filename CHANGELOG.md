@@ -9,6 +9,9 @@ CHANGELOG
 
 ## Upcoming version ##
 
+
+## 2.0.0 (29.01.2023) ##
+
 * 🛠 Add pull-to-refresh action to station details
 * ➕ Show data source origin ([#55](https://github.com/tankste/app/issues/55))
 * ➕ Add report wrong data form ([#54](https://github.com/tankste/app/issues/54))
