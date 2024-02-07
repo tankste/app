@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+* 🐞 Fix initial state hangup ([#64](https://github.com/tankste/app/issues/64))
 
 ## 2.0.0 (29.01.2024) ##
 

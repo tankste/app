@@ -5,6 +5,8 @@ import 'package:station/ui/map/filter_dialog.dart';
 
 abstract class StationMapState {}
 
+class EmptyStationMapState extends StationMapState {}
+
 class MoveToPositionStationMapState extends StationMapState {
   final CameraPosition cameraPosition;
   final StationMapState underlyingState;
@@ -13,7 +15,21 @@ class MoveToPositionStationMapState extends StationMapState {
       {required this.cameraPosition, required this.underlyingState});
 }
 
-class LoadingStationMapState extends StationMapState {}
+abstract class LoadingStationMapState extends StationMapState {
+  final StationMapState underlyingState;
+
+  LoadingStationMapState({required this.underlyingState});
+}
+
+class PositionLoadingStationMapState extends LoadingStationMapState {
+  PositionLoadingStationMapState({required super.underlyingState});
+}
+
+class StationLoadingStationMapState extends LoadingStationMapState {
+  StationLoadingStationMapState({required super.underlyingState});
+}
+
+enum LoadingType { position, stations }
 
 class ErrorStationMapState extends StationMapState {
   String? errorDetails;
@@ -32,13 +48,6 @@ class MarkersStationMapState extends StationMapState {
       required this.filter});
 }
 
-class LoadingMarkersStationMapState extends MarkersStationMapState {
-  LoadingMarkersStationMapState(
-      {required super.stationMarkers,
-      required super.isShowingLabelMarkers,
-      required super.filter});
-}
-
 class TooFarZoomedOutStationMapState extends StationMapState {}
 
 class FilterMarkersStationMapState extends MarkersStationMapState {
@@ -53,5 +62,6 @@ class MarkerAnnotation {
   final MarkerModel marker;
   final ByteData icon;
 
-  MarkerAnnotation({required this.id, required this.marker, required this.icon});
+  MarkerAnnotation(
+      {required this.id, required this.marker, required this.icon});
 }

@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:core/log/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,8 +46,9 @@ class StationMapCubit extends Cubit<StationMapState>
   Future? _stationRequest;
   bool _hasInitialMovementDone = false;
   int _requestNumber = 0;
+  bool _fetchForced = false;
 
-  StationMapCubit() : super(LoadingStationMapState()) {
+  StationMapCubit() : super(EmptyStationMapState()) {
     WidgetsBinding.instance.addObserver(this);
 
     _requestReviewIfNeeded();
@@ -72,10 +74,11 @@ class StationMapCubit extends Cubit<StationMapState>
   void _fetchStations(
       CameraPosition position, LatLngBounds visibleBounds, bool force) {
     StationMapState state = this.state;
-
-    if (state is MoveToPositionStationMapState) {
-      state = state.underlyingState;
+    if (state is PositionLoadingStationMapState) {
+      return;
     }
+
+    state = _getRootState();
 
     // Require loaded filter
     if (_filter == null) {
@@ -115,14 +118,7 @@ class StationMapCubit extends Cubit<StationMapState>
       }
     }
 
-    if (state is MarkersStationMapState) {
-      emit(LoadingMarkersStationMapState(
-          stationMarkers: state.stationMarkers,
-          isShowingLabelMarkers: state.isShowingLabelMarkers,
-          filter: state.filter));
-    } else {
-      emit(LoadingStationMapState());
-    }
+    emit(StationLoadingStationMapState(underlyingState: state));
 
     _stationRequest?.ignore();
     _stationRequest = _markerRepository
@@ -155,8 +151,7 @@ class StationMapCubit extends Cubit<StationMapState>
                     "${marker.id}-${filter.gas}#${Object.hash(marker.e5Price, marker.e5PriceState, marker.e10Price, marker.e10PriceState, marker.dieselPrice, marker.dieselPriceState, showLabelMarkers ? "label" : "dot")}",
                 marker: marker,
                 icon: await _genMarkerBitmap(
-                    marker, showLabelMarkers))))
-                .then((markers) {
+                    marker, showLabelMarkers)))).then((markers) {
               if (isClosed) {
                 return;
               }
@@ -190,35 +185,16 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onZoomInfoClicked() {
+    CameraPosition zoomedCameraPosition =
+        CameraPosition(latLng: _position.latLng, zoom: 12.5);
+
     emit(MoveToPositionStationMapState(
-        cameraPosition:
-            CameraPosition(latLng: _position.latLng, zoom: 12.5),
-        underlyingState: state));
+        cameraPosition: zoomedCameraPosition, underlyingState: state));
   }
 
   void _moveToOwnOrLastLocation() {
-    StationMapState state = this.state;
-    if (state is MoveToPositionStationMapState) {
-      state = state.underlyingState;
-    }
-    if (state is LoadingMarkersStationMapState) {
-      state = MarkersStationMapState(
-          stationMarkers: state.stationMarkers,
-          isShowingLabelMarkers: state.isShowingLabelMarkers,
-          filter: state.filter);
-    } else if (state is LoadingStationMapState) {
-      state = MarkersStationMapState(
-          stationMarkers: [], isShowingLabelMarkers: false, filter: _filter!);
-    }
-
-    if (state is MarkersStationMapState) {
-      emit(LoadingMarkersStationMapState(
-          stationMarkers: state.stationMarkers,
-          isShowingLabelMarkers: state.isShowingLabelMarkers,
-          filter: state.filter));
-    } else {
-      emit(LoadingStationMapState());
-    }
+    StationMapState state = _getRootState();
+    emit(PositionLoadingStationMapState(underlyingState: state));
 
     _getOwnPosition(false).then((result) {
       result.when((position) {
@@ -233,22 +209,13 @@ class StationMapCubit extends Cubit<StationMapState>
             _position = newPosition;
 
             // Stations fetched automatically after map has moved
-            if (state is MarkersStationMapState) {
-              emit(MoveToPositionStationMapState(
-                  cameraPosition: _position,
-                  underlyingState: LoadingMarkersStationMapState(
-                      stationMarkers: state.stationMarkers,
-                      isShowingLabelMarkers: state.isShowingLabelMarkers,
-                      filter: state.filter)));
-            } else {
-              emit(MoveToPositionStationMapState(
-                  cameraPosition: _position,
-                  underlyingState: LoadingStationMapState()));
-            }
+            emit(MoveToPositionStationMapState(
+                cameraPosition: _position, underlyingState: state));
           } else {
             emit(state);
           }
         } else {
+
           _cameraPositionRepository.getLast().first.then((result) {
             if (isClosed) {
               return;
@@ -284,19 +251,8 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void _moveToOwnLocation() {
-    StationMapState state = this.state;
-    if (state is MoveToPositionStationMapState) {
-      state = state.underlyingState;
-    }
-
-    if (state is MarkersStationMapState) {
-      emit(LoadingMarkersStationMapState(
-          stationMarkers: state.stationMarkers,
-          isShowingLabelMarkers: state.isShowingLabelMarkers,
-          filter: state.filter));
-    } else {
-      emit(LoadingStationMapState());
-    }
+    StationMapState state = _getRootState();
+    emit(PositionLoadingStationMapState(underlyingState: state));
 
     _getOwnPosition(true).then((result) {
       result.when((position) {
@@ -308,19 +264,10 @@ class StationMapCubit extends Cubit<StationMapState>
           if (newPosition != _position) {
             _position = newPosition;
 
+            _fetchForced = true;
             // Stations fetched automatically after map has moved
-            if (state is MarkersStationMapState) {
-              emit(MoveToPositionStationMapState(
-                  cameraPosition: _position,
-                  underlyingState: LoadingMarkersStationMapState(
-                      stationMarkers: state.stationMarkers,
-                      isShowingLabelMarkers: state.isShowingLabelMarkers,
-                      filter: state.filter)));
-            } else {
-              emit(MoveToPositionStationMapState(
-                  cameraPosition: _position,
-                  underlyingState: LoadingStationMapState()));
-            }
+            emit(MoveToPositionStationMapState(
+                cameraPosition: _position, underlyingState: state));
           } else {
             emit(state);
           }
@@ -345,7 +292,9 @@ class StationMapCubit extends Cubit<StationMapState>
 
   void onCameraIdle() {
     if (_visibleBounds != null) {
-      _fetchStations(_position, _visibleBounds!, false);
+      emit(StationLoadingStationMapState(underlyingState: _getRootState()));
+      _fetchStations(_position, _visibleBounds!, _fetchForced);
+      _fetchForced = false;
     }
   }
 
@@ -371,10 +320,11 @@ class StationMapCubit extends Cubit<StationMapState>
 
     StationMapState state = this.state;
     if (state is FilterMarkersStationMapState) {
-      emit(LoadingMarkersStationMapState(
-          stationMarkers: state.stationMarkers,
-          isShowingLabelMarkers: state.isShowingLabelMarkers,
-          filter: filter));
+      emit(StationLoadingStationMapState(
+          underlyingState: MarkersStationMapState(
+              stationMarkers: state.stationMarkers,
+              isShowingLabelMarkers: state.isShowingLabelMarkers,
+              filter: state.filter)));
     }
 
     if (_visibleBounds != null) {
@@ -703,5 +653,15 @@ class StationMapCubit extends Cubit<StationMapState>
 
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     return data!;
+  }
+
+  StationMapState _getRootState() {
+    StationMapState state = this.state;
+    if (state is MoveToPositionStationMapState) {
+      state = state.underlyingState;
+    } else if (state is LoadingStationMapState) {
+      state = state.underlyingState;
+    }
+    return state;
   }
 }

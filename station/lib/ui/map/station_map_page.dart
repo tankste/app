@@ -29,13 +29,15 @@ class StationMapPageState extends State<StationMapPage> {
             _mapController?.moveCameraToPosition(state.cameraPosition);
           }
         }, builder: (context, state) {
-          return Scaffold(body: _buildBody(context, state));
+          return Scaffold(body: _buildBody(context, state, false));
         }));
   }
 
-  Widget _buildBody(BuildContext context, StationMapState state) {
+  Widget _buildBody(BuildContext context, StationMapState state, bool isLoading) {
     if (state is MoveToPositionStationMapState) {
-      return _buildBody(context, state.underlyingState);
+      return _buildBody(context, state.underlyingState, false);
+    } else if (state is LoadingStationMapState) {
+      return _buildBody(context, state.underlyingState, true);
     }
 
     return Stack(children: <Widget>[
@@ -64,7 +66,7 @@ class StationMapPageState extends State<StationMapPage> {
                 ? _genMarkers(context, state)
                 : {},
           )),
-      state is LoadingStationMapState || state is LoadingMarkersStationMapState
+      isLoading
           ? const SafeArea(child: LinearProgressIndicator())
           : Container(),
       state is TooFarZoomedOutStationMapState
