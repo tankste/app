@@ -25,7 +25,11 @@ class StationMapPageState extends State<StationMapPage> {
         create: (context) => StationMapCubit(),
         child: BlocConsumer<StationMapCubit, StationMapState>(
             listener: (context, state) {
-          if (state is MoveToPositionStationMapState) {
+          if (state is MoveToInitLoadingStationMapState) {
+            _mapController?.moveCameraToPosition(state.cameraPosition);
+          } else if (state is MoveToOwnLoadingStationMapState) {
+            _mapController?.moveCameraToPosition(state.cameraPosition);
+          } else if (state is MoveToZoomedInLoadingStationMapState) {
             _mapController?.moveCameraToPosition(state.cameraPosition);
           }
         }, builder: (context, state) {
@@ -33,11 +37,16 @@ class StationMapPageState extends State<StationMapPage> {
         }));
   }
 
-  Widget _buildBody(BuildContext context, StationMapState state, bool isLoading) {
-    if (state is MoveToPositionStationMapState) {
-      return _buildBody(context, state.underlyingState, false);
-    } else if (state is LoadingStationMapState) {
+  Widget _buildBody(
+      BuildContext context, StationMapState state, bool isLoading) {
+    if (state is FindOwnPositionLoadingStationMapState) {
       return _buildBody(context, state.underlyingState, true);
+    } else if (state is MoveToZoomedInLoadingStationMapState) {
+      isLoading = true;
+    } else if (state is LoadingMarkersStationMapState) {
+      return _buildBody(context, state.underlyingState, true);
+    } else if (state is LoadingStationMapState) {
+      isLoading = true;
     }
 
     return Stack(children: <Widget>[
@@ -60,7 +69,7 @@ class StationMapPageState extends State<StationMapPage> {
                 return;
               }
 
-              context.read<StationMapCubit>().onCameraPositionChanged(position, visibleBounds);
+              context.read<StationMapCubit>().onCameraPositionChanged(position);
             },
             markers: state is MarkersStationMapState
                 ? _genMarkers(context, state)
@@ -232,7 +241,7 @@ class StationMapPageState extends State<StationMapPage> {
                                 Icons.tune,
                                 color: Theme.of(context).primaryColor,
                               ))))))),
-      state is FilterMarkersStationMapState
+      state is FilterDialogStationMapState
           ? FilterDialog(
               currentFilter: state.filter,
               onSubmit: (filter) {

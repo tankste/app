@@ -1,5 +1,5 @@
+import 'dart:math';
 import 'dart:ui' as ui;
-import 'package:core/log/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +25,12 @@ final CameraPosition initialCameraPosition =
     CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
 
 //TODO: continue refactoring
+//TODO: re-build this cubit:
+//  - outsource bitmap marker generation here
+//  - improve state handling (in best case remove depending on map area bounds)
+//  - async-fixes in map specific adapters are feeling wrong
+//  - refactor code quality (naming, duplicated code, ...)
+//  - maybe overthink the whole logic
 class StationMapCubit extends Cubit<StationMapState>
     with WidgetsBindingObserver {
   final double _minZoom = 10.5;
@@ -35,18 +41,14 @@ class StationMapCubit extends Cubit<StationMapState>
   final CameraPositionRepository _cameraPositionRepository =
       MapModuleFactory.createCameraPositionRepository();
 
-  final double _boundaryQueryPadding = 0.03; // ~ 3 kilometers
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
   CameraPosition _position = initialCameraPosition;
   CameraPosition? _lastRequestPosition;
-  LatLngBounds? _visibleBounds;
   Filter? _filter;
   DateTime? _lastRequestTime;
   Future? _stationRequest;
-  bool _hasInitialMovementDone = false;
   int _requestNumber = 0;
-  bool _fetchForced = false;
 
   StationMapCubit() : super(EmptyStationMapState()) {
     WidgetsBinding.instance.addObserver(this);
@@ -59,39 +61,25 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void _init() {
-    _hasInitialMovementDone = false;
-
-    _fetchGasFilter().then((_) => _moveToOwnOrLastLocation());
+    _fetchInitGasFilter().then((_) => _moveToInitPosition());
   }
 
   //TODO: outsource to repository
-  Future<void> _fetchGasFilter() async {
+  Future<void> _fetchInitGasFilter() async {
+    emit(InitFilterLoadingStationMapState());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gas = prefs.getString("filter_gas") ?? "e5";
     _filter = Filter(gas);
   }
 
-  void _fetchStations(
-      CameraPosition position, LatLngBounds visibleBounds, bool force) {
+  void _fetchStations(CameraPosition position, bool force) {
     StationMapState state = this.state;
-    if (state is PositionLoadingStationMapState) {
-      return;
-    }
-
-    state = _getRootState();
-
     // Require loaded filter
     if (_filter == null) {
-      if (state is MarkersStationMapState) {
-        emit(MarkersStationMapState(
-            stationMarkers: state.stationMarkers,
-            isShowingLabelMarkers: state.isShowingLabelMarkers,
-            filter: state.filter));
-      }
       return;
     }
+
     Filter filter = _filter!;
-    int requestNumber = ++_requestNumber;
 
     // Zoomed out too far, skip station loading
     if (position.zoom < _minZoom) {
@@ -118,21 +106,24 @@ class StationMapCubit extends Cubit<StationMapState>
       }
     }
 
-    emit(StationLoadingStationMapState(underlyingState: state));
+    int requestNumber = ++_requestNumber;
+
+    double requestBoundsSizeLatitude =
+        0.3 - min((position.zoom - _minZoom) / 5, 0.9) * 0.3;
+    double requestBoundsSizeLongitude =
+        0.5 - min((position.zoom - _minZoom) / 5, 0.9) * 0.5;
 
     _stationRequest?.ignore();
     _stationRequest = _markerRepository
         .list([
           CoordinateModel(
-              latitude:
-                  visibleBounds.southWest.latitude - _boundaryQueryPadding,
+              latitude: position.latLng.latitude - requestBoundsSizeLatitude,
               longitude:
-                  visibleBounds.southWest.longitude - _boundaryQueryPadding),
+                  position.latLng.longitude - requestBoundsSizeLongitude),
           CoordinateModel(
-              latitude:
-                  visibleBounds.northEast.latitude + _boundaryQueryPadding,
+              latitude: position.latLng.latitude + requestBoundsSizeLatitude,
               longitude:
-                  visibleBounds.northEast.longitude + _boundaryQueryPadding),
+                  position.latLng.longitude + requestBoundsSizeLongitude),
         ])
         .first //TODO: use stream benefits
         .then((result) {
@@ -171,10 +162,8 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onRetryClicked() {
-    if (_visibleBounds != null) {
-      _fetchStations(_position, _visibleBounds!, true);
-    } else if (_filter != null) {
-      _moveToOwnLocation();
+    if (_filter != null) {
+      _fetchStations(_position, true);
     } else {
       _init();
     }
@@ -188,71 +177,68 @@ class StationMapCubit extends Cubit<StationMapState>
     CameraPosition zoomedCameraPosition =
         CameraPosition(latLng: _position.latLng, zoom: 12.5);
 
-    emit(MoveToPositionStationMapState(
-        cameraPosition: zoomedCameraPosition, underlyingState: state));
+    emit(MoveToZoomedInLoadingStationMapState(cameraPosition: zoomedCameraPosition));
   }
 
-  void _moveToOwnOrLastLocation() {
-    StationMapState state = _getRootState();
-    emit(PositionLoadingStationMapState(underlyingState: state));
+  void _moveToInitPosition() {
+    emit(InitPositionLoadingStationMapState());
 
-    _getOwnPosition(false).then((result) {
-      result.when((position) {
-        _hasInitialMovementDone = true;
+    _cameraPositionRepository.getLast().first.then((result) {
+      if (isClosed) {
+        return;
+      }
 
-        if (position != null) {
-          CameraPosition newPosition = CameraPosition(
-              latLng: LatLng(position.latitude, position.longitude),
-              zoom: 12.5);
+      result.when((cameraPosition) {
+        if (cameraPosition != null) {
+          _position = CameraPosition(
+              latLng: LatLng(cameraPosition.latitude, cameraPosition.longitude),
+              zoom: cameraPosition.zoom);
 
-          if (newPosition != _position) {
-            _position = newPosition;
 
-            // Stations fetched automatically after map has moved
-            emit(MoveToPositionStationMapState(
-                cameraPosition: _position, underlyingState: state));
-          } else {
-            emit(state);
-          }
+          emit(MoveToInitLoadingStationMapState(
+              cameraPosition: CameraPosition(
+                  latLng:
+                      LatLng(cameraPosition.latitude, cameraPosition.longitude),
+                  zoom: cameraPosition.zoom)));
+
+          emit(LoadingInitMarkersStationMapState());
+          _fetchStations(_position, true);
         } else {
 
-          _cameraPositionRepository.getLast().first.then((result) {
-            if (isClosed) {
-              return;
-            }
+          _getOwnPosition(false).then((result) {
+            result.when((position) {
+              if (position != null) {
+                CameraPosition newPosition = CameraPosition(
+                    latLng: LatLng(position.latitude, position.longitude),
+                    zoom: 12.5);
 
-            emit(result.when((cameraPosition) {
-              _hasInitialMovementDone = true;
+                if (newPosition != _position) {
+                  _position = newPosition;
 
-              if (cameraPosition != null) {
-                _position = CameraPosition(
-                    latLng: LatLng(
-                        cameraPosition.latitude, cameraPosition.longitude),
-                    zoom: cameraPosition.zoom);
 
-                return MoveToPositionStationMapState(
-                    cameraPosition: CameraPosition(
-                        latLng: LatLng(
-                            cameraPosition.latitude, cameraPosition.longitude),
-                        zoom: cameraPosition.zoom),
-                    underlyingState: state);
+                  emit(MoveToInitLoadingStationMapState(
+                      cameraPosition: newPosition));
+
+                  emit(LoadingInitMarkersStationMapState());
+                  _fetchStations(_position, true);
+                } else {
+                  emit(state);
+                }
               } else {
-                return TooFarZoomedOutStationMapState();
+                emit(TooFarZoomedOutStationMapState());
               }
-            },
-                (error) =>
-                    ErrorStationMapState(errorDetails: error.toString())));
+            }, (error) {
+              emit(ErrorStationMapState(errorDetails: error.toString()));
+            });
           });
         }
-      }, (error) {
-        emit(ErrorStationMapState(errorDetails: error.toString()));
-      });
+      }, (error) => emit(ErrorStationMapState(errorDetails: error.toString())));
     });
   }
 
   void _moveToOwnLocation() {
-    StationMapState state = _getRootState();
-    emit(PositionLoadingStationMapState(underlyingState: state));
+    StationMapState state = _getUnderlyingState(this.state);
+    emit(FindOwnPositionLoadingStationMapState(underlyingState: state));
 
     _getOwnPosition(true).then((result) {
       result.when((position) {
@@ -264,10 +250,10 @@ class StationMapCubit extends Cubit<StationMapState>
           if (newPosition != _position) {
             _position = newPosition;
 
-            _fetchForced = true;
-            // Stations fetched automatically after map has moved
-            emit(MoveToPositionStationMapState(
-                cameraPosition: _position, underlyingState: state));
+            emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition));
+
+            emit(LoadingInitMarkersStationMapState());
+            _fetchStations(_position, true);
           } else {
             emit(state);
           }
@@ -280,34 +266,34 @@ class StationMapCubit extends Cubit<StationMapState>
     });
   }
 
-  void onFilterClicked() {
-    StationMapState state = this.state;
-    if (state is MarkersStationMapState) {
-      emit(FilterMarkersStationMapState(
-          stationMarkers: state.stationMarkers,
-          isShowingLabelMarkers: state.isShowingLabelMarkers,
-          filter: state.filter));
-    }
-  }
-
   void onCameraIdle() {
-    if (_visibleBounds != null) {
-      emit(StationLoadingStationMapState(underlyingState: _getRootState()));
-      _fetchStations(_position, _visibleBounds!, _fetchForced);
-      _fetchForced = false;
+    if (state is MoveToInitLoadingStationMapState) {
+      return;
     }
+
+
+    emit(LoadingMarkersStationMapState(underlyingState: _getUnderlyingState(state)));
+    _fetchStations(_position, false);
   }
 
-  void onCameraPositionChanged(
-      CameraPosition cameraPosition, LatLngBounds? bounds) {
-    _position = cameraPosition;
-    _visibleBounds = bounds;
+  void onCameraPositionChanged(CameraPosition cameraPosition) {
+    if (state is MoveToInitLoadingStationMapState) {
+      return;
+    }
 
-    if (_hasInitialMovementDone) {
-      _cameraPositionRepository.updateLast(CameraPositionModel(
-          latitude: cameraPosition.latLng.latitude,
-          longitude: cameraPosition.latLng.longitude,
-          zoom: cameraPosition.zoom));
+    _position = cameraPosition;
+
+    _cameraPositionRepository.updateLast(CameraPositionModel(
+        latitude: cameraPosition.latLng.latitude,
+        longitude: cameraPosition.latLng.longitude,
+        zoom: cameraPosition.zoom));
+  }
+
+  void onFilterClicked() {
+    StationMapState state = _getUnderlyingState(this.state);
+    if (state is MarkersStationMapState) {
+      emit(FilterDialogStationMapState(
+          underlyingState: state, filter: state.filter));
     }
   }
 
@@ -318,27 +304,15 @@ class StationMapCubit extends Cubit<StationMapState>
     SharedPreferences.getInstance()
         .then((prefs) => prefs.setString("filter_gas", filter.gas));
 
-    StationMapState state = this.state;
-    if (state is FilterMarkersStationMapState) {
-      emit(StationLoadingStationMapState(
-          underlyingState: MarkersStationMapState(
-              stationMarkers: state.stationMarkers,
-              isShowingLabelMarkers: state.isShowingLabelMarkers,
-              filter: state.filter)));
-    }
-
-    if (_visibleBounds != null) {
-      _fetchStations(_position, _visibleBounds!, true);
-    }
+    emit(LoadingMarkersStationMapState(
+        underlyingState: _getUnderlyingState(state)));
+    _fetchStations(_position, true);
   }
 
   void onCancelFilterSettings() {
     StationMapState state = this.state;
-    if (state is FilterMarkersStationMapState) {
-      emit(MarkersStationMapState(
-          stationMarkers: state.stationMarkers,
-          isShowingLabelMarkers: state.isShowingLabelMarkers,
-          filter: state.filter));
+    if (state is FilterDialogStationMapState) {
+      emit(_getUnderlyingState(this.state));
     }
   }
 
@@ -419,9 +393,7 @@ class StationMapCubit extends Cubit<StationMapState>
         DateTime thresholdDate =
             _lastRequestTime!.add(_refreshAfterBackgroundDuration);
         if (DateTime.now().isAfter(thresholdDate)) {
-          if (_visibleBounds != null) {
-            _fetchStations(_position, _visibleBounds!, true);
-          }
+          _fetchStations(_position, true);
         }
       }
     }
@@ -655,13 +627,15 @@ class StationMapCubit extends Cubit<StationMapState>
     return data!;
   }
 
-  StationMapState _getRootState() {
-    StationMapState state = this.state;
-    if (state is MoveToPositionStationMapState) {
-      state = state.underlyingState;
-    } else if (state is LoadingStationMapState) {
-      state = state.underlyingState;
+  StationMapState _getUnderlyingState(StationMapState state) {
+    if (state is FindOwnPositionLoadingStationMapState) {
+      return _getUnderlyingState(state.underlyingState);
+    } else if (state is FilterDialogStationMapState) {
+      return _getUnderlyingState(state.underlyingState);
+    } else if (state is LoadingMarkersStationMapState) {
+      return _getUnderlyingState(state.underlyingState);
+    } else {
+      return state;
     }
-    return state;
   }
 }

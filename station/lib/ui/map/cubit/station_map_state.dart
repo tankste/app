@@ -7,34 +7,42 @@ abstract class StationMapState {}
 
 class EmptyStationMapState extends StationMapState {}
 
-class MoveToPositionStationMapState extends StationMapState {
+abstract class LoadingStationMapState extends StationMapState {}
+
+class InitFilterLoadingStationMapState extends LoadingStationMapState {}
+
+class InitPositionLoadingStationMapState extends LoadingStationMapState {}
+
+class MoveToInitLoadingStationMapState extends LoadingStationMapState {
   final CameraPosition cameraPosition;
+
+  MoveToInitLoadingStationMapState({required this.cameraPosition});
+}
+
+class LoadingInitMarkersStationMapState extends LoadingStationMapState {}
+
+class FindOwnPositionLoadingStationMapState extends LoadingStationMapState {
   final StationMapState underlyingState;
 
-  MoveToPositionStationMapState(
-      {required this.cameraPosition, required this.underlyingState});
+  FindOwnPositionLoadingStationMapState({required this.underlyingState});
 }
 
-abstract class LoadingStationMapState extends StationMapState {
+class MoveToOwnLoadingStationMapState extends LoadingStationMapState {
+  final CameraPosition cameraPosition;
+
+  MoveToOwnLoadingStationMapState({required this.cameraPosition});
+}
+
+class MoveToZoomedInLoadingStationMapState extends LoadingStationMapState {
+  final CameraPosition cameraPosition;
+
+  MoveToZoomedInLoadingStationMapState({required this.cameraPosition});
+}
+
+class LoadingMarkersStationMapState extends LoadingStationMapState {
   final StationMapState underlyingState;
 
-  LoadingStationMapState({required this.underlyingState});
-}
-
-class PositionLoadingStationMapState extends LoadingStationMapState {
-  PositionLoadingStationMapState({required super.underlyingState});
-}
-
-class StationLoadingStationMapState extends LoadingStationMapState {
-  StationLoadingStationMapState({required super.underlyingState});
-}
-
-enum LoadingType { position, stations }
-
-class ErrorStationMapState extends StationMapState {
-  String? errorDetails;
-
-  ErrorStationMapState({this.errorDetails});
+  LoadingMarkersStationMapState({required this.underlyingState});
 }
 
 class MarkersStationMapState extends StationMapState {
@@ -48,13 +56,22 @@ class MarkersStationMapState extends StationMapState {
       required this.filter});
 }
 
+class FilterDialogStationMapState extends StationMapState {
+  Filter filter;
+  StationMapState underlyingState;
+
+  FilterDialogStationMapState({
+    required this.filter,
+    required this.underlyingState,
+  });
+}
+
 class TooFarZoomedOutStationMapState extends StationMapState {}
 
-class FilterMarkersStationMapState extends MarkersStationMapState {
-  FilterMarkersStationMapState(
-      {required super.stationMarkers,
-      required super.isShowingLabelMarkers,
-      required super.filter});
+class ErrorStationMapState extends StationMapState {
+  String? errorDetails;
+
+  ErrorStationMapState({this.errorDetails});
 }
 
 class MarkerAnnotation {
