@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:map/ui/generic/generic_map.dart';
 
 typedef MapCreatedCallback = void Function(MapController controller);
-typedef CameraPositionCallback = void Function(CameraPosition cameraPosition, LatLngBounds visibleBounds);
+typedef CameraPositionCallback = void Function(CameraPosition cameraPosition);
 
 abstract class MapAdapter extends StatefulWidget {
   final CameraPosition initialCameraPosition;

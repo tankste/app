@@ -48,7 +48,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onCameraIdle: () async {
+      onCameraIdle: () {
         google_maps.GoogleMapController? mapController = _mapController;
         google_maps.CameraPosition? lastPosition = _lastPosition;
         if (mapController != null && lastPosition != null) {
@@ -57,15 +57,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
                   lastPosition.target.latitude, lastPosition.target.longitude),
               zoom: lastPosition.zoom);
 
-          LatLngBounds visibleBounds = await mapController
-              .getVisibleRegion()
-              .then((bounds) => LatLngBounds(
-                  northEast: LatLng(
-                      bounds.northeast.latitude, bounds.northeast.longitude),
-                  southWest: LatLng(
-                      bounds.southwest.latitude, bounds.southwest.longitude)));
-
-          widget.onCameraMove?.call(cameraPosition, visibleBounds);
+          widget.onCameraMove?.call(cameraPosition);
         }
 
         widget.onCameraIdle?.call();
@@ -170,14 +162,5 @@ class GoogleMapController extends MapController {
             southwest: google_maps.LatLng(
                 bounds.southWest.latitude, bounds.southWest.longitude)),
         padding));
-  }
-
-  @override
-  Future<LatLngBounds> getVisibleBounds() {
-    return childController.getVisibleRegion().then((bounds) => LatLngBounds(
-        northEast:
-            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
-        southWest:
-            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
   }
 }

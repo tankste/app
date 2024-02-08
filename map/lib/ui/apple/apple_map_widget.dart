@@ -48,7 +48,17 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
       onCameraIdle: () {
         apple_maps.CameraPosition? lastPosition = _lastPosition;
         if (lastPosition != null) {
-          callMoveCallbacks(lastPosition);
+          AppleMapController? mapController = _mapController;
+          if (mapController != null) {
+            CameraPosition cameraPosition = CameraPosition(
+                latLng: LatLng(lastPosition.target.latitude,
+                    lastPosition.target.longitude),
+                zoom: lastPosition.zoom);
+
+            widget.onCameraMove?.call(cameraPosition);
+          }
+
+          widget.onCameraIdle?.call();
         }
       },
       onCameraMove: (position) {
@@ -83,7 +93,7 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
   }
 
   void _mapCreated(apple_maps.AppleMapController mapController) {
-    _mapController = AppleMapController(mapController, callMoveCallbacks);
+    _mapController = AppleMapController(mapController);
     widget.onMapCreated(_mapController!);
   }
 
@@ -104,42 +114,18 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
       _annotations = annotations;
     });
   }
-
-  void callMoveCallbacks(apple_maps.CameraPosition lastPosition) async {
-    AppleMapController? mapController = _mapController;
-    if (mapController != null) {
-      CameraPosition cameraPosition = CameraPosition(
-          latLng: LatLng(
-              lastPosition.target.latitude, lastPosition.target.longitude),
-          zoom: lastPosition.zoom);
-
-      LatLngBounds visibleBounds = await mapController.getVisibleBounds().then(
-          (bounds) => LatLngBounds(
-              northEast:
-                  LatLng(bounds.northEast.latitude, bounds.northEast.longitude),
-              southWest: LatLng(
-                  bounds.southWest.latitude, bounds.southWest.longitude)));
-
-      widget.onCameraMove?.call(cameraPosition, visibleBounds);
-    }
-
-    widget.onCameraIdle?.call();
-  }
 }
 
 class AppleMapController extends MapController {
   apple_maps.AppleMapController childController;
-  Function callMoveCallbacks;
 
-  AppleMapController(this.childController, this.callMoveCallbacks);
+  AppleMapController(this.childController);
 
   @override
   void moveCameraToPosition(CameraPosition position) {
-    childController
-        .animateCamera(apple_maps.CameraUpdate.newLatLngZoom(
-            apple_maps.LatLng(
-                position.latLng.latitude, position.latLng.longitude),
-            position.zoom));
+    childController.animateCamera(apple_maps.CameraUpdate.newLatLngZoom(
+        apple_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
+        position.zoom));
   }
 
   @override
@@ -151,14 +137,5 @@ class AppleMapController extends MapController {
             southwest: apple_maps.LatLng(
                 bounds.southWest.latitude, bounds.southWest.longitude)),
         padding));
-  }
-
-  @override
-  Future<LatLngBounds> getVisibleBounds() {
-    return childController.getVisibleRegion().then((bounds) => LatLngBounds(
-        northEast:
-            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
-        southWest:
-            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
   }
 }

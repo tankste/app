@@ -64,7 +64,7 @@ class StationMapPageState extends State<StationMapPage> {
             onCameraIdle: () {
               context.read<StationMapCubit>().onCameraIdle();
             },
-            onCameraMove: (position, visibleBounds) async {
+            onCameraMove: (position) {
               if (_mapController == null) {
                 return;
               }
