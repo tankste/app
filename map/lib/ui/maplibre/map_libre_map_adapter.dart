@@ -34,6 +34,19 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   map_libre_maps.CameraPosition? _lastCameraPosition;
 
   @override
+  void initState() {
+    super.initState();
+
+    _lastCameraPosition = map_libre_maps.CameraPosition(
+        target: map_libre_maps.LatLng(
+            widget.initialCameraPosition.latLng.latitude,
+            widget.initialCameraPosition.latLng.longitude),
+        zoom: widget.initialCameraPosition.zoom);
+
+    _updateMarkers();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return map_libre_maps.MaplibreMap(
       initialCameraPosition: map_libre_maps.CameraPosition(
@@ -92,13 +105,6 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       },
       myLocationTrackingMode: map_libre_maps.MyLocationTrackingMode.None,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _updateMarkers();
   }
 
   @override

@@ -23,6 +23,19 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
   apple_maps.AppleMapController? _mapController;
   apple_maps.CameraPosition? _lastPosition;
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    _lastPosition = apple_maps.CameraPosition(
+        target: apple_maps.LatLng(widget.initialCameraPosition.latLng.latitude,
+            widget.initialCameraPosition.latLng.longitude),
+        zoom: widget.initialCameraPosition.zoom);
+
+    _convertMarkers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return apple_maps.AppleMap(
@@ -74,13 +87,6 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
       compassEnabled: false,
       myLocationEnabled: true,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _convertMarkers();
   }
 
   @override

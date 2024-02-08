@@ -27,6 +27,19 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
   bool? _isDark;
 
   @override
+  void initState() {
+    super.initState();
+
+    _lastPosition = google_maps.CameraPosition(
+        target: google_maps.LatLng(widget.initialCameraPosition.latLng.latitude,
+            widget.initialCameraPosition.latLng.longitude),
+        zoom: widget.initialCameraPosition.zoom);
+
+    _checkTheme();
+    _convertMarkers();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return google_maps.GoogleMap(
       initialCameraPosition: google_maps.CameraPosition(
@@ -77,14 +90,6 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
       mapToolbarEnabled: false,
       myLocationEnabled: true,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _checkTheme();
-    _convertMarkers();
   }
 
   @override
