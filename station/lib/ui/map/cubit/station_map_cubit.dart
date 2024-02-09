@@ -253,7 +253,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
             emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition));
 
-            emit(LoadingInitMarkersStationMapState());
+            emit(LoadingMarkersStationMapState(underlyingState: state));
             _fetchStations(_position, true);
           } else {
             emit(state);
@@ -373,7 +373,15 @@ class StationMapCubit extends Cubit<StationMapState>
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    Position position = await Geolocator.getCurrentPosition();
+    Position? position = await Geolocator.getLastKnownPosition();
+    if (position == null) {
+      position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.medium);
+    } else {
+      // Run get position in background, to be sure, next time we always getting the correct position on last-known request
+      Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
+    }
+
     return Result.success(position);
   }
 
