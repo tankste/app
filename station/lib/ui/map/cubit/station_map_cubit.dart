@@ -177,7 +177,8 @@ class StationMapCubit extends Cubit<StationMapState>
     CameraPosition zoomedCameraPosition =
         CameraPosition(latLng: _position.latLng, zoom: 12.5);
 
-    emit(MoveToZoomedInLoadingStationMapState(cameraPosition: zoomedCameraPosition));
+    emit(MoveToZoomedInLoadingStationMapState(
+        cameraPosition: zoomedCameraPosition));
   }
 
   void _moveToInitPosition() {
@@ -267,21 +268,38 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onCameraIdle() {
-    if (state is MoveToInitLoadingStationMapState) {
+    if ([
+      InitFilterLoadingStationMapState,
+      InitPositionLoadingStationMapState,
+      MoveToInitLoadingStationMapState,
+      LoadingInitMarkersStationMapState
+    ].contains(state.runtimeType)) {
       return;
     }
 
 
-    emit(LoadingMarkersStationMapState(underlyingState: _getUnderlyingState(state)));
+    emit(LoadingMarkersStationMapState(
+        underlyingState: _getUnderlyingState(state)));
     _fetchStations(_position, false);
   }
 
   void onCameraPositionChanged(CameraPosition cameraPosition) {
-    if (state is MoveToInitLoadingStationMapState) {
+    if ([
+      InitFilterLoadingStationMapState,
+      InitPositionLoadingStationMapState,
+      MoveToInitLoadingStationMapState,
+      LoadingInitMarkersStationMapState
+    ].contains(state.runtimeType)) {
       return;
     }
 
     _position = cameraPosition;
+
+    if (state is TooFarZoomedOutStationMapState) {
+      if (cameraPosition.zoom >= _minZoom) {
+        emit(EmptyStationMapState());
+      }
+    }
 
     _cameraPositionRepository.updateLast(CameraPositionModel(
         latitude: cameraPosition.latLng.latitude,
