@@ -73,7 +73,7 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void _fetchStations(CameraPosition position, bool force) {
-    StationMapState state = this.state;
+    StationMapState state = _getUnderlyingState(this.state);
     // Require loaded filter
     if (_filter == null) {
       return;
