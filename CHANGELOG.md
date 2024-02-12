@@ -9,6 +9,8 @@ CHANGELOG
 
 ## Upcoming version ##
 
+## 2.0.1 (12.02.204) ##
+
 * 🛠 Add logging framework ([#66](https://github.com/tankste/app/issues/66))
 * 🐞 Fix initial state hangup ([#64](https://github.com/tankste/app/issues/64))
 
