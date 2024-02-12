@@ -1,7 +1,7 @@
 import 'package:core/app/repository/app_info_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:settings/di/settings_module_factory.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
-import 'package:settings/usecase/enable_developer_mode_use_case.dart';
 import 'package:settings/ui/version/cubit/version_item_state.dart';
 import 'package:settings/usecase/get_app_version_use_case.dart';
 
@@ -9,8 +9,8 @@ class VersionItemCubit extends Cubit<VersionItemState> {
   final GetAppVersionUseCase _getAppVersionUseCase =
       GetAppVersionUseCaseImpl(LocalAppInfoRepository());
 
-  final EnableDeveloperModeUseCase _enableDeveloperModeUseCase =
-      EnableDeveloperModeUseCaseImpl(LocalDeveloperSettingsRepository());
+  final DeveloperSettingsRepository _developerSettingsRepository =
+      SettingsModuleFactory.createDeveloperSettingsRepository();
 
   int _clickCount = 0;
 
@@ -27,11 +27,15 @@ class VersionItemCubit extends Cubit<VersionItemState> {
 
   void onClicked() {
     if (++_clickCount >= 5) {
-      _enableDeveloperModeUseCase.invoke(true).then((value) {
-        _clickCount = 0;
-        emit(VersionItemState.success(state.version ?? "", true));
-        return value;
-      }).catchError((error) => emit(VersionItemState.failure(error)));
+      _developerSettingsRepository.get()
+        .first
+        .then((developerSettings) {
+          return _developerSettingsRepository.update(developerSettings.copyWith(isDeveloperModeEnabled: true));
+        })
+        .then((_) {
+          _clickCount = 0;
+          emit(VersionItemState.success(state.version ?? "", true));
+        });
     }
   }
 }
