@@ -3,22 +3,22 @@ import 'package:map/di/map_module_factory.dart';
 import 'package:map/repository/camera_position_repository.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:settings/di/settings_module_factory.dart';
-import 'package:settings/model/permission_model.dart';
+import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:settings/repository/permission_repository.dart';
 import 'package:settings/ui/developer/cubit/developer_card_state.dart';
-import 'package:settings/usecase/enable_developer_mode_use_case.dart';
 
 class DeveloperCardCubit extends Cubit<DeveloperCardState> {
-  final DeveloperSettingsRepository developerSettingsRepository =
+  final DeveloperSettingsRepository _developerSettingsRepository =
       LocalDeveloperSettingsRepository();
+
   final PermissionRepository _permissionRepository =
       SettingsModuleFactory.createPermissionRepository();
+
   final CameraPositionRepository _cameraPositionRepository =
       MapModuleFactory.createCameraPositionRepository();
 
-  final EnableDeveloperModeUseCase enableDeveloperModeUseCase =
-      EnableDeveloperModeUseCaseImpl(LocalDeveloperSettingsRepository());
+  DeveloperSettingsModel? _developerSettings;
 
   DeveloperCardCubit() : super(LoadingDeveloperCardState()) {
     _fetchDeveloperSettings();
@@ -27,10 +27,12 @@ class DeveloperCardCubit extends Cubit<DeveloperCardState> {
   void _fetchDeveloperSettings() {
     emit(LoadingDeveloperCardState());
 
-    developerSettingsRepository.get().listen((developerSettings) {
+    _developerSettingsRepository.get().listen((developerSettings) {
       if (isClosed) {
         return;
       }
+
+      _developerSettings = developerSettings;
 
       emit(developerSettings.isDeveloperModeEnabled
           ? EnabledDeveloperCardState()
@@ -39,7 +41,13 @@ class DeveloperCardCubit extends Cubit<DeveloperCardState> {
   }
 
   void onDeveloperModeChanged(bool isEnabled) {
-    enableDeveloperModeUseCase.invoke(isEnabled);
+    DeveloperSettingsModel? developerSettings = _developerSettings;
+    if (developerSettings == null) {
+      return;
+    }
+
+    _developerSettingsRepository
+        .update(developerSettings.copyWith(isDeveloperModeEnabled: isEnabled));
   }
 
   void onResetCacheClicked() {

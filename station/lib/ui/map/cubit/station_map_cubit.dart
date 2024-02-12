@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:core/log/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,6 +77,7 @@ class StationMapCubit extends Cubit<StationMapState>
     StationMapState state = _getUnderlyingState(this.state);
     // Require loaded filter
     if (_filter == null) {
+      Log.d("Filter not available. Skip station fetching.");
       return;
     }
 
@@ -83,6 +85,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
     // Zoomed out too far, skip station loading
     if (position.zoom < _minZoom) {
+      Log.d("Too far zoomed out. Skip station fetching.");
       emit(TooFarZoomedOutStationMapState());
       return;
     }
@@ -96,6 +99,7 @@ class StationMapCubit extends Cubit<StationMapState>
           position.latLng.longitude);
 
       if (movementDistance < 300) {
+        Log.d("Movement below 300 meters. Skip station fetching.");
         if (state is MarkersStationMapState) {
           emit(MarkersStationMapState(
               stationMarkers: state.stationMarkers,
@@ -133,6 +137,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
           // Ignore this request, when other one is already in progress
           if (requestNumber < _requestNumber) {
+            Log.d("Request is outdated. Skip marker generation.");
             return;
           }
 
@@ -150,6 +155,7 @@ class StationMapCubit extends Cubit<StationMapState>
               _lastRequestTime = DateTime.now();
               _lastRequestPosition = position;
 
+              Log.i("Successfully fetched ${markers.length} station markers.");
               emit(MarkersStationMapState(
                   stationMarkers: markers,
                   isShowingLabelMarkers: showLabelMarkers,
@@ -176,6 +182,7 @@ class StationMapCubit extends Cubit<StationMapState>
   void onZoomInfoClicked() {
     CameraPosition zoomedCameraPosition =
         CameraPosition(latLng: _position.latLng, zoom: 12.5);
+    Log.i("Move by zoom in info at $zoomedCameraPosition.");
 
     emit(MoveToZoomedInLoadingStationMapState(
         cameraPosition: zoomedCameraPosition));
@@ -183,6 +190,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
   void _moveToInitPosition() {
     emit(InitPositionLoadingStationMapState());
+    Log.d("Fetch initial position.");
 
     _cameraPositionRepository.getLast().first.then((result) {
       if (isClosed) {
@@ -195,6 +203,7 @@ class StationMapCubit extends Cubit<StationMapState>
               latLng: LatLng(cameraPosition.latitude, cameraPosition.longitude),
               zoom: cameraPosition.zoom);
 
+          Log.i("Move map initial to last position at $cameraPosition.");
 
           emit(MoveToInitLoadingStationMapState(
               cameraPosition: CameraPosition(
@@ -205,6 +214,8 @@ class StationMapCubit extends Cubit<StationMapState>
           emit(LoadingInitMarkersStationMapState());
           _fetchStations(_position, true);
         } else {
+          Log.d(
+              "Last position not available. Try to move initial to own position.");
 
           _getOwnPosition(false).then((result) {
             result.when((position) {
@@ -216,6 +227,7 @@ class StationMapCubit extends Cubit<StationMapState>
                 if (newPosition != _position) {
                   _position = newPosition;
 
+                  Log.i("Move map initial to own position at $newPosition.");
 
                   emit(MoveToInitLoadingStationMapState(
                       cameraPosition: newPosition));
@@ -223,9 +235,13 @@ class StationMapCubit extends Cubit<StationMapState>
                   emit(LoadingInitMarkersStationMapState());
                   _fetchStations(_position, true);
                 } else {
+                  Log.d(
+                      "Already at own position at $_position. Skip map move.");
                   emit(state);
                 }
               } else {
+                Log.d(
+                    "Position not available. Fallback to initial too far zoomed out state.");
                 emit(TooFarZoomedOutStationMapState());
               }
             }, (error) {
@@ -241,6 +257,8 @@ class StationMapCubit extends Cubit<StationMapState>
     StationMapState state = _getUnderlyingState(this.state);
     emit(FindOwnPositionLoadingStationMapState(underlyingState: state));
 
+    Log.d("Fetch own position.");
+
     _getOwnPosition(true).then((result) {
       result.when((position) {
         if (position != null) {
@@ -251,14 +269,17 @@ class StationMapCubit extends Cubit<StationMapState>
           if (newPosition != _position) {
             _position = newPosition;
 
+            Log.i("Move map to own position at $newPosition.");
             emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition));
 
             emit(LoadingMarkersStationMapState(underlyingState: state));
             _fetchStations(_position, true);
           } else {
+            Log.d("Already at own position at $_position. Skip map move.");
             emit(state);
           }
         } else {
+          Log.d("Position not available. Skip map move.");
           emit(state);
         }
       }, (error) {
@@ -274,9 +295,12 @@ class StationMapCubit extends Cubit<StationMapState>
       MoveToInitLoadingStationMapState,
       LoadingInitMarkersStationMapState
     ].contains(state.runtimeType)) {
+      Log.d(
+          "Initial movement (${state.runtimeType}). Ignore camera idle at $_position.");
       return;
     }
 
+    Log.d("Camera position idle at: $_position.");
 
     emit(LoadingMarkersStationMapState(
         underlyingState: _getUnderlyingState(state)));
@@ -290,9 +314,12 @@ class StationMapCubit extends Cubit<StationMapState>
       MoveToInitLoadingStationMapState,
       LoadingInitMarkersStationMapState
     ].contains(state.runtimeType)) {
+      Log.d(
+          "Initial movement (${state.runtimeType}). Ignore camera idle at $_position.");
       return;
     }
 
+    Log.d("Camera position changed to: $_position.");
     _position = cameraPosition;
 
     if (state is TooFarZoomedOutStationMapState) {

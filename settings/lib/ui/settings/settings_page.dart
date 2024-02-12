@@ -4,6 +4,7 @@ import 'package:settings/ui/developer/developer_card.dart';
 import 'package:settings/ui/map/map_provider_item.dart';
 import 'package:settings/ui/navigation/map_destination_item.dart';
 import 'package:settings/ui/settings/settings_card.dart';
+import 'package:settings/ui/support/support_card.dart';
 import 'package:settings/ui/theme/theme_item.dart';
 import 'package:settings/ui/version/version_item.dart';
 import 'package:sponsor/ui/overview/overview_page.dart';
@@ -113,6 +114,7 @@ class SettingsPage extends StatelessWidget {
             title: const Text("Datenschutzbestimmungen"))
       ]),
       const DeveloperCard(),
+      const SupportCard(),
       SettingsCard(title: "Über", items: [
         ListTile(
             onTap: () {

@@ -9,6 +9,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  settings:
+    path: '../settings'
+
   # Package Info - https://pub.dev/packages/package_info_plus
   package_info_plus: ^4.2.0
 
@@ -23,6 +26,9 @@ dependencies:
 
   # UUID - https://pub.dev/packages/uuid
   uuid: ^4.2.1
+
+  # Logger - https://pub.dev/packages/logger
+  logger: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:
