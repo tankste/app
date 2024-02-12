@@ -27,6 +27,19 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
   bool? _isDark;
 
   @override
+  void initState() {
+    super.initState();
+
+    _lastPosition = google_maps.CameraPosition(
+        target: google_maps.LatLng(widget.initialCameraPosition.latLng.latitude,
+            widget.initialCameraPosition.latLng.longitude),
+        zoom: widget.initialCameraPosition.zoom);
+
+    _checkTheme();
+    _convertMarkers();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return google_maps.GoogleMap(
       initialCameraPosition: google_maps.CameraPosition(
@@ -35,7 +48,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onCameraIdle: () async {
+      onCameraIdle: () {
         google_maps.GoogleMapController? mapController = _mapController;
         google_maps.CameraPosition? lastPosition = _lastPosition;
         if (mapController != null && lastPosition != null) {
@@ -44,15 +57,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
                   lastPosition.target.latitude, lastPosition.target.longitude),
               zoom: lastPosition.zoom);
 
-          LatLngBounds visibleBounds = await mapController
-              .getVisibleRegion()
-              .then((bounds) => LatLngBounds(
-                  northEast: LatLng(
-                      bounds.northeast.latitude, bounds.northeast.longitude),
-                  southWest: LatLng(
-                      bounds.southwest.latitude, bounds.southwest.longitude)));
-
-          widget.onCameraMove?.call(cameraPosition, visibleBounds);
+          widget.onCameraMove?.call(cameraPosition);
         }
 
         widget.onCameraIdle?.call();
@@ -77,14 +82,6 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
       mapToolbarEnabled: false,
       myLocationEnabled: true,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _checkTheme();
-    _convertMarkers();
   }
 
   @override
@@ -165,14 +162,5 @@ class GoogleMapController extends MapController {
             southwest: google_maps.LatLng(
                 bounds.southWest.latitude, bounds.southWest.longitude)),
         padding));
-  }
-
-  @override
-  Future<LatLngBounds> getVisibleBounds() {
-    return childController.getVisibleRegion().then((bounds) => LatLngBounds(
-        northEast:
-            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
-        southWest:
-            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
   }
 }

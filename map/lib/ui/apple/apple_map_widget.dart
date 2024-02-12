@@ -5,13 +5,14 @@ import 'package:map/ui/generic/map_adapter.dart';
 import 'package:map/ui/generic/generic_map.dart';
 
 class AppleMapAdapter extends MapAdapter {
-  const AppleMapAdapter({required super.initialCameraPosition,
-    required super.onMapCreated,
-    super.onCameraIdle,
-    super.onCameraMove,
-    super.markers,
-    super.polylines,
-    Key? key})
+  const AppleMapAdapter(
+      {required super.initialCameraPosition,
+      required super.onMapCreated,
+      super.onCameraIdle,
+      super.onCameraMove,
+      super.markers,
+      super.polylines,
+      Key? key})
       : super(key: key);
 
   @override
@@ -20,8 +21,20 @@ class AppleMapAdapter extends MapAdapter {
 
 class AppleMapAdapterState extends State<AppleMapAdapter> {
   Set<apple_maps.Annotation> _annotations = <apple_maps.Annotation>{};
-  apple_maps.AppleMapController? _mapController;
   apple_maps.CameraPosition? _lastPosition;
+  AppleMapController? _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _lastPosition = apple_maps.CameraPosition(
+        target: apple_maps.LatLng(widget.initialCameraPosition.latLng.latitude,
+            widget.initialCameraPosition.latLng.longitude),
+        zoom: widget.initialCameraPosition.zoom);
+
+    _convertMarkers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,40 +45,32 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onCameraIdle: () async {
-        apple_maps.AppleMapController? mapController = _mapController;
+      onCameraIdle: () {
         apple_maps.CameraPosition? lastPosition = _lastPosition;
-        if (mapController != null && lastPosition != null) {
-          CameraPosition cameraPosition = CameraPosition(
-              latLng: LatLng(lastPosition.target.latitude,
-                  lastPosition.target.longitude),
-              zoom: lastPosition.zoom);
+        if (lastPosition != null) {
+          AppleMapController? mapController = _mapController;
+          if (mapController != null) {
+            CameraPosition cameraPosition = CameraPosition(
+                latLng: LatLng(lastPosition.target.latitude,
+                    lastPosition.target.longitude),
+                zoom: lastPosition.zoom);
 
-          LatLngBounds visibleBounds = await mapController
-              .getVisibleRegion()
-              .then((bounds) =>
-              LatLngBounds(
-                  northEast: LatLng(
-                      bounds.northeast.latitude, bounds.northeast.longitude),
-                  southWest: LatLng(
-                      bounds.southwest.latitude, bounds.southwest.longitude)));
+            widget.onCameraMove?.call(cameraPosition);
+          }
 
-          widget.onCameraMove?.call(cameraPosition, visibleBounds);
+          widget.onCameraIdle?.call();
         }
-
-        widget.onCameraIdle?.call();
       },
-      onCameraMove: (position) async {
+      onCameraMove: (position) {
         _lastPosition = position;
       },
       annotations: _annotations,
       polylines: widget.polylines
-          .map((p) =>
-          apple_maps.Polyline(
+          .map((p) => apple_maps.Polyline(
               polylineId: apple_maps.PolylineId(p.id),
               points: p.points
                   .map((latLng) =>
-                  apple_maps.LatLng(latLng.latitude, latLng.longitude))
+                      apple_maps.LatLng(latLng.latitude, latLng.longitude))
                   .toList(),
               color: p.color,
               width: p.width))
@@ -74,13 +79,6 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
       compassEnabled: false,
       myLocationEnabled: true,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _convertMarkers();
   }
 
   @override
@@ -95,20 +93,19 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
   }
 
   void _mapCreated(apple_maps.AppleMapController mapController) {
-    _mapController = mapController;
-    widget.onMapCreated(AppleMapController(mapController));
+    _mapController = AppleMapController(mapController);
+    widget.onMapCreated(_mapController!);
   }
 
   Future _convertMarkers() async {
     Set<apple_maps.Annotation> annotations = widget.markers
-        .map((m) =>
-        apple_maps.Annotation(
+        .map((m) => apple_maps.Annotation(
             annotationId: apple_maps.AnnotationId(m.id),
             icon: m.icon != null
                 ? apple_maps.BitmapDescriptor.fromBytes(
-                m.icon!.buffer.asUint8List())
+                    m.icon!.buffer.asUint8List())
                 : apple_maps.BitmapDescriptor.defaultAnnotationWithHue(
-                apple_maps.BitmapDescriptor.hueAzure),
+                    apple_maps.BitmapDescriptor.hueAzure),
             position: apple_maps.LatLng(m.latLng.latitude, m.latLng.longitude),
             onTap: () => m.onTap?.call()))
         .toSet();
@@ -140,15 +137,5 @@ class AppleMapController extends MapController {
             southwest: apple_maps.LatLng(
                 bounds.southWest.latitude, bounds.southWest.longitude)),
         padding));
-  }
-
-  @override
-  Future<LatLngBounds> getVisibleBounds() {
-    return childController.getVisibleRegion().then((bounds) =>
-        LatLngBounds(
-            northEast:
-            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
-            southWest:
-            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
   }
 }

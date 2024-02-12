@@ -34,6 +34,19 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   map_libre_maps.CameraPosition? _lastCameraPosition;
 
   @override
+  void initState() {
+    super.initState();
+
+    _lastCameraPosition = map_libre_maps.CameraPosition(
+        target: map_libre_maps.LatLng(
+            widget.initialCameraPosition.latLng.latitude,
+            widget.initialCameraPosition.latLng.longitude),
+        zoom: widget.initialCameraPosition.zoom);
+
+    _updateMarkers();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return map_libre_maps.MaplibreMap(
       initialCameraPosition: map_libre_maps.CameraPosition(
@@ -42,7 +55,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
               widget.initialCameraPosition.latLng.longitude),
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
-      onMapIdle: () async {
+      onMapIdle: () {
         map_libre_maps.MaplibreMapController? mapController = _mapController;
         if (mapController == null) {
           return;
@@ -64,14 +77,8 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
               latLng: LatLng(mapLibreCameraPosition.target.latitude,
                   mapLibreCameraPosition.target.longitude),
               zoom: mapLibreCameraPosition.zoom);
-          LatLngBounds visibleBounds = await mapController
-              .getVisibleRegion()
-              .then((mapLibreBounds) => LatLngBounds(
-                  northEast: LatLng(mapLibreBounds.northeast.latitude,
-                      mapLibreBounds.northeast.longitude),
-                  southWest: LatLng(mapLibreBounds.southwest.latitude,
-                      mapLibreBounds.southwest.longitude)));
-          widget.onCameraMove?.call(cameraPosition, visibleBounds);
+
+          widget.onCameraMove?.call(cameraPosition);
 
           widget.onCameraIdle?.call();
         }
@@ -92,13 +99,6 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       },
       myLocationTrackingMode: map_libre_maps.MyLocationTrackingMode.None,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _updateMarkers();
   }
 
   @override
@@ -201,7 +201,7 @@ class MapLibreMapController extends MapController {
   void moveCameraToPosition(CameraPosition position) {
     // Don't update to same position, to prevent endless looping
     if (position.latLng.latitude ==
-            childController.cameraPosition?.target.latitude &&
+        childController.cameraPosition?.target.latitude &&
         position.latLng.longitude ==
             childController.cameraPosition?.target.longitude &&
         position.zoom == childController.cameraPosition?.zoom) {
@@ -226,14 +226,5 @@ class MapLibreMapController extends MapController {
         bottom: padding,
         left: padding,
         right: padding));
-  }
-
-  @override
-  Future<LatLngBounds> getVisibleBounds() {
-    return childController.getVisibleRegion().then((bounds) => LatLngBounds(
-        northEast:
-            LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
-        southWest:
-            LatLng(bounds.southwest.latitude, bounds.southwest.longitude)));
   }
 }
