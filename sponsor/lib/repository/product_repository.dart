@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:core/device/model/device_model.dart';
 import 'package:core/device/repository/device_repository.dart';
+import 'package:core/log/log.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
@@ -72,15 +73,19 @@ class MobileProductRepository extends ProductRepository {
   Future<Result<ProductModel, Exception>> _getAsync(String id) async {
     try {
       if (!await InAppPurchase.instance.isAvailable()) {
-        return Result.error(Exception("InAppPurchase is not available"));
+        Exception error = Exception("InAppPurchase is not available");
+        Log.exception(error);
+        return Result.error(error);
       }
 
       final ProductDetailsResponse response =
           await InAppPurchase.instance.queryProductDetails({id});
 
       if (response.notFoundIDs.isNotEmpty) {
-        return Result.error(Exception(
-            "Product '$id' not found. Reason: ${response.error?.message}"));
+        Exception error = Exception(
+            "Product '$id' not found. Reason: ${response.error?.message}");
+        Log.exception(error);
+        return Result.error(error);
       }
 
       ProductDetails productDto = response.productDetails.first;
@@ -93,6 +98,7 @@ class MobileProductRepository extends ProductRepository {
       );
       return Result.success(product);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -115,7 +121,9 @@ class MobileProductRepository extends ProductRepository {
   Future<Result<void, Exception>> _purchaseAsync(String id) async {
     try {
       if (!await InAppPurchase.instance.isAvailable()) {
-        return Result.error(Exception("InAppPurchase is not available"));
+        Exception error = Exception("InAppPurchase is not available");
+        Log.exception(error);
+        return Result.error(error);
       }
 
       final ProductDetailsResponse response =
@@ -125,7 +133,9 @@ class MobileProductRepository extends ProductRepository {
       Result<DeviceModel, Exception> deviceResult =
           await _deviceRepository.get().first;
       if (deviceResult.isError()) {
-        return Result.error(deviceResult.tryGetError()!);
+        Exception error = Exception(deviceResult.tryGetError()!);
+        Log.exception(error);
+        return Result.error(error);
       }
       DeviceModel device = deviceResult.tryGetSuccess()!;
 
@@ -166,9 +176,12 @@ class MobileProductRepository extends ProductRepository {
                 provider: PurchaseProvider.appleStore))
             .first;
       } else {
-        return Result.error(Exception("Unsupported purchase details!"));
+        Exception error = Exception("Unsupported purchase details!");
+        Log.exception(error);
+        return Result.error(error);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -186,7 +199,9 @@ class MobileProductRepository extends ProductRepository {
   Future<Result<void, Exception>> _restoreAsync() async {
     try {
       if (!await InAppPurchase.instance.isAvailable()) {
-        return Result.error(Exception("InAppPurchase is not available"));
+        Exception error = Exception("InAppPurchase is not available");
+        Log.exception(error);
+        return Result.error(error);
       }
 
       InAppPurchase.instance.restorePurchases();
@@ -201,7 +216,9 @@ class MobileProductRepository extends ProductRepository {
       if (purchaseDetails is GooglePlayPurchaseDetails) {
         // TODO
         // This is not required for Google. But be fair and add this later :-)
-        return Result.error(Exception("Unsupported purchase details!"));
+        Exception error = Exception("Unsupported purchase details!");
+        Log.exception(error);
+        return Result.error(error);
       } else if (purchaseDetails is AppStorePurchaseDetails) {
         String transactionId = purchaseDetails.skPaymentTransaction
                 .originalTransaction?.transactionIdentifier ??
@@ -210,9 +227,12 @@ class MobileProductRepository extends ProductRepository {
             .registerByAppleTransactionId(transactionId)
             .first;
       } else {
-        return Result.error(Exception("Unsupported purchase details!"));
+        Exception error = Exception("Unsupported purchase details!");
+        Log.exception(error);
+        return Result.error(error);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -240,8 +260,9 @@ class MobileProductRepository extends ProductRepository {
             await InAppPurchase.instance.completePurchase(purchaseDetails);
           }
 
-          return Result.error(
-              Exception("Purchase error: ${purchaseDetails.error}"));
+          Exception error = Exception("Purchase error: ${purchaseDetails.error}");
+          Log.exception(error);
+          return Result.error(error);
         case PurchaseStatus.restored:
           if (purchaseDetails.pendingCompletePurchase && Platform.isIOS) {
             await InAppPurchase.instance.completePurchase(purchaseDetails);
@@ -253,9 +274,12 @@ class MobileProductRepository extends ProductRepository {
             await InAppPurchase.instance.completePurchase(purchaseDetails);
           }
 
-          return Result.error(Exception("Purchase error: Canceled"));
+          Exception error = Exception("Purchase error: Canceled");
+          Log.exception(error);
+          return Result.error(error);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

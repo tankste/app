@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:core/log/log.dart';
 import 'package:http/http.dart' as http;
 import 'package:core/device/model/device_model.dart';
 import 'package:core/device/repository/device_repository.dart';
@@ -51,7 +52,9 @@ class TanksteWebTransactionDeviceRepository
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
       if (configResult.isError()) {
-        return Result.error(configResult.tryGetError()!);
+        Exception error = configResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
       }
       ConfigModel config = configResult.tryGetSuccess()!;
 
@@ -68,9 +71,12 @@ class TanksteWebTransactionDeviceRepository
 
         return Result.success(device);
       } else {
-        return Result.error(Exception("API Error!\n\n${response.body}"));
+        Exception error = Exception("API Error!\n\n${response.body}");
+        Log.exception(error);
+        return Result.error(error);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

@@ -35,4 +35,8 @@ class Log {
   static void e(String message) {
     _logger.e(message);
   }
+
+  static void exception(Exception exception) {
+    _logger.t(exception);
+  }
 }

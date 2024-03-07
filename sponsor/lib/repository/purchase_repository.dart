@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:core/device/model/device_model.dart';
 import 'package:core/device/repository/device_repository.dart';
+import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:http/http.dart' as http;
 import 'package:sponsor/model/apple_purchase_model.dart';
@@ -49,14 +50,18 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
       if (configResult.isError()) {
-        return Result.error(configResult.tryGetError()!);
+        Exception error = configResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
       }
       ConfigModel config = configResult.tryGetSuccess()!;
 
       Result<DeviceModel, Exception> deviceResult =
           await _deviceRepository.get().first;
       if (deviceResult.isError()) {
-        return Result.error(deviceResult.tryGetError()!);
+        Exception error = deviceResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
       }
       DeviceModel device = deviceResult.tryGetSuccess()!;
 
@@ -68,7 +73,9 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
       } else if (purchase is ApplePurchaseModel) {
         body = jsonEncode(ApplePurchaseDto.fromModel(purchase, device.id));
       } else {
-        return Result.error(Exception("Unsupported purchase type!"));
+        Exception error = Exception("Unsupported purchase type!");
+        Log.exception(error);
+        return Result.error(error);
       }
 
       http.Response response = await http.post(url, body: body, headers: {
@@ -86,14 +93,19 @@ class TanksteWebPurchaseRepository extends PurchaseRepository {
               ApplePurchaseDto.fromJson(jsonResponse);
           purchaseResult = applePurchaseDto.toModel();
         } else {
-          return Result.error(Exception("Unsupported purchase type!"));
+          Exception error = Exception("Unsupported purchase type!");
+          Log.exception(error);
+          return Result.error(error);
         }
 
         return Result.success(purchaseResult);
       } else {
-        return Result.error(Exception("API Error!\n\n${response.body}"));
+        Exception error = Exception("API Error!\n\n${response.body}");
+        Log.exception(error);
+        return Result.error(error);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
