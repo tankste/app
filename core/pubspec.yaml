@@ -2,8 +2,8 @@ name: core
 publish_to: none
 
 environment:
-  sdk: ">=2.19.6 <3.0.0"
-  flutter: ">=3.7.12"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.7.12 <4.0.0"
 
 dependencies:
   flutter:
@@ -13,27 +13,31 @@ dependencies:
     path: '../settings'
 
   # Package Info - https://pub.dev/packages/package_info_plus
-  package_info_plus: ^4.2.0
+  package_info_plus: ^5.0.1
 
   # Tuple - https://pub.dev/packages/tuple
-  tuple: ^2.0.0
+  tuple: ^2.0.2
 
   # Multiple Result - https://pub.dev/packages/multiple_result
-  multiple_result: ^4.0.0
+  multiple_result: ^5.1.0
 
   # Shared Preferences - https://pub.dev/packages/shared_preferences
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.2.2
 
   # UUID - https://pub.dev/packages/uuid
-  uuid: ^4.2.1
+  uuid: ^4.3.3
 
   # Logger - https://pub.dev/packages/logger
-  logger: ^2.0.2+1
+  logger: ^2.1.0
+
+dependency_overrides:
+  # Force `package_info_plus` using newest `web version (see: https://github.com/fluttercommunity/plus_plugins/issues/2653)
+  web: ^0.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 flutter:
   assets:

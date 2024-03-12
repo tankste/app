@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:core/cubit/base_state.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:station/ui/map/station_map_page.dart';
