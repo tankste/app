@@ -40,8 +40,11 @@ dependencies:
   shared_preferences: ^2.2.2
 
 dependency_overrides:
-  # Force `package_info_plus` using newest `web version (see: https://github.com/fluttercommunity/plus_plugins/issues/2653)
+  # Force `package_info_plus` using newest `web` version (see: https://github.com/fluttercommunity/plus_plugins/issues/2653)
   web: ^0.5.0
+
+  # Force `flutter_localizations` using newest `intl`
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

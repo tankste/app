@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.10"
+  args:
+    dependency: transitive
+    description:
+      name: args
+      sha256: eef6c46b622e0494a36c5a12d10d77fb4e855501a91c1b9ef9339326e58f0596
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.2"
   async:
     dependency: transitive
     description:
@@ -65,6 +73,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  connectivity_plus:
+    dependency: transitive
+    description:
+      name: connectivity_plus
+      sha256: "224a77051d52a11fbad53dd57827594d3bd24f945af28bd70bab376d68d437f0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
+  connectivity_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: connectivity_plus_platform_interface
+      sha256: cf1d1c28f4416f8c654d7dc3cd638ec586076255d407cef3ddbdaf178272a71a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.4"
   convert:
     dependency: transitive
     description:
@@ -96,6 +120,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  csv:
+    dependency: transitive
+    description:
+      name: csv
+      sha256: "63ed2871dd6471193dffc52c0e6c76fb86269c00244d244297abbb355c84a86e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
+  dbus:
+    dependency: transitive
+    description:
+      name: dbus
+      sha256: "365c771ac3b0e58845f39ec6deebc76e3276aa9922b0cc60840712094d9047ac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.10"
+  easy_localization:
+    dependency: "direct main"
+    description:
+      name: easy_localization
+      sha256: c145aeb6584aedc7c862ab8c737c3277788f47488bfdf9bae0fe112bd0a4789c
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.5"
+  easy_localization_loader:
+    dependency: "direct main"
+    description:
+      name: easy_localization_loader
+      sha256: "465d03dc6d0a29ec51f725ba910ae311795fe79db4b87212a4fa6344cfa46c55"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  easy_logger:
+    dependency: transitive
+    description:
+      name: easy_logger
+      sha256: c764a6e024846f33405a2342caf91c62e357c24b02c04dbc712ef232bf30ffb7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   fake_async:
     dependency: transitive
     description:
@@ -149,6 +213,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -352,7 +421,7 @@ packages:
     source: hosted
     version: "2.0.5"
   intl:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: intl
       sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
@@ -520,6 +589,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  nm:
+    dependency: transitive
+    description:
+      name: nm
+      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   package_info_plus:
     dependency: transitive
     description:
@@ -544,6 +621,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+  path_provider:
+    dependency: transitive
+    description:
+      name: path_provider
+      sha256: b27217933eeeba8ff24845c34003b003b2b22151de3c908d0e679e8fe1aa078b
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.2"
+  path_provider_android:
+    dependency: transitive
+    description:
+      name: path_provider_android
+      sha256: "477184d672607c0a3bf68fbbf601805f92ef79c82b64b4d6eb318cbca4c48668"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
+  path_provider_foundation:
+    dependency: transitive
+    description:
+      name: path_provider_foundation
+      sha256: "5a7999be66e000916500be4f15a3633ebceb8302719b47b9cc49ce924125350f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   path_provider_linux:
     dependency: transitive
     description:
@@ -929,6 +1030,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      sha256: "75769501ea3489fca56601ff33454fe45507ea3bfb014161abc3b43ae25989d5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
 sdks:
   dart: ">=3.3.0 <4.0.0"
   flutter: ">=3.19.0"
