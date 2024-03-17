@@ -49,6 +49,15 @@ class SettingsPage extends StatelessWidget {
           subtitle: Text(tr('settings.open_source.sponsor.description')),
         ),
         ListTile(
+          onTap: () {
+            _openUrl("https://translation.liveyourproject.com/projects/tankste/");
+          },
+          minLeadingWidth: 8,
+          leading: const Icon(Icons.translate),
+          title: Text(tr('settings.open_source.translation.title')),
+          subtitle: Text(tr('settings.open_source.translation.description')),
+        ),
+        ListTile(
             onTap: () {
               _openUrl("https://github.com/tankste/app");
             },

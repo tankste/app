@@ -36,9 +36,12 @@ settings:
     sponsor:
       title: Spenden
       description: Werde tankste! Sponsor
+    translation:
+      title: Übersetzen
+      description: Übersetze tankste! in deine Sprache
     source_code:
       title: Quellcode
-      description: Fork me on Github
+      description: Passe me on Github
   contact:
     title: Kontakt
     website:
