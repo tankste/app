@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:settings/model/map_destination_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +25,7 @@ class LocalMapDestinationRepository extends MapDestinationRepository {
   LocalMapDestinationRepository._internal();
 
   final MapDestinationModel systemDestination =
-      MapDestinationModel("Systemstandard", MapDestinationDestination.system);
+      MapDestinationModel(tr('settings.app.navigation_map.system'), MapDestinationDestination.system);
 
   @override
   Future<List<MapDestinationModel>> listAvailable() {

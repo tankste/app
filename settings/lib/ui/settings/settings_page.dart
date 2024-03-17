@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:settings/ui/developer/developer_card.dart';
@@ -19,7 +20,7 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Einstellungen"),
+          title: Text(tr('settings.title')),
         ),
         body: SafeArea(
             child: ListView.builder(
@@ -33,10 +34,10 @@ class SettingsPage extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     return [
-      const SettingsCard(
-          title: "App",
+      SettingsCard(
+          title: tr('settings.app.title'),
           items: [ThemeItem(), MapProviderItem(), MapDestinationItem()]),
-      SettingsCard(title: "Unterstütze uns", items: [
+      SettingsCard(title: tr('settings.open_source.title'), items: [
         ListTile(
           onTap: () {
             Navigator.push(context,
@@ -44,8 +45,8 @@ class SettingsPage extends StatelessWidget {
           },
           minLeadingWidth: 8,
           leading: const Icon(Icons.star),
-          title: Text("Spenden"),
-          subtitle: Text("Werde tankste! Sponsor"),
+          title: Text(tr('settings.open_source.sponsor.title')),
+          subtitle: Text(tr('settings.open_source.sponsor.description')),
         ),
         ListTile(
             onTap: () {
@@ -53,85 +54,86 @@ class SettingsPage extends StatelessWidget {
             },
             minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.github),
-            title: const Text("Source Code"),
-            subtitle: const Text("Fork me on Github")),
+            title: Text(tr('settings.open_source.source_code.title')),
+            subtitle: Text(tr('settings.open_source.source_code.description'))),
       ]),
-      SettingsCard(title: "Kontakt", items: [
+      SettingsCard(title: tr('settings.contact.title'), items: [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/");
             },
             minLeadingWidth: 8,
             leading: const Icon(Icons.public),
-            title: const Text("Webseite"),
-            subtitle: const Text("tankste.app")),
+            title: Text(tr('settings.contact.website.title')),
+            subtitle: Text(tr('settings.contact.website.description'))),
         ListTile(
             onTap: () {
               _openUrl("mailto:hey@tankste.app");
             },
             minLeadingWidth: 8,
             leading: const Icon(Icons.mail),
-            title: const Text("E-Mail"),
-            subtitle: const Text("hey@tankste.app")),
+            title: Text(tr('settings.contact.email.title')),
+            subtitle: Text(tr('settings.contact.email.description'))),
         ListTile(
             onTap: () {
               _openUrl("https://www.instagram.com/tankste.app");
             },
             minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.instagram),
-            title: const Text("Instagram"),
-            subtitle: const Text("@tankste.app")),
+            title: Text(tr('settings.contact.instagram.title')),
+            subtitle: Text(tr('settings.contact.instagram.description'))),
         ListTile(
             onTap: () {
               _openUrl("https://twitter.com/tankste_app");
             },
             minLeadingWidth: 8,
             leading: const Icon(FontAwesomeIcons.twitter),
-            title: const Text("Twitter"),
-            subtitle: const Text("@tankste_app"))
+            title: Text(tr('settings.contact.twitter.title')),
+            subtitle: Text(tr('settings.contact.twitter.description')))
       ]),
-      SettingsCard(title: "Rechtliches", items: [
+      SettingsCard(title: tr('settings.legal.title'), items: [
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/datenquellen");
             },
             minLeadingWidth: 8,
             leading: const Icon(Icons.source),
-            title: const Text("Datenquellen")),
+            title: Text(tr('settings.legal.data_source.title'))),
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/nutzungsbedingungen");
             },
             minLeadingWidth: 8,
             leading: const Icon(Icons.account_balance),
-            title: const Text("Nutzungsbedingungen")),
+            title: Text(tr('settings.legal.terms.title'))),
         ListTile(
             onTap: () {
               _openUrl("https://tankste.app/datenschutz");
             },
             minLeadingWidth: 8,
             leading: const Icon(Icons.local_police),
-            title: const Text("Datenschutzbestimmungen"))
+            title: Text(tr('settings.legal.privacy.title')))
       ]),
       const DeveloperCard(),
       const SupportCard(),
-      SettingsCard(title: "Über", items: [
+      SettingsCard(title: tr('settings.about.title'), items: [
         ListTile(
             onTap: () {
               _openUrl("https://status.tankste.app/");
             },
             minLeadingWidth: 8,
             leading: const Icon(Icons.traffic),
-            title: const Text("Status")),
+            title: Text(tr('settings.about.status.title'))),
         const VersionItem()
       ]),
       Padding(
           padding: const EdgeInsets.only(top: 16, bottom: 8),
           child: Center(
-              child: Text(TimeOfDay.now().hour >=
-                      19 // Show a beer after 20:00 :p
-                  ? "Made with \u{2665} and \u{1F37A} in \u{1F1E9}\u{1F1EA}."
-                  : "Made with \u{2665} and \u{2615} in \u{1F1E9}\u{1F1EA}.")))
+              child: Text(tr('settings.footer.note', args: [
+            "\u{2665}",
+            TimeOfDay.now().hour >= 19 ? "\u{1F37A}" : "\u{2615}",
+            "\u{1F1E9}\u{1F1EA}"
+          ])))),
     ];
   }
 

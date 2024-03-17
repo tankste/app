@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/ui/theme/cubit/theme_item_cubit.dart';
@@ -21,7 +22,7 @@ class ThemeItem extends StatelessWidget {
                   },
                   minLeadingWidth: 10,
                   leading: const Icon(Icons.brightness_4),
-                  title: const Text("Design"),
+                  title: Text(tr('settings.app.design.title')),
                   subtitle: Text(state.designLabel ?? ""));
             }));
   }

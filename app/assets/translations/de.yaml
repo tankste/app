@@ -1,1 +1,89 @@
-foo:
+app:
+  title:
+    short: "tankste!"
+    full: "tankste! - Deine Tankpreis App"
+    slogan: "Deine Tankpreis App"
+
+generic:
+  cancel: Abbrechen
+  error:
+    short: Es ist ein Fehler aufgetreten!
+    long:
+
+#core:
+#
+settings:
+  title: Einstellungen
+  app:
+    title: App
+    design:
+      title: Design
+      system: Systemstandard
+      light: Hell
+      dark: Dunkel
+    map_provider:
+      title: Kartenanbieter
+      system: Systemstandard
+      map_libre: MapLibre
+      google_maps: Google Maps
+      apple_maps: Apple Maps
+      error: Es ist ein Fehler aufgetreten! Zum Wiederholen klicken.
+    navigation_map:
+      title: Navigation starten mit…
+      system: Systemstandard
+  open_source:
+    title: Unterstütze uns
+    sponsor:
+      title: Spenden
+      description: Werde tankste! Sponsor
+    source_code:
+      title: Quellcode
+      description: Fork me on Github
+  contact:
+    title: Kontakt
+    website:
+      title: Website
+      description: tankste.app
+    email:
+      title: E-Mail
+      description: "hey@tankste.app"
+    instagram:
+      title: Instagram
+      description: "@tankste.app"
+    twitter:
+      title: Twitter
+      description: "@tankste_app"
+  legal:
+    title: Rechtliches
+    data_source:
+      title: Datenquellen
+    terms:
+      title: Nutzungsbedingungen
+    privacy:
+      title: Datenschutzbestimmungen
+  developer:
+    title: Entwickler
+    developer_mode:
+      title: Entwicklermodus
+      description: Deaktiviere den Entwicklermodus
+      enabled: Entwickler Modus aktiviert!
+    feature_flags:
+      title: Experimentelle Funktionen
+      description: Aktiviere experimentelle Funktionen
+    clear_cache:
+      title: Cache zurücksetzen
+      description: Lösche alle Cache Parameter
+      success: App Cache wurde zurückgesetzt
+  support:
+    title: Support
+    logs:
+      title: Logs
+      description: Anzeigen der letzten Logs
+  about:
+    title: Über
+    status:
+      title: Status
+    version:
+      title: Version
+  footer:
+    note: Made with {} and {} in {}.

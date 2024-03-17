@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/repository/theme_repository.dart';
@@ -20,11 +21,11 @@ class ThemeItemCubit extends Cubit<ThemeItemState> {
       
       String label;
       if (theme == ThemeMode.light) {
-        label = "Hell";
+        label = tr('settings.app.design.light');
       } else if (theme == ThemeMode.dark) {
-        label = "Dunkel";
+        label = tr('settings.app.design.dark');
       } else {
-        label = "Systemstandard";
+        label = tr('settings.app.design.system');
       }
 
       emit(ThemeItemState.success(theme, label));

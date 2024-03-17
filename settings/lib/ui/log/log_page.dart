@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:core/log/log.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class LogPage extends StatelessWidget {
@@ -9,7 +10,7 @@ class LogPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Logs"),
+          title: Text(tr('settings.support.logs.title')),
         ),
         body: SafeArea(
             child: SingleChildScrollView(

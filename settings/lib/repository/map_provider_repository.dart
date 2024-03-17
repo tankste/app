@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:settings/model/map_provider_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +27,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
   LocalMapProviderRepository._internal();
 
   final MapProviderModel _sytemProvider =
-      MapProviderModel("Systemstandard", MapProvider.system);
+      MapProviderModel(tr('settings.app.map_provider.system'), MapProvider.system);
 
   final StreamController<Result<List<MapProviderModel>, Exception>>
       _listAvailableStreamController = StreamController.broadcast();
@@ -48,16 +49,16 @@ class LocalMapProviderRepository extends MapProviderRepository {
 
       availableProviders.add(_sytemProvider);
       availableProviders
-          .add(MapProviderModel("MapLibre", MapProvider.mapLibre));
+          .add(MapProviderModel(tr('settings.app.map_provider.map_libre'), MapProvider.mapLibre));
 
       //TODO: does Google Maps runs everywhere? (Android without Play Services, iOS without extra apps)
       //  If not, we should validate this before showing this option
       availableProviders
-          .add(MapProviderModel("Google Maps", MapProvider.googleMaps));
+          .add(MapProviderModel(tr('settings.app.map_provider.google_maps'), MapProvider.googleMaps));
 
       if (Platform.isIOS) {
         availableProviders
-            .add(MapProviderModel("Apple Maps", MapProvider.appleMaps));
+            .add(MapProviderModel(tr('settings.app.map_provider.apple_maps'), MapProvider.appleMaps));
       }
 
       return Result.success(availableProviders);
