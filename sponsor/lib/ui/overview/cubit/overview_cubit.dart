@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:rxdart/streams.dart';
@@ -34,8 +35,7 @@ class OverviewCubit extends Cubit<OverviewState> {
             gaugePercentage: balance.spent > 0
                 ? (balance.earned / balance.spent * 100).round()
                 : 100,
-            balance:
-                "${balance.earned.round()} € von ${balance.spent.round()} €");
+            balance: tr('sponsor.overview.balance', args: [balance.earned.round().toString(), balance.spent.round().toString()]));
       }, (error) => ErrorOverviewState(errorDetails: error.toString())));
     });
   }

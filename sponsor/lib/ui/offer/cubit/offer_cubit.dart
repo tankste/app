@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/streams.dart';
 import 'package:sponsor/di/sponsor_module_factory.dart';
@@ -46,43 +47,38 @@ class OfferCubit extends Cubit<OfferState> {
                     items.add(OfferItem(
                         id: yearlySubscriptionProduct.id,
                         labelPrice: yearlySubscriptionProduct.priceLabel,
-                        labelType: "/ Jährlich",
-                        hint:
-                            "Unterstütze tankste! mit einer jährlichen Zahlung von ${yearlySubscriptionProduct.priceLabel}."));
+                        labelType: tr('sponsor.overview.options.year.by'),
+                        hint: tr('sponsor.overview.options.year.hint', args: [yearlySubscriptionProduct.priceLabel])));
 
                     items.add(OfferItem(
                         id: monthlySubscriptionProduct.id,
                         labelPrice: monthlySubscriptionProduct.priceLabel,
-                        labelType: "/ Monatlich",
-                        hint:
-                            "Unterstütze tankste! mit einer monatlichen Zahlung von ${monthlySubscriptionProduct.priceLabel}."));
+                        labelType: tr('sponsor.overview.options.month.by'),
+                        hint: tr('sponsor.overview.options.month.hint', args: [monthlySubscriptionProduct.priceLabel])));
 
                     items.add(OfferItem(
                         id: onceTenProduct.id,
                         labelPrice: onceTenProduct.priceLabel,
-                        labelType: "/ Einmalig",
-                        hint:
-                            "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTenProduct.priceLabel}."));
+                        labelType: tr('sponsor.overview.options.single.by'),
+                        hint: tr('sponsor.overview.options.single.hint', args: [onceTenProduct.priceLabel])));
 
                     items.add(OfferItem(
                         id: onceTwoProduct.id,
                         labelPrice: onceTwoProduct.priceLabel,
-                        labelType: "/ Einmalig",
-                        hint:
-                            "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceTwoProduct.priceLabel}."));
+                        labelType: tr('sponsor.overview.options.single.by'),
+                        hint: tr('sponsor.overview.options.single.hint', args: [onceTwoProduct.priceLabel])));
 
                     items.add(OfferItem(
                         id: onceOneProduct.id,
                         labelPrice: onceOneProduct.priceLabel,
-                        labelType: "/ Einmalig",
-                        hint:
-                            "Unterstütze tankste! mit einer einmaligen Zahlung von ${onceOneProduct.priceLabel}."));
+                        labelType: tr('sponsor.overview.options.single.by'),
+                        hint: tr('sponsor.overview.options.single.hint', args: [onceOneProduct.priceLabel])));
                   }
 
                   return OffersOfferState(
                       title: sponsorship.activeSubscriptionId != null
-                          ? "Zusätzliche Optionen"
-                          : "Optionen",
+                          ? tr('sponsor.overview.options.title.extended')
+                          : tr('sponsor.overview.options.title.new'),
                       isSponsorshipInfoVisible: sponsorship.value > 0,
                       sponsoredValue: "${sponsorship.value.round()} €",
                       activeSubscription:
@@ -119,7 +115,6 @@ class OfferCubit extends Cubit<OfferState> {
       }
 
       if (result.isError()) {
-        print("Error: ${result.tryGetError()?.toString()}");
         emit(ErrorPurchaseLoadingOfferState(
             errorDetails: result.tryGetError()?.toString()));
         _fetchItems();
@@ -145,7 +140,6 @@ class OfferCubit extends Cubit<OfferState> {
       }
 
       if (result.isError()) {
-        print("Error: ${result.tryGetError()?.toString()}");
         emit(ErrorPurchaseLoadingOfferState(
             errorDetails: result.tryGetError()?.toString()));
         _fetchItems();

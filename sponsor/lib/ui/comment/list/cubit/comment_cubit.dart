@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/streams.dart';
 import 'package:sponsor/di/sponsor_module_factory.dart';
@@ -24,9 +25,9 @@ class CommentCubit extends Cubit<CommentState> {
             .map((c) => CommentItem(
                 id: c.id,
                 avatarChar: c.name.isNotEmpty ? c.name[0].toUpperCase() : "?",
-                name: c.name.isNotEmpty ? c.name : "Anonym",
+                name: c.name.isNotEmpty ? c.name : tr('sponsor.overview.comments.anonymous'),
                 comment: c.comment.isNotEmpty ? c.comment : "-",
-                value: "${c.value.round()} €",
+                value: tr('sponsor.overview.comments.value', args: [c.value.round().toString()]),
                 isEditable: c.id == ownCommentId))
             .toList();
 

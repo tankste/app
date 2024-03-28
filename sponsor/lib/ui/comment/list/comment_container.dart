@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sponsor/ui/comment/form/comment_form_page.dart';
@@ -28,11 +29,12 @@ class CommentContainer extends StatelessWidget {
       return Padding(
           padding: EdgeInsets.symmetric(vertical: 32),
           child: Column(children: [
-            Text("Fehler!", style: Theme.of(context).textTheme.headline5),
+            Text(tr('generic.error.title'),
+                style: Theme.of(context).textTheme.headline5),
             Padding(
-                padding: EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+                  tr('generic.error.long'),
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 )),
@@ -42,31 +44,31 @@ class CommentContainer extends StatelessWidget {
                     onPressed: () {
                       context.read<CommentCubit>().onRetryClicked();
                     },
-                    child: const Text("Wiederholen"))),
+                    child: Text(tr('generic.retry.long')))),
             TextButton(
                 onPressed: () {
                   showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text('Fehler Details'),
+                          title: Text(tr('generic.error.details.title')),
                           content: Text(state.errorDetails.toString()),
                           actions: <Widget>[
                             TextButton(
                                 onPressed: () =>
                                     Navigator.of(context).pop(true),
-                                child: const Text('OK')),
+                                child: Text(tr('generic.ok'))),
                           ],
                         );
                       });
                 },
-                child: const Text("Fehler anzeigen")),
+                child: Text(tr('generic.error.details.show'))),
           ]));
     } else if (state is CommentsCommentState) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-          child: Text("Sponsoren",
+          child: Text(tr('sponsor.overview.sponsors'),
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.titleLarge),
         ),
@@ -105,14 +107,14 @@ class CommentContainer extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => CommentFormPage()));
                           },
-                          child: Text("Bearbeiten")))
+                          child: Text((tr('generic.edit')))))
                   : Container(),
             ]))),
         Center(
             child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Text(
-                    "Danke an jede/n einzelne/n Unterstützer/in! 💜💜💜💜",
+                    tr('sponsor.overview.comments.footer', args: ["💜💜💜💜"]),
                     style: Theme.of(context).textTheme.bodySmall)))
       ]);
     } else {

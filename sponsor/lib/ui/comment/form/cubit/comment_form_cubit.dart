@@ -1,10 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/streams.dart';
 import 'package:sponsor/di/sponsor_module_factory.dart';
 import 'package:sponsor/model/comment_model.dart';
 import 'package:sponsor/repository/comment_repository.dart';
 import 'package:sponsor/ui/comment/form/cubit/comment_form_state.dart';
-import 'package:sponsor/ui/comment/list/cubit/comment_state.dart';
 
 class CommentFormCubit extends Cubit<CommentFormState> {
   final CommentRepository _commentRepository =

@@ -1,9 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/ui/preview/route_preview.dart';
 import 'package:station/ui/details/cubit/station_details_cubit.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
-import 'package:station/model/station_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:report/ui/form/report_form_page.dart';
 
@@ -55,11 +55,12 @@ class StationDetailsPage extends StatelessWidget {
       return Center(
           child: Column(children: [
         Spacer(),
-        Text("Fehler!", style: Theme.of(context).textTheme.headline5),
+        Text(tr('generic.error.title'),
+            style: Theme.of(context).textTheme.headline5),
         Padding(
             padding: EdgeInsets.only(top: 8),
             child: Text(
-              "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+              (tr('generic.error.long')),
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             )),
@@ -69,24 +70,24 @@ class StationDetailsPage extends StatelessWidget {
                 onPressed: () {
                   context.read<StationDetailsCubit>().onRetryClicked();
                 },
-                child: const Text("Wiederholen"))),
+                child: Text(tr('generic.retry.long')))),
         TextButton(
             onPressed: () {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text('Fehler Details'),
+                      title: Text(tr('core.error.details.title')),
                       content: Text(state.errorDetails),
                       actions: <Widget>[
                         TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('OK')),
+                            child: Text(tr('generic.ok'))),
                       ],
                     );
                   });
             },
-            child: const Text("Fehler anzeigen")),
+            child: Text(tr('core.error.details.show'))),
         Spacer(),
       ]));
     } else if (state is DetailStationDetailsState) {
@@ -112,7 +113,7 @@ class StationDetailsPage extends StatelessWidget {
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 4),
-                                    child: Text("Spritpreise",
+                                    child: Text(tr('station.prices.title'),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -159,7 +160,8 @@ class StationDetailsPage extends StatelessWidget {
                                   Padding(
                                       padding: EdgeInsets.only(top: 16),
                                       child: Text(
-                                        "Letzte Preisänderung: ${state.lastPriceUpdate}",
+                                        tr('station.prices.last_price_changes_at',
+                                            args: [state.lastPriceUpdate]),
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall,
@@ -176,7 +178,7 @@ class StationDetailsPage extends StatelessWidget {
                                       padding: const EdgeInsets.only(bottom: 4),
                                       child: Row(
                                         children: [
-                                          Text("Öffnungszeiten",
+                                          Text(tr('station.open_times.title'),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6),
@@ -225,7 +227,7 @@ class StationDetailsPage extends StatelessWidget {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 4),
-                                child: Text("Datenquellen",
+                                child: Text(tr('station.data_source.title'),
                                     style:
                                         Theme.of(context).textTheme.titleSmall),
                               ),

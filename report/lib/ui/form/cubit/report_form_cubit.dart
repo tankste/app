@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -143,11 +144,13 @@ class ReportFormCubit extends Cubit<ReportFormState> {
                 "-";
             _originalOpenTimesState = station.isOpen.toString();
             _openTimesState = station.isOpen.toString();
-            _openTimesStateLabel = station.isOpen ? "Geöffnet" : "Geschlossen";
+            _openTimesStateLabel = station.isOpen
+                ? tr('report.open_times.open')
+                : tr('report.open_times.closed');
             _originalOpenTimes = _genOpenTimes(openTimes);
             _openTimes = _genOpenTimes(openTimes);
             _availability = "available";
-            _availabilityLabel = "Verfügbar";
+            _availabilityLabel = tr('report.availability.available');
             _note = "";
 
             return FormReportFormState(
@@ -214,42 +217,42 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     String dayLabel = "";
     switch (day) {
       case OpenTimeDay.monday:
-        dayLabel = "Montag";
+        dayLabel = tr('station.open_times.monday');
         break;
       case OpenTimeDay.tuesday:
-        dayLabel = "Dienstag";
+        dayLabel = tr('station.open_times.tuesday');
         break;
       case OpenTimeDay.wednesday:
-        dayLabel = "Mittwoch";
+        dayLabel = tr('station.open_times.wednesday');
         break;
       case OpenTimeDay.thursday:
-        dayLabel = "Donnerstag";
+        dayLabel = tr('station.open_times.thursday');
         break;
       case OpenTimeDay.friday:
-        dayLabel = "Freitag";
+        dayLabel = tr('station.open_times.friday');
         break;
       case OpenTimeDay.saturday:
-        dayLabel = "Samstag";
+        dayLabel = tr('station.open_times.saturday');
         break;
       case OpenTimeDay.sunday:
-        dayLabel = "Sonntag";
+        dayLabel = tr('station.open_times.sunday');
         break;
       case OpenTimeDay.publicHoliday:
-        dayLabel = "Feiertag";
+        dayLabel = tr('station.open_times.public_holiday');
         break;
       default:
-        dayLabel = "Unbekannt";
+        dayLabel = tr('generic.unknown');
     }
 
     if (openTimes.isEmpty) {
       if (day == OpenTimeDay.publicHoliday) {
         return null;
       } else {
-        return "$dayLabel: Geschlossen";
+        return "$dayLabel: ${tr('station.open_times.closed')}";
       }
     }
 
-    DateFormat timeFormat = DateFormat('HH:mm');
+    DateFormat timeFormat = DateFormat(tr('generic.date.time.format'));
     return "$dayLabel: ${openTimes.map((ot) => "${timeFormat.format(ot.startTime)} - ${timeFormat.format(ot.endTime)}").join("\n")}";
   }
 
@@ -268,11 +271,11 @@ class ReportFormCubit extends Cubit<ReportFormState> {
   void onAvailabilityChanged(String value) {
     _availability = value;
     if (value == "available") {
-      _availabilityLabel = "Verfügbar";
+      _availabilityLabel = tr('report.availability.available');
     } else if (value == "temporary_closed") {
-      _availabilityLabel = "Temporär geschlossen";
+      _availabilityLabel = tr('report.availability.temporarily_closed');
     } else {
-      _availabilityLabel = "Dauerhaft geschlossen";
+      _availabilityLabel = tr('report.availability.permanently_closed');
     }
 
     emit(FormReportFormState(
@@ -340,9 +343,9 @@ class ReportFormCubit extends Cubit<ReportFormState> {
   void onOpenTimesStateChanged(String value) {
     _openTimesState = value;
     if (value == "true") {
-      _openTimesStateLabel = "Geöffnet";
+      _openTimesStateLabel = tr('report.open_times.open');
     } else {
-      _openTimesStateLabel = "Geschlossen";
+      _openTimesStateLabel = tr('report.open_times.closed');
     }
 
     emit(FormReportFormState(

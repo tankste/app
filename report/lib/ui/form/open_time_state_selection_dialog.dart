@@ -1,17 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OpenTimeStateSelectionDialog extends StatefulWidget {
   final String selection;
 
-  const OpenTimeStateSelectionDialog(
-      {required this.selection, Key? key})
-      : super(key: key);
+  const OpenTimeStateSelectionDialog({required this.selection, super.key});
 
   @override
   State<StatefulWidget> createState() => OpenTimeStateSelectionDialogState();
 }
 
-class OpenTimeStateSelectionDialogState extends State<OpenTimeStateSelectionDialog> {
+class OpenTimeStateSelectionDialogState
+    extends State<OpenTimeStateSelectionDialog> {
   late String openTimeState;
 
   @override
@@ -22,18 +22,17 @@ class OpenTimeStateSelectionDialogState extends State<OpenTimeStateSelectionDial
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(title: const Text("Aktuell geöffnet?"), children: [
+    return SimpleDialog(title: Text(tr('report.open_times.title')), children: [
       RadioListTile<String>(
-        value: "true",
-        groupValue: openTimeState,
-        onChanged: (_) {
-          setState(() {
-            openTimeState = "true";
-          });
-          Navigator.of(context).pop("true");
-        },
-        title: const Text("Geöffnet"),
-      ),
+          value: "true",
+          groupValue: openTimeState,
+          onChanged: (_) {
+            setState(() {
+              openTimeState = "true";
+            });
+            Navigator.of(context).pop("true");
+          },
+          title: Text(tr('report.open_times.open'))),
       RadioListTile<String>(
         value: "false",
         groupValue: openTimeState,
@@ -43,7 +42,7 @@ class OpenTimeStateSelectionDialogState extends State<OpenTimeStateSelectionDial
           });
           Navigator.of(context).pop("false");
         },
-        title: const Text("Geschlossen"),
+        title: Text(tr('report.open_times.closed')),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -52,7 +51,7 @@ class OpenTimeStateSelectionDialogState extends State<OpenTimeStateSelectionDial
             const Spacer(),
             TextButton(
                 onPressed: () => Navigator.of(context).pop(null),
-                child: const Text('Abbrechen'))
+                child: Text(tr('generic.cancel')))
           ],
         ),
       )

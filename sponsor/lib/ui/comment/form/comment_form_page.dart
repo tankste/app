@@ -1,10 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sponsor/ui/comment/form/cubit/comment_form_cubit.dart';
 import 'package:sponsor/ui/comment/form/cubit/comment_form_state.dart';
-import 'package:sponsor/ui/comment/list/cubit/comment_cubit.dart';
-import 'package:sponsor/ui/comment/list/cubit/comment_state.dart';
-import 'package:sponsor/ui/offer/cubit/offer_cubit.dart';
 
 class CommentFormPage extends StatelessWidget {
   final _nameTextController = TextEditingController();
@@ -23,12 +21,12 @@ class CommentFormPage extends StatelessWidget {
             Navigator.of(context).pop();
           } else if (state is SaveErrorFormCommentFormState) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Ein Fehler ist aufgetreten"),
+              content: Text(tr('generic.error.short')),
               action: SnackBarAction(
                 onPressed: () {
                   context.read<CommentFormCubit>().onRetrySaveClicked();
                 },
-                label: "Wiederholen",
+                label: tr('generic.retry.short'),
               ),
             ));
           } else if (state is FormCommentFormState) {
@@ -42,7 +40,7 @@ class CommentFormPage extends StatelessWidget {
         }, builder: (context, state) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text("Kommentar bearbeiten"),
+                title: Text(tr('sponsor.overview.comments.edit')),
               ),
               body: SafeArea(child: _buildBody(context, state)));
         }));
@@ -56,13 +54,14 @@ class CommentFormPage extends StatelessWidget {
               child: CircularProgressIndicator()));
     } else if (state is ErrorCommentFormState) {
       return Padding(
-          padding: EdgeInsets.symmetric(vertical: 32),
+          padding: const EdgeInsets.symmetric(vertical: 32),
           child: Column(children: [
-            Text("Fehler!", style: Theme.of(context).textTheme.headline5),
+            Text(tr('generic.error.title'),
+                style: Theme.of(context).textTheme.headlineSmall),
             Padding(
-                padding: EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+                  tr('generic.error.long'),
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 )),
@@ -72,25 +71,25 @@ class CommentFormPage extends StatelessWidget {
                     onPressed: () {
                       context.read<CommentFormCubit>().onRetryClicked();
                     },
-                    child: const Text("Wiederholen"))),
+                    child: Text(tr('generic.retry.short')))),
             TextButton(
                 onPressed: () {
                   showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text('Fehler Details'),
+                          title: Text(tr('generic.error.details.title')),
                           content: Text(state.errorDetails.toString()),
                           actions: <Widget>[
                             TextButton(
                                 onPressed: () =>
                                     Navigator.of(context).pop(true),
-                                child: const Text('OK')),
+                                child: Text(tr('generic.ok'))),
                           ],
                         );
                       });
                 },
-                child: const Text("Fehler anzeigen")),
+                child: Text(tr('generic.error.details.show')))
           ]));
     } else if (state is FormCommentFormState) {
       return SingleChildScrollView(
@@ -100,7 +99,7 @@ class CommentFormPage extends StatelessWidget {
           children: [
             TextFormField(
               decoration: InputDecoration(
-                labelText: "Name",
+                labelText: tr('generic.name'),
                 border: const OutlineInputBorder(),
                 alignLabelWithHint: true,
                 errorText: null,
@@ -111,10 +110,10 @@ class CommentFormPage extends StatelessWidget {
               },
             ),
             Padding(
-                padding: EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: "Kommentar",
+                    labelText: tr('sponsor.overview.comments.comment'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
@@ -149,7 +148,7 @@ class CommentFormPage extends StatelessWidget {
                                     .onSaveClicked();
                               }
                             : null,
-                        child: Text("Speichern")),
+                        child: Text(tr('generic.save'))),
                   ],
                 )),
           ],
