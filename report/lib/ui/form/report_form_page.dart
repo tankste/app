@@ -144,12 +144,12 @@ class ReportFormPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(tr('report.generic.title'), style: Theme.of(context).textTheme.titleLarge),
+            Text(tr('report.general.title'), style: Theme.of(context).textTheme.titleLarge),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: tr('report.generic.name'),
+                    labelText: tr('report.general.name'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
@@ -163,7 +163,7 @@ class ReportFormPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: tr('report.generic.brand'),
+                    labelText: tr('report.general.brand'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,

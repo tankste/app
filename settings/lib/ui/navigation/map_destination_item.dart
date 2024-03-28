@@ -23,7 +23,7 @@ class MapDestinationItem extends StatelessWidget {
                         state.availableDestinations ??
                             [
                               MapDestinationModel(
-                                  tr('settings.app.navigation_map.system'),
+                                  tr('generic.system_default'),
                                   MapDestinationDestination.system)
                             ],
                         state.value ?? MapDestinationDestination.system);

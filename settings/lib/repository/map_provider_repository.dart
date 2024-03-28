@@ -27,7 +27,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
   LocalMapProviderRepository._internal();
 
   final MapProviderModel _sytemProvider =
-      MapProviderModel(tr('settings.app.map_provider.system'), MapProvider.system);
+      MapProviderModel(tr('generic.system_default'), MapProvider.system);
 
   final StreamController<Result<List<MapProviderModel>, Exception>>
       _listAvailableStreamController = StreamController.broadcast();

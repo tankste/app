@@ -20,7 +20,7 @@ generic:
     long: Erneut versuchen
   name: Name
   save: Speichern
-  unknown: Unknown
+  unknown: Unbekannt
   date:
     time:
       format: "HH:mm"
@@ -33,6 +33,7 @@ generic:
     minutes:
       long: "{} Minuten"
   send: Senden
+  system_default: Systemstandard
 
 sponsor:
   overview:
@@ -52,14 +53,14 @@ sponsor:
       year:
         by: "/ Jährlich"
         hint: "Unterstütze tankste! mit einer jährlichen Zahlung von {}."
-    restore: "Restore purchases"
+    restore: "Käufe wiederherstellen"
     info:
       new:
         title: "tankste! braucht dich!"
         description: "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft kostenlos und werbefrei!"
       sponsorship:
-        title: "Du unterstützt tankste"
-        description: "Ein großes Dankeschön an dich, dass du mir hilfst das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit ${state.sponsoredValue} ausgeholfen, und somit die Weiterentwicklung voran getrieben."
+        title: "Du unterstützt tankste!"
+        description: "Ein großes Dankeschön an dich, dass du mir hilfst das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit {} ausgeholfen, und somit die Weiterentwicklung voran getrieben."
         active_subscription: "Zur Zeit hast du das Abonnement „{}“ aktiv."
         comment_hint: "Du wirst weiter unten als Sponsor gelistet. Du kannst deinen Namen angeben, und zusätzlich einen Kommentar hinterlassen. Diese Angaben sind für alle Nutzer sichtbar."
     comments:
@@ -75,19 +76,16 @@ settings:
     title: App
     design:
       title: Design
-      system: Systemstandard
       light: Hell
       dark: Dunkel
     map_provider:
       title: Kartenanbieter
-      system: Systemstandard
       map_libre: MapLibre
       google_maps: Google Maps
       apple_maps: Apple Maps
       error: Es ist ein Fehler aufgetreten! Zum Wiederholen klicken.
     navigation_map:
       title: Navigation starten mit…
-      system: Systemstandard
   open_source:
     title: Unterstütze uns
     sponsor:
@@ -184,7 +182,7 @@ report:
     available: Verfügbar
     temporarily_closed: "Vorübergehend geschlossen"
     permanently_closed: "Dauerhaft geschlossen"
-  generic:
+  general:
     title: Allgemein
     name: Name
     brand: "Marke (Firmenname)"

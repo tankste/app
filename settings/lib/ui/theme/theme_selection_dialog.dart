@@ -33,7 +33,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
           });
           Navigator.of(context).pop(ThemeMode.system);
         },
-        title: Text(tr('settings.app.design.system')),
+        title: Text(tr('generic.system_default')),
       ),
       RadioListTile<ThemeMode>(
         value: ThemeMode.light,

@@ -25,7 +25,7 @@ class ThemeItemCubit extends Cubit<ThemeItemState> {
       } else if (theme == ThemeMode.dark) {
         label = tr('settings.app.design.dark');
       } else {
-        label = tr('settings.app.design.system');
+        label = tr('generic.system_default');
       }
 
       emit(ThemeItemState.success(theme, label));

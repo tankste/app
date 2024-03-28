@@ -25,7 +25,7 @@ class LocalMapDestinationRepository extends MapDestinationRepository {
   LocalMapDestinationRepository._internal();
 
   final MapDestinationModel systemDestination =
-      MapDestinationModel(tr('settings.app.navigation_map.system'), MapDestinationDestination.system);
+      MapDestinationModel(tr('generic.system_default'), MapDestinationDestination.system);
 
   @override
   Future<List<MapDestinationModel>> listAvailable() {
