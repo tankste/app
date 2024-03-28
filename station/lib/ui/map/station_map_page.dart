@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map/ui/generic/generic_map.dart';
@@ -107,7 +108,7 @@ class StationMapPageState extends State<StationMapPage> {
                                         child: Padding(
                                       padding: EdgeInsets.only(left: 8),
                                       child: Text(
-                                          "Zu weit entfernt, bitte näher zoomen.",
+                                          tr('station.map.too_far_zoomed_out'),
                                           maxLines: 2,
                                           style: TextStyle(
                                               fontSize: 14,
@@ -133,12 +134,11 @@ class StationMapPageState extends State<StationMapPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Unerwarteter Fehler",
+                    Text(tr('generic.error.title'),
                         style: Theme.of(context).textTheme.headline6),
                     Padding(
                         padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                            "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+                        child: Text(tr('generic.error.long'),
                             style: Theme.of(context).textTheme.bodyText2)),
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
@@ -151,19 +151,20 @@ class StationMapPageState extends State<StationMapPage> {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: const Text('Fehler Details'),
+                                        title: Text(
+                                            tr('generic.error.details.title')),
                                         content: Text(state.errorDetails ?? ""),
                                         actions: <Widget>[
                                           TextButton(
                                               onPressed: () =>
                                                   Navigator.of(context)
                                                       .pop(true),
-                                              child: const Text('OK')),
+                                              child: Text(tr('generic.ok'))),
                                         ],
                                       );
                                     });
                               },
-                              child: const Text("Fehler anzeigen")),
+                              child: Text(tr('generic.error.details.show'))),
                           Padding(
                               padding: const EdgeInsets.only(left: 8),
                               child: ElevatedButton(
@@ -172,7 +173,7 @@ class StationMapPageState extends State<StationMapPage> {
                                         .read<StationMapCubit>()
                                         .onRetryClicked();
                                   },
-                                  child: const Text("Wiederholen")))
+                                  child: Text(tr('generic.retry.long'))))
                         ],
                       ),
                     )

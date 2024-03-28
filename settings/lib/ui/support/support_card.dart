@@ -1,12 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:settings/ui/developer/cubit/developer_card_cubit.dart';
-import 'package:settings/ui/developer/cubit/developer_card_state.dart';
-import 'package:settings/ui/feature/feature_settings_page.dart';
 import 'package:settings/ui/log/log_page.dart';
 import 'package:settings/ui/settings/settings_card.dart';
-import 'package:settings/ui/custom_switch_list_tile.dart';
 import 'package:settings/ui/support/cubit/support_card_cubit.dart';
 import 'package:settings/ui/support/cubit/support_card_state.dart';
 
@@ -28,7 +24,7 @@ class SupportCard extends StatelessWidget {
     } else if (state is DisabledSupportCardState) {
       return Container();
     } else if (state is EnabledSupportCardState) {
-      return SettingsCard(title: "Support", items: [
+      return SettingsCard(title: tr('settings.support.title'), items: [
         ListTile(
           onTap: () {
             Navigator.push(context,
@@ -36,8 +32,8 @@ class SupportCard extends StatelessWidget {
           },
           minLeadingWidth: 8,
           leading: const Icon(Icons.list_outlined),
-          title: const Text("Logs"),
-          subtitle: const Text("Anzeigen der letzten Logs"),
+          title: Text(tr('settings.support.logs.title')),
+          subtitle: Text(tr('settings.support.logs.description')),
         ),
       ]);
     }

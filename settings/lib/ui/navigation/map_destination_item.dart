@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/model/map_destination_model.dart';
@@ -21,14 +22,15 @@ class MapDestinationItem extends StatelessWidget {
                         context,
                         state.availableDestinations ??
                             [
-                              MapDestinationModel("Systemstandard",
+                              MapDestinationModel(
+                                  tr('generic.system_default'),
                                   MapDestinationDestination.system)
                             ],
                         state.value ?? MapDestinationDestination.system);
                   },
                   minLeadingWidth: 10,
                   leading: const Icon(Icons.navigation),
-                  title: const Text("Navigation starten mit…"),
+                  title: Text(tr('settings.app.navigation_map.title')),
                   subtitle: Text(state.valueLabel ?? ""));
             }));
   }

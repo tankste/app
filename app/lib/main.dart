@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:core/cubit/base_state.dart';
-import 'package:flutter/foundation.dart';
+import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:station/ui/map/station_map_page.dart';
@@ -8,11 +8,19 @@ import 'package:tankste/app/cubit/app_cubit.dart';
 import 'package:tankste/app/cubit/app_state.dart';
 import 'package:tankste/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
-  runApp(const TanksteApp());
+  runApp(EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('de'), Locale('is')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      useOnlyLangCode: true,
+      assetLoader: const YamlAssetLoader(),
+      child: const TanksteApp()));
 }
 
 class TanksteApp extends StatelessWidget {
@@ -60,7 +68,10 @@ class TanksteApp extends StatelessWidget {
                 theme: tanksteTheme,
                 darkTheme: tanksteThemeDark,
                 themeMode: state.theme,
-                home: StationMapPage(),
+                localizationsDelegates: context.localizationDelegates,
+                supportedLocales: context.supportedLocales,
+                locale: context.locale,
+                home: const StationMapPage(),
               );
             })));
   }

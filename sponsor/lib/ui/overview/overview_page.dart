@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sponsor/ui/comment/list/comment_container.dart';
@@ -17,7 +18,7 @@ class OverviewPage extends StatelessWidget {
             builder: (context, state) {
               return Scaffold(
                   appBar: AppBar(
-                    title: Text("Spenden"),
+                    title: Text(tr('sponsor.overview.title')),
                   ),
                   body: SafeArea(child: _buildBody(context, state)));
             }));
@@ -30,11 +31,11 @@ class OverviewPage extends StatelessWidget {
       return Center(
           child: Column(children: [
         Spacer(),
-        Text("Fehler!", style: Theme.of(context).textTheme.headline5),
+        Text(tr('generic.error.title'), style: Theme.of(context).textTheme.headline5),
         Padding(
             padding: EdgeInsets.only(top: 8),
             child: Text(
-              "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+              tr('generic.error.long'),
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             )),
@@ -44,24 +45,24 @@ class OverviewPage extends StatelessWidget {
                 onPressed: () {
                   context.read<OverviewCubit>().onRetryClicked();
                 },
-                child: const Text("Wiederholen"))),
+                child: Text(tr('generic.retry.long')))),
         TextButton(
             onPressed: () {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text('Fehler Details'),
+                      title: Text(tr('generic.error.details.title')),
                       content: Text(state.errorDetails.toString()),
                       actions: <Widget>[
                         TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Ok')),
+                            child: Text(tr('generic.ok'))),
                       ],
                     );
                   });
             },
-            child: const Text("Fehler anzeigen")),
+            child: Text(tr('generic.error.details.show'))),
         Spacer(),
       ]));
     } else if (state is BalanceOverviewState) {

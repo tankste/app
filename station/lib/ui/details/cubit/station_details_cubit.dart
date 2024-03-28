@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:station/di/station_module_factory.dart';
@@ -124,19 +125,19 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     bool isSelected = false;
     switch (fuelType) {
       case FuelType.e5:
-        fuelLabel = "Super E5";
+        fuelLabel = tr('station.gas.super_e5');
         isSelected = activeGasPriceFilter == "e5";
         break;
       case FuelType.e10:
-        fuelLabel = "Super E10";
+        fuelLabel = tr('station.gas.super_e10');
         isSelected = activeGasPriceFilter == "e10";
         break;
       case FuelType.diesel:
-        fuelLabel = "Diesel";
+        fuelLabel = tr('station.gas.diesel');
         isSelected = activeGasPriceFilter == "diesel";
         break;
       default:
-        fuelLabel = "Unbekannt";
+        fuelLabel = tr('generic.unknown');;
     }
 
     return Price(
@@ -201,39 +202,39 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     bool isTodayFallback = false;
     switch (day) {
       case OpenTimeDay.monday:
-        dayLabel = "Montag";
+        dayLabel = tr('station.open_times.monday');
         isTodayFallback = now.weekday == DateTime.monday;
         break;
       case OpenTimeDay.tuesday:
-        dayLabel = "Dienstag";
+        dayLabel = tr('station.open_times.tuesday');
         isTodayFallback = now.weekday == DateTime.tuesday;
         break;
       case OpenTimeDay.wednesday:
-        dayLabel = "Mittwoch";
+        dayLabel = tr('station.open_times.wednesday');
         isTodayFallback = now.weekday == DateTime.wednesday;
         break;
       case OpenTimeDay.thursday:
-        dayLabel = "Donnerstag";
+        dayLabel = tr('station.open_times.thursday');
         isTodayFallback = now.weekday == DateTime.thursday;
         break;
       case OpenTimeDay.friday:
-        dayLabel = "Freitag";
+        dayLabel = tr('station.open_times.friday');
         isTodayFallback = now.weekday == DateTime.friday;
         break;
       case OpenTimeDay.saturday:
-        dayLabel = "Samstag";
+        dayLabel = tr('station.open_times.saturday');
         isTodayFallback = now.weekday == DateTime.saturday;
         break;
       case OpenTimeDay.sunday:
-        dayLabel = "Sonntag";
+        dayLabel = tr('station.open_times.sunday');
         isTodayFallback = now.weekday == DateTime.sunday;
         break;
       case OpenTimeDay.publicHoliday:
-        dayLabel = "Feiertag";
+        dayLabel = tr('station.open_times.public_holiday');
         isTodayFallback = false;
         break;
       default:
-        dayLabel = "Unbekannt";
+        dayLabel = tr('generic.unknown');
         isTodayFallback = false;
     }
 
@@ -276,11 +277,11 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     if (changeDate.year == today.year &&
         changeDate.month == today.month &&
         changeDate.day == today.day) {
-      DateFormat dateFormat = DateFormat('HH:mm');
-      return "${dateFormat.format(changeDate)} Uhr";
+      DateFormat dateFormat = DateFormat(tr('generic.date.time.format'));
+      return tr('generic.date.time.clock', args: [dateFormat.format(changeDate)]);
     } else {
-      DateFormat dateFormat = DateFormat('dd.MM.yyyy, HH:mm');
-      return "${dateFormat.format(changeDate)} Uhr";
+      DateFormat dateFormat = DateFormat(tr('generic.date.date_time.format'));
+      return tr('generic.date.time.clock', args: [dateFormat.format(changeDate)]);
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ThemeSelectionDialog extends StatefulWidget {
@@ -22,7 +23,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(title: const Text("Design"), children: [
+    return SimpleDialog(title: Text(tr('settings.app.design.title')), children: [
       RadioListTile<ThemeMode>(
         value: ThemeMode.system,
         groupValue: theme,
@@ -32,7 +33,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
           });
           Navigator.of(context).pop(ThemeMode.system);
         },
-        title: const Text("Systemstandard"),
+        title: Text(tr('generic.system_default')),
       ),
       RadioListTile<ThemeMode>(
         value: ThemeMode.light,
@@ -43,7 +44,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
           });
           Navigator.of(context).pop(ThemeMode.light);
         },
-        title: const Text("Hell"),
+        title: Text(tr('settings.app.design.light')),
       ),
       RadioListTile<ThemeMode>(
         value: ThemeMode.dark,
@@ -54,7 +55,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
           });
           Navigator.of(context).pop(ThemeMode.dark);
         },
-        title: const Text("Dunkel"),
+        title: Text(tr('settings.app.design.dark')),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -63,7 +64,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
             const Spacer(),
             TextButton(
                 onPressed: () => Navigator.of(context).pop(null),
-                child: const Text('Abbrechen'))
+                child: Text(tr('generic.cancel')))
           ],
         ),
       )

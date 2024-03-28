@@ -1,0 +1,208 @@
+app:
+  title:
+    short: "tankste!"
+    full: "tankste! - App þín fyrir bensínverð"
+    slogan: "App þín fyrir bensínverð"
+
+generic:
+  cancel: Hætta við
+  ok: OK
+  edit: Breyta
+  error:
+    title: Villa
+    details:
+      title: Smáatriði um villu
+      show: Sýna smáatriði
+    short: Eitthvað fór úrskeiðis!
+    long: Eitthvað fór úrskeiðis. Vinsamlegast athugaðu nettenginguna þína og reyndu aftur.
+  retry:
+    short: Reyndu aftur
+    long: Reyna aftur
+  name: Nafn
+  save: Vista
+  unknown: Óþekkt
+  date:
+    time:
+      format: "HH:mm"
+      clock: "{} klst."
+    date_time:
+      format: "dd.MM.yyyy, HH:mm"
+  units:
+    kilometers:
+      short: "{} km"
+    minutes:
+      long: "{} Mínútur"
+  send: Senda
+  system_default: Kerfisbundið sjálfgefið
+
+sponsor:
+  overview:
+    title: "Gjafir"
+    balance: "{} € af {} €"
+    sponsors: Styrktaraðilar
+    options:
+      title:
+        new: Valmöguleikar
+        extended: Fleiri valmöguleikar
+      single:
+        by: "/ Einu sinni"
+        hint: "Styðja tankste! með einu gjaldi á {}."
+      month:
+        by : "/ Mánaðarlega"
+        hint: "Styðja tankste! með mánaðarlegu greiðslu á {}."
+      year:
+        by: "/ Árlega"
+        hint: "Styðja tankste! með árlegri greiðslu á {}"
+    restore: "Endurheimta kaup"
+    info:
+      new:
+        title: "tankste! þarfnast þín!"
+        description: "Til að bæta rekstrarútgjöldin, er ég háður fjárhagslegri hjálp þinni.\nSparirðu reglulega peninga á bensín með tankste! Þá gefurðu smá upphæð til verkefnisins.\nÞannig mun forritið vera frjáls og auglýsingafritt í framtíðinni!"
+      sponsorship:
+        title: "Þú styður tankste!"
+        description: "Stór þakkir til þín fyrir að hjálpa mér að halda lífi í tankste! verkefninu! Þú hefur þegar hjálpað verkefninu með {} og þannig dreift því áfram."
+        active_subscription: "Þú ert núna með áskriftina "{}" virka."
+        comment_hint: "Þú verður skráður hér að neðan sem styrktaraðili. Þú getur sláð inn nafnið þitt og skilaboð. Þessar upplýsingar eru sjáanlegar öllum notendum."
+    comments:
+      anonymous: "Nafnlaus"
+      comment: "Athugasemd"
+      value: "{} €"
+      footer: "Takk fyrir hverja einustu styðju! {}"
+      edit: "Breyta athugasemd"
+
+settings:
+  title: Stillingar
+  app:
+    title: Forrit
+    design:
+      title: Hönnun
+      light: Ljóst
+      dark: Myrkur
+    map_provider:
+      title: Kortaveitandi
+      map_libre: MapLibre
+      google_maps: Google Maps
+      apple_maps: Apple Maps
+      error: Eitthvað fór úrskeiðis! Smelltu til að reyna aftur.
+    navigation_map:
+      title: Byrja vegvísun með…
+  open_source:
+    title: Styðja okkur
+    sponsor:
+      title: Gefa framlag
+      description: Gerast styrktaraðili tankste!
+    translation:
+      title: Þýðing
+      description: Þýða tankste! á þitt tungumál
+    source_code:
+      title: Upprunakóði
+      description: Fork me on Github
+  contact:
+    title: Hafa samband
+    website:
+      title: Vefsíða
+      description: tankste.app
+    email:
+      title: Netfang
+      description: "hey@tankste.app"
+    instagram:
+      title: Instagram
+      description: "@tankste.app"
+    twitter:
+      title: Twitter
+      description: "@tankste_app"
+  legal:
+    title: Löglegt
+    data_source:
+      title: Upplýsingaheimildir
+    terms:
+      title: Notkunarvillur
+    privacy:
+      title: Persónuverndarstefna
+  developer:
+    title: Þróunaraðili
+    developer_mode:
+      title: Þróunarhamur
+      description: Slökkva á þróunarhami
+      enabled: Þróunarhamur virkjaður
+    feature_flags:
+      title: Tilraunaföll
+      description: Virkja tilraunaföll
+    clear_cache:
+      title: Hreinsa skyndiminni
+      description: Eyða öllum skyndiminni stiklum
+      success: Skyndiminni hefur verið hreinsað
+  support:
+    title: Styðja
+    logs:
+      title: Skrár
+      description: Skoða síðustu skrár
+  about:
+    title: Um
+    status:
+      title: Stöða
+    version:
+      title: Útgáfa
+  footer:
+    note: Gerð með {} og {} í {}.
+
+station:
+  title: Stöð
+  gas:
+    label: Eldsneytisgerð
+    super_e5: Super E5
+    super_e10: Super E10
+    diesel: Dísel
+  map:
+    too_far_zoomed_out: "Of langt í burtu, vins
+
+amlegast zooma inn."
+  open_times:
+    title: Opnunartími
+    monday: Mánudagur
+    tuesday: Þriðjudagur
+    wednesday: Miðvikudagur
+    thursday: Fimmtudagur
+    friday: Föstudagur
+    saturday: Laugardagur
+    sunday: Sunnudagur
+    public_holiday: Almenningssóttækur
+  prices:
+    title: Verð á eldsneyti
+    last_price_changes_at: "Síðustu verðbreytingar: {}"
+  data_source:
+    title: Gagnagrunnur
+
+report:
+  title: "Tilkynna rangar upplýsingar"
+  open_times:
+    title: Er opið í augnablikinu?
+    open: Opin
+    closed: Lokað
+  availability:
+    title: Í boði
+    available: Í boði
+    temporarily_closed: "Tímabundið lokað"
+    permanently_closed: "Varanlega lokað"
+  general:
+    title: Almennt
+    name: Nafn
+    brand: "Vörumerki (Fyrirtæki)"
+  address:
+    title: Heimilisfang
+    street: Götunafn
+    house_number: Húsatala
+    post_code: Póstnúmer
+    city: Borg
+    country: Land
+  location:
+    title: Staðsetning
+    latitude: Breiddargráða
+    longitude: Lengdargráða
+  misc:
+    title: "Annað"
+    comment:
+      label: Athugasemdir
+      hint: "Láttu okkur vita hvað vandamálið er á þessari bensínstöð."
+  form:
+    sent: "Skilaboð send."

@@ -1,0 +1,206 @@
+app:
+  title:
+    short: "tankste!"
+    full: "tankste! - Deine Tankpreis App"
+    slogan: "Deine Tankpreis App"
+
+generic:
+  cancel: Abbrechen
+  ok: OK
+  edit: Bearbeiten
+  error:
+    title: Fehler
+    details:
+      title: Fehlerdetails
+      show: Details anzeigen
+    short: Es ist ein Fehler aufgetreten!
+    long: Es ist ein Fehler aufgetreten. Bitte überprüfe deine Internetverbindung und versuche es erneut.
+  retry:
+    short: Wiederholen
+    long: Erneut versuchen
+  name: Name
+  save: Speichern
+  unknown: Unbekannt
+  date:
+    time:
+      format: "HH:mm"
+      clock: "{} Uhr"
+    date_time:
+      format: "dd.MM.yyyy, HH:mm"
+  units:
+    kilometers:
+      short: "{} km"
+    minutes:
+      long: "{} Minuten"
+  send: Senden
+  system_default: Systemstandard
+
+sponsor:
+  overview:
+    title: "Spenden"
+    balance: "{} € von {} €"
+    sponsors: Sponsoren
+    options:
+      title:
+        new: Optionen
+        extended: Zusätzliche Optionen
+      single:
+        by: "/ Einmalig"
+        hint: "Unterstütze tankste! mit einer einmaligen Zahlung von {}."
+      month:
+        by : "/ Monatlich"
+        hint: "Unterstütze tankste! mit einer monatlichen Zahlung von {}."
+      year:
+        by: "/ Jährlich"
+        hint: "Unterstütze tankste! mit einer jährlichen Zahlung von {}."
+    restore: "Käufe wiederherstellen"
+    info:
+      new:
+        title: "tankste! braucht dich!"
+        description: "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft kostenlos und werbefrei!"
+      sponsorship:
+        title: "Du unterstützt tankste!"
+        description: "Ein großes Dankeschön an dich, dass du mir hilfst das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit {} ausgeholfen, und somit die Weiterentwicklung voran getrieben."
+        active_subscription: "Zur Zeit hast du das Abonnement „{}“ aktiv."
+        comment_hint: "Du wirst weiter unten als Sponsor gelistet. Du kannst deinen Namen angeben, und zusätzlich einen Kommentar hinterlassen. Diese Angaben sind für alle Nutzer sichtbar."
+    comments:
+      anonymous: "Anonym"
+      comment: "Kommentar"
+      value: "{} €"
+      footer: "Danke an jede/n einzelne/n Unterstützer/in! {}"
+      edit: "Kommentar bearbeiten"
+
+settings:
+  title: Einstellungen
+  app:
+    title: App
+    design:
+      title: Design
+      light: Hell
+      dark: Dunkel
+    map_provider:
+      title: Kartenanbieter
+      map_libre: MapLibre
+      google_maps: Google Maps
+      apple_maps: Apple Maps
+      error: Es ist ein Fehler aufgetreten! Zum Wiederholen klicken.
+    navigation_map:
+      title: Navigation starten mit…
+  open_source:
+    title: Unterstütze uns
+    sponsor:
+      title: Spenden
+      description: Werde tankste! Sponsor
+    translation:
+      title: Übersetzen
+      description: Übersetze tankste! in deine Sprache
+    source_code:
+      title: Quellcode
+      description: Fork me on Github
+  contact:
+    title: Kontakt
+    website:
+      title: Website
+      description: tankste.app
+    email:
+      title: E-Mail
+      description: "hey@tankste.app"
+    instagram:
+      title: Instagram
+      description: "@tankste.app"
+    twitter:
+      title: Twitter
+      description: "@tankste_app"
+  legal:
+    title: Rechtliches
+    data_source:
+      title: Datenquellen
+    terms:
+      title: Nutzungsbedingungen
+    privacy:
+      title: Datenschutzbestimmungen
+  developer:
+    title: Entwickler
+    developer_mode:
+      title: Entwicklermodus
+      description: Deaktiviere den Entwicklermodus
+      enabled: Entwickler Modus aktiviert!
+    feature_flags:
+      title: Experimentelle Funktionen
+      description: Aktiviere experimentelle Funktionen
+    clear_cache:
+      title: Cache zurücksetzen
+      description: Lösche alle Cache Parameter
+      success: App Cache wurde zurückgesetzt
+  support:
+    title: Support
+    logs:
+      title: Logs
+      description: Anzeigen der letzten Logs
+  about:
+    title: Über
+    status:
+      title: Status
+    version:
+      title: Version
+  footer:
+    note: Made with {} and {} in {}.
+
+station:
+  title: Tankstelle
+  gas:
+    label: Spritsorte
+    super_e5: Super E5
+    super_e10: Super E10
+    diesel: Diesel
+  map:
+    too_far_zoomed_out: "Zu weit entfernt, bitte näher zoomen."
+  open_times:
+    title: Öffnungszeiten
+    monday: Montag
+    tuesday: Dienstag
+    wednesday: Mittwoch
+    thursday: Donnerstag
+    friday: Freitag
+    saturday: Samstag
+    sunday: Sonntag
+    public_holiday: Feiertag
+  prices:
+    title: Kraftstoffpreise
+    last_price_changes_at: "Letzte Preisänderung: {}"
+  data_source:
+    title: Datenquellen
+
+report:
+  title: "Fehlerhafte Daten melden"
+  open_times:
+    title: Aktuell geöffnet?
+    open: Geöffnet
+    closed: Geschlossen
+  availability:
+    title: Verfügbarkeit
+    available: Verfügbar
+    temporarily_closed: "Vorübergehend geschlossen"
+    permanently_closed: "Dauerhaft geschlossen"
+  general:
+    title: Allgemein
+    name: Name
+    brand: "Marke (Firmenname)"
+  address:
+    title: Adresse
+    street: Straße
+    house_number: Hausnummer
+    post_code: Postleitzahl
+    city: Stadt
+    country: Land
+  location:
+    title: Position
+    latitude: Breitengrad (Latitude)
+    longitude: Längengrad (Longitude)
+  misc:
+    title: "Sonstiges"
+    comment:
+      label: Anmerkungen
+      hint: "Teile uns mit, welches Problem bei dieser Tankstelle vorliegt."
+  form:
+    sent: "Meldung erfolgreich gesendet."

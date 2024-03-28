@@ -1,23 +1,25 @@
 tankste! - App
 ==============
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Translations](https://translation.liveyourproject.com/widget/tankste/app/svg-badge.svg)](https://translation.liveyourproject.com/projects/tankste/app/)
 
-Your open source gas station mobile app. We love the minimalistic of the Bertha app from Mercedes
-and want to keep them alive! So we create this project.
+Your open source fuel price app. The mission is to give you one app that you can use in all countries.
 
 [<img src="https://tankste.app/assets/playstore.png" height="60" alt="Play Store">](https://play.google.com/store/apps/details?id=app.tankste) 
 [<img src="https://tankste.app/assets/appstore.png" height="60" alt="App Store">](https://apps.apple.com/de/app/tankste-deine-tankpreis-app/id1633457177)
 
 <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-1.jpeg" height="360" alt="iOS Screenshot 1"> <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-2.jpeg" height="360" alt="iOS Screenshot 2"> <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-3.jpeg" height="360" alt="iOS Screenshot 3"> 
 
+## Availability ##
+
+| Flag  | Country |
+| ----- | ------- |
+| 🇩🇪    | Germany |
+
 ## Data sources ##
 
 The gas station data are hosted by our own [backend](https://github.com/tankste/backend). The backend 
 gets the data from multiple data sources. We listing them on our [website](https://tankste.app/datenquellen).
-
-Previously we used the [Tankerkönig](https://creativecommons.tankerkoenig.de/) API. Thanks a lot for your API, 
-without your offer this project will not exists!
 
 ## Get started ##
 
@@ -51,6 +53,11 @@ auto-generated created by build scripts.
 The tankste! project is based on a prototype code. The quality of the code has improved since then,
 but there is still a lot to do. We are on the right track. So please be patient or help us 
 to improve the code.
+
+## Special thanks ##
+
+- [Tankerkönig](https://creativecommons.tankerkoenig.de/) that provides a free API for German gas stations. I would never have started the project without this offer.
+- Tim Brückner from [Teuer Tanken](https://teuer-tanken.app/) for your help to implement the MTS-K API.
 
 ## License ##
 

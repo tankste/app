@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class FilterDialog extends StatefulWidget {
@@ -61,7 +62,7 @@ class FilterDialogState extends State<FilterDialog> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Text("Spritsorte",
+                                                Text(tr('station.gas.label'),
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -73,8 +74,7 @@ class FilterDialogState extends State<FilterDialog> {
                                                       spacing: 8,
                                                       children: <Widget>[
                                                         FilterChip(
-                                                            label: Text(
-                                                                "Super E5",
+                                                            label: Text(tr('station.gas.super_e5'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),
@@ -92,8 +92,7 @@ class FilterDialogState extends State<FilterDialog> {
                                                               });
                                                             }),
                                                         FilterChip(
-                                                            label: Text(
-                                                                "Super E10",
+                                                            label: Text(tr('station.gas.super_e10'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),
@@ -111,8 +110,7 @@ class FilterDialogState extends State<FilterDialog> {
                                                               });
                                                             }),
                                                         FilterChip(
-                                                            label: Text(
-                                                                "Diesel",
+                                                            label: Text(tr('station.gas.diesel'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),
@@ -159,8 +157,7 @@ class FilterDialogState extends State<FilterDialog> {
                                                                 widget.onSubmit(
                                                                     filter);
                                                               },
-                                                              child: Text(
-                                                                  "Speichern"),
+                                                              child: Text(tr('generic.save')),
                                                             ),
                                                           ))
                                                         ])))

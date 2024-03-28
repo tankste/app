@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:settings/model/map_destination_model.dart';
 
@@ -26,7 +27,7 @@ class MapDestinationSelectionDialogState
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-        title: const Text("Navigation starten mit…"),
+        title: Text(tr('settings.app.navigation_map.title')),
         children: widget.availableMaps
                 .map<Widget>(
                   (map) => RadioListTile<MapDestinationDestination>(
@@ -50,7 +51,7 @@ class MapDestinationSelectionDialogState
                     const Spacer(),
                     TextButton(
                         onPressed: () => Navigator.of(context).pop(null),
-                        child: const Text('Abbrechen'))
+                        child: Text(tr('generic.cancel')))
                   ],
                 ),
               )

@@ -1,4 +1,5 @@
 import 'package:core/cubit/base_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:navigation/route_model.dart';
 
 class RoutePreviewState extends BaseState {
@@ -25,7 +26,7 @@ class RoutePreviewState extends BaseState {
 
     double kilometers = route!.distanceMeters / 1000;
 
-    return "${kilometers.toStringAsFixed(1)} km".replaceAll('.', ',');
+    return tr('generic.units.kilometers.short', args: [kilometers.toStringAsFixed(1)]).replaceAll('.', ',');
   }
 
   String formatTravelTime() {
@@ -35,6 +36,6 @@ class RoutePreviewState extends BaseState {
 
     double minutes = route!.travelTimeSeconds / 60;
 
-    return "${minutes.toStringAsFixed(0)} Minuten".replaceAll('.', ',');
+    return tr('generic.units.minutes.long', args: [minutes.toStringAsFixed(0)]).replaceAll('.', ',');
   }
 }

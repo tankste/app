@@ -1,0 +1,206 @@
+app:
+  title:
+    short: "tankste!"
+    full: "tankste! - Your gas price app"
+    slogan: "Your gas price app"
+
+generic:
+  cancel: Cancel
+  ok: OK
+  edit: Edit
+  error:
+    title: Error
+    details:
+      title: Error details
+      show: Show details
+    short: Something went wrong!
+    long: Something went wrong. Please check your internet connection and try again.
+  retry:
+    short: Retry
+    long: Try again
+  name: Name
+  save: Save
+  unknown: Unknown
+  date:
+    time:
+      format: "HH:mm"
+      clock: "{} Uhr"
+    date_time:
+      format: "dd.MM.yyyy, HH:mm"
+  units:
+    kilometers:
+      short: "{} km"
+    minutes:
+      long: "{} Minutes"
+  send: Send
+  system_default: System default
+
+sponsor:
+  overview:
+    title: "Donates"
+    balance: "{} € von {} €"
+    sponsors: Sponsors
+    options:
+      title:
+        new: Options
+        extended: More options
+      single:
+        by: "/ One-Time"
+        hint: "Support tankste! with a one-time payment of {}."
+      month:
+        by : "/ Monthly"
+        hint: "Support tankste! with a monthly payment of {}."
+      year:
+        by: "/ Yearly"
+        hint: "Support tankste! with a yearly payment of {}"
+    restore: "Restore purchases"
+    info:
+      new:
+        title: "tankste! needs you!"
+        description: "To cover the running costs, I am dependent on your financial help.\nDo you regularly save money on gas with tankste! Then donate a small amount to the project.\nSo the app will remain free and ad-free in the future!"
+      sponsorship:
+        title: "You support tankste!"
+        description: "A big thank you to you for helping me keep the tankste! project alive! You have already helped out the project with {} and thus driven its further development."
+        active_subscription: "You currently have the subscription "{}" active."
+        comment_hint: "You will be listed below as a sponsor. You can enter your name and leave a comment. This information is visible to all users."
+    comments:
+      anonymous: "Anonymous"
+      comment: "Comment"
+      value: "{} €"
+      footer: "Thanks to every single supporter! {}"
+      edit: "Edit comment"
+
+settings:
+  title: Settings
+  app:
+    title: App
+    design:
+      title: Design
+      light: Light
+      dark: Dark
+    map_provider:
+      title: Map provider
+      map_libre: MapLibre
+      google_maps: Google Maps
+      apple_maps: Apple Maps
+      error: Something went wrong! Click for retry.
+    navigation_map:
+      title: Start navigations with…
+  open_source:
+    title: Support us
+    sponsor:
+      title: Donate
+      description: Become a tankste! sponsor
+    translation:
+      title: Translation
+      description: Translate tankste! in your language
+    source_code:
+      title: Source code
+      description: Fork me on Github
+  contact:
+    title: Contact
+    website:
+      title: Website
+      description: tankste.app
+    email:
+      title: E-Mail
+      description: "hey@tankste.app"
+    instagram:
+      title: Instagram
+      description: "@tankste.app"
+    twitter:
+      title: Twitter
+      description: "@tankste_app"
+  legal:
+    title: Legal
+    data_source:
+      title: Data sources
+    terms:
+      title: Terms of use
+    privacy:
+      title: Privacy policy
+  developer:
+    title: Developer
+    developer_mode:
+      title: Developer mode
+      description: Disable the developer mode
+      enabled: Developer mode enabled
+    feature_flags:
+      title: Experimental functions
+      description: Activate experimental functions
+    clear_cache:
+      title: Reset cache
+      description: Delete all cache parameters
+      success: Cache has been reset
+  support:
+    title: Support
+    logs:
+      title: Logs
+      description: View last logs
+  about:
+    title: About
+    status:
+      title: Status
+    version:
+      title: Version
+  footer:
+    note: Made with {} and {} in {}.
+
+station:
+  title: Station
+  gas:
+    label: Fuel type
+    super_e5: Super E5
+    super_e10: Super E10
+    diesel: Diesel
+  map:
+    too_far_zoomed_out: "Too far away, please zoom in."
+  open_times:
+    title: Open times
+    monday: Monday
+    tuesday: Tuesday
+    wednesday: Wednesday
+    thursday: Thursday
+    friday: Friday
+    saturday: Saturday
+    sunday: Sunday
+    public_holiday: Public holiday
+  prices:
+    title: Fuel prices
+    last_price_changes_at: "Last price changes: {}"
+  data_source:
+    title: Data source
+
+report:
+  title: "Report incorrect data"
+  open_times:
+    title: Currently open?
+    open: Open
+    closed: Closed
+  availability:
+    title: Availability
+    available: Available
+    temporarily_closed: "Temporarily closed"
+    permanently_closed: "Permanently closed"
+  general:
+    title: General
+    name: Name
+    brand: "Brand (Company name)"
+  address:
+    title: Address
+    street: Street
+    house_number: House number
+    post_code: Post code
+    city: City
+    country: Country
+  location:
+    title: Location
+    latitude: Latitude
+    longitude: Longitude
+  misc:
+    title: "Other"
+    comment:
+      label: Notes
+      hint: "Let us know what the problem is at this filling station."
+  form:
+    sent: "Message sent successfully."

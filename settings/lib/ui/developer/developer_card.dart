@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,12 +18,12 @@ class DeveloperCard extends StatelessWidget {
         child: BlocConsumer<DeveloperCardCubit, DeveloperCardState>(
             listener: (context, state) {
               if (state is SuccessDeleteCacheEnabledDeveloperCardState) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("App Cache wurde zurückgesetzt!"),
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(tr('settings.developer.clear_cache.success')),
                 ));
               } else if (state is ErrorDeleteCacheEnabledDeveloperCardState) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Es ist ein Fehler aufgetreten!"),
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(tr('generic.error.short')),
                 ));
               }
             },
@@ -35,7 +36,7 @@ class DeveloperCard extends StatelessWidget {
     } else if (state is DisabledDeveloperCardState) {
       return Container();
     } else if (state is EnabledDeveloperCardState) {
-      return SettingsCard(title: "Entwickler", items: [
+      return SettingsCard(title: tr('settings.developer.title'), items: [
         CustomSwitchListTile(
           value: true,
           onChanged: (value) {
@@ -43,8 +44,8 @@ class DeveloperCard extends StatelessWidget {
           },
           minLeadingWidth: 8,
           secondary: const Icon(Icons.code),
-          title: const Text("Entwicklermodus"),
-          subtitle: const Text("Deaktiviere den Entwicklermodus"),
+          title: Text(tr('settings.developer.developer_mode.title')),
+          subtitle: Text(tr('settings.developer.developer_mode.description')),
         ),
         ListTile(
           onTap: () {
@@ -55,8 +56,8 @@ class DeveloperCard extends StatelessWidget {
           },
           minLeadingWidth: 8,
           leading: const Icon(FontAwesomeIcons.wandMagicSparkles),
-          title: const Text("Experimentelle Funktionen"),
-          subtitle: const Text("Aktiviere experimentelle Funktionen"),
+          title: Text(tr('settings.developer.feature_flags.title')),
+          subtitle: Text(tr('settings.developer.feature_flags.description')),
         ),
         ListTile(
           onTap: () {
@@ -64,8 +65,8 @@ class DeveloperCard extends StatelessWidget {
           },
           minLeadingWidth: 8,
           leading: const Icon(Icons.cookie_outlined),
-          title: const Text("Cache zurücksetzen"),
-          subtitle: const Text("Lösche alle Cache Parameter"),
+          title: Text(tr('settings.developer.clear_cache.title')),
+          subtitle: Text(tr('settings.developer.clear_cache.description')),
         ),
       ]);
     } else if (state is ErrorDeveloperCardState) {
@@ -75,4 +76,3 @@ class DeveloperCard extends StatelessWidget {
     return Container();
   }
 }
-

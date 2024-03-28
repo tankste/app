@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/ui/version/cubit/version_item_cubit.dart';
@@ -26,7 +27,7 @@ class VersionItem extends StatelessWidget {
               onTap: () {
                 context.read<VersionItemCubit>().onClicked();
               },
-              title: const Text("Version"),
+              title: Text(tr('settings.about.version.title')),
               subtitle: Text(state.version ?? "..."));
         }));
   }

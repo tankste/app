@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilitySelectionDialog extends StatefulWidget {
@@ -22,17 +23,17 @@ class AvailabilitySelectionDialogState extends State<AvailabilitySelectionDialog
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(title: const Text("Verfügbarkeit"), children: [
+    return SimpleDialog(title: Text(tr('report.availability.title')), children: [
       RadioListTile<String>(
         value: "available",
         groupValue: availability,
         onChanged: (_) {
           setState(() {
-            availability = "Verfügbar";
+            availability = 'available';
           });
-          Navigator.of(context).pop("Verfügbar");
+          Navigator.of(context).pop('available');
         },
-        title: const Text("Verfügbar"),
+        title: Text(tr('report.availability.available')),
       ),
       RadioListTile<String>(
         value: "temporary_closed",
@@ -43,7 +44,7 @@ class AvailabilitySelectionDialogState extends State<AvailabilitySelectionDialog
           });
           Navigator.of(context).pop("temporary_closed");
         },
-        title: const Text("Temporär geschlossen"),
+        title: Text(tr('report.availability.temporarily_closed')),
       ),
       RadioListTile<String>(
         value: "permanent_closed",
@@ -54,7 +55,7 @@ class AvailabilitySelectionDialogState extends State<AvailabilitySelectionDialog
           });
           Navigator.of(context).pop("permanent_closed");
         },
-        title: const Text("Dauerhaft geschlossen"),
+        title: Text(tr('report.availability.permanently_closed')),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -63,7 +64,7 @@ class AvailabilitySelectionDialogState extends State<AvailabilitySelectionDialog
             const Spacer(),
             TextButton(
                 onPressed: () => Navigator.of(context).pop(null),
-                child: const Text('Abbrechen'))
+                child: Text(tr('generic.cancel')))
           ],
         ),
       )

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:report/ui/form/availability_selection_dialog.dart';
@@ -43,8 +44,8 @@ class ReportFormPage extends StatelessWidget {
         child: BlocConsumer<ReportFormCubit, ReportFormState>(
             listener: (context, state) {
           if (state is SavedFormReportFormState) {
-            const snackBar = SnackBar(
-              content: Text('Meldung erfolgreich gesendet.'),
+            SnackBar snackBar = SnackBar(
+              content: Text(tr('report.form.sent')),
             );
 
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -55,12 +56,12 @@ class ReportFormPage extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: const Text('Fehler'),
+                    title: Text(tr('generic.error.title')),
                     content: Text(state.errorDetails),
                     actions: <Widget>[
                       TextButton(
                           onPressed: () => Navigator.of(context).pop(true),
-                          child: const Text('Ok')),
+                          child: Text(tr('generic.ok'))),
                     ],
                   );
                 });
@@ -90,7 +91,7 @@ class ReportFormPage extends StatelessWidget {
           }
         }, builder: (context, state) {
           return Scaffold(
-              appBar: AppBar(title: const Text("Fehlerhafte Daten melden")),
+              appBar: AppBar(title: Text(tr('report.title'))),
               body: SafeArea(child: _buildBody(context, state)));
         }));
   }
@@ -102,11 +103,11 @@ class ReportFormPage extends StatelessWidget {
       return Center(
           child: Column(children: [
         const Spacer(),
-        Text("Fehler!", style: Theme.of(context).textTheme.headlineSmall),
+        Text(tr('generic.error.title'), style: Theme.of(context).textTheme.headlineSmall),
         Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(
-              "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+              tr('generic.error.long'),
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             )),
@@ -116,24 +117,24 @@ class ReportFormPage extends StatelessWidget {
                 onPressed: () {
                   context.read<ReportFormCubit>().onRetryClicked();
                 },
-                child: const Text("Wiederholen"))),
+                child: Text(tr('generic.retry.long')))),
         TextButton(
             onPressed: () {
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text('Fehler Details'),
+                      title: Text(tr('generic.error.details.title')),
                       content: Text(state.errorDetails),
                       actions: <Widget>[
                         TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Ok')),
+                            child: Text(tr('generic.ok'))),
                       ],
                     );
                   });
             },
-            child: const Text("Fehler anzeigen")),
+            child: Text(tr('generic.error.details.show'))),
         const Spacer(),
       ]));
     } else if (state is FormReportFormState) {
@@ -143,13 +144,13 @@ class ReportFormPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Allgemein", style: Theme.of(context).textTheme.titleLarge),
+            Text(tr('report.general.title'), style: Theme.of(context).textTheme.titleLarge),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Name",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: tr('report.general.name'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -161,9 +162,9 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Marke (Firmenname)",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: tr('report.general.brand'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -175,12 +176,12 @@ class ReportFormPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 16),
               child: TextFormField(
-                decoration: const InputDecoration(
-                    labelText: "Verfügbarkeit",
+                decoration:  InputDecoration(
+                    labelText: tr('report.availability.title'),
                     errorText: null,
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
-                    suffixIcon: Icon(Icons.arrow_drop_down)),
+                    suffixIcon: const Icon(Icons.arrow_drop_down)),
                 readOnly: true,
                 onTap: () {
                   showDialog(
@@ -201,7 +202,7 @@ class ReportFormPage extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: Text("Addresse",
+                child: Text(tr('report.address.title'),
                     style: Theme.of(context).textTheme.titleLarge)),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
@@ -209,9 +210,9 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 4,
                       child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: "Straße",
-                          border: OutlineInputBorder(),
+                        decoration:  InputDecoration(
+                          labelText: tr('report.address.street'),
+                          border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
                           errorText: null,
                         ),
@@ -226,9 +227,9 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 2,
                       child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: "Hausnummer",
-                          border: OutlineInputBorder(),
+                        decoration:  InputDecoration(
+                          labelText: tr('report.address.house_number'),
+                          border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
                           errorText: null,
                         ),
@@ -246,9 +247,9 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 1,
                       child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: "Postleitszahl",
-                          border: OutlineInputBorder(),
+                        decoration:  InputDecoration(
+                          labelText: tr('report.address.post_code'),
+                          border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
                           errorText: null,
                         ),
@@ -263,9 +264,9 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 2,
                       child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: "Stadt",
-                          border: OutlineInputBorder(),
+                        decoration:  InputDecoration(
+                          labelText: tr('report.address.city'),
+                          border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
                           errorText: null,
                         ),
@@ -280,9 +281,9 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Land",
-                    border: OutlineInputBorder(),
+                  decoration:  InputDecoration(
+                    labelText: tr('report.address.country'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -295,14 +296,14 @@ class ReportFormPage extends StatelessWidget {
                 )),
             Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: Text("Position",
+                child: Text(tr('report.location.title'),
                     style: Theme.of(context).textTheme.titleLarge)),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Latitude",
-                    border: OutlineInputBorder(),
+                  decoration:  InputDecoration(
+                    labelText: tr('report.location.latitude'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -316,9 +317,9 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Longitude",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: tr('report.location.longitude'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -331,14 +332,14 @@ class ReportFormPage extends StatelessWidget {
                 )),
             Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: Text("Preise",
+                child: Text(tr('station.prices.title'),
                     style: Theme.of(context).textTheme.titleLarge)),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "E5",
-                    border: OutlineInputBorder(),
+                  decoration:  InputDecoration(
+                    labelText: tr('station.gas.super_e5'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -350,9 +351,9 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "E10",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: tr('station.gas.super_e10'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -364,9 +365,9 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Diesel",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: tr('station.gas.diesel'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -377,17 +378,17 @@ class ReportFormPage extends StatelessWidget {
                 )),
             Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: Text("Öffnungszeiten",
+                child: Text(tr('station.open_times.title'),
                     style: Theme.of(context).textTheme.titleLarge)),
             Padding(
               padding: const EdgeInsets.only(top: 16),
               child: TextFormField(
-                decoration: const InputDecoration(
-                    labelText: "Aktuell geöffnet?",
+                decoration:  InputDecoration(
+                    labelText: tr('report.open_times.title'),
                     errorText: null,
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
-                    suffixIcon: Icon(Icons.arrow_drop_down)),
+                    suffixIcon: const Icon(Icons.arrow_drop_down)),
                 readOnly: true,
                 onTap: () {
                   showDialog(
@@ -409,9 +410,9 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Öffnungszeiten",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: tr('station.open_times.title'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
                   ),
@@ -423,17 +424,16 @@ class ReportFormPage extends StatelessWidget {
                 )),
             Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: Text("Sonstiges",
+                child: Text(tr('report.misc.title'),
                     style: Theme.of(context).textTheme.titleLarge)),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Anmerkungen",
-                    border: OutlineInputBorder(),
+                  decoration:  InputDecoration(
+                    labelText: tr('report.misc.comment.label'),
+                    border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
-                    helperText:
-                        "Teile uns mit, was bei der Tankstelle das Problem ist.",
+                    helperText: tr('report.misc.comment.hint'),
                     errorText: null,
                   ),
                   maxLines: 7,
@@ -463,7 +463,7 @@ class ReportFormPage extends StatelessWidget {
                                 context.read<ReportFormCubit>().onSaveClicked();
                               }
                             : null,
-                        child: const Text("Senden")),
+                        child: Text(tr('generic.send')))
                   ],
                 )),
           ],

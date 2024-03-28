@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -7,14 +8,16 @@ import 'package:sponsor/ui/offer/cubit/offer_cubit.dart';
 import 'package:sponsor/ui/offer/cubit/offer_state.dart';
 
 class OfferContainer extends StatelessWidget {
+  const OfferContainer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => OfferCubit(),
         child: BlocConsumer<OfferCubit, OfferState>(listener: (context, state) {
           if (state is ErrorPurchaseLoadingOfferState) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Es ist ein Fehler aufgetreten!"),
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(tr('generic.error.short')),
             ));
           } else if (state is PurchasedOffersOfferState) {
             showDialog(
@@ -47,13 +50,14 @@ class OfferContainer extends StatelessWidget {
               child: CircularProgressIndicator()));
     } else if (state is ErrorOfferState) {
       return Padding(
-          padding: EdgeInsets.symmetric(vertical: 32),
+          padding: const EdgeInsets.symmetric(vertical: 32),
           child: Column(children: [
-            Text("Fehler!", style: Theme.of(context).textTheme.headline5),
+            Text(tr('generic.error.title'),
+                style: Theme.of(context).textTheme.headlineSmall),
             Padding(
-                padding: EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  "Es ist ein Fehler aufgetreten. Bitte prüfe deine Internetverbindung oder versuche es später erneut.",
+                  tr('generic.error.long'),
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 )),
@@ -63,83 +67,83 @@ class OfferContainer extends StatelessWidget {
                     onPressed: () {
                       context.read<OfferCubit>().onRetryClicked();
                     },
-                    child: const Text("Wiederholen"))),
+                    child: Text(tr('generic.retry.long')))),
             TextButton(
                 onPressed: () {
                   showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text('Fehler Details'),
+                          title: Text(tr('generic.error.details.title')),
                           content: Text(state.errorDetails.toString()),
                           actions: <Widget>[
                             TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: const Text('Ok')),
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text(tr('generic.ok')),
+                            )
                           ],
                         );
                       });
                 },
-                child: const Text("Fehler anzeigen")),
+                child: Text(tr('generic.error.details.show'))),
           ]));
     } else if (state is OffersOfferState) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         state.isSponsorshipInfoVisible
             ? Padding(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Du unterstützt tankste!",
+                      Text(tr('sponsor.overview.info.sponsorship.title'),
                           textAlign: TextAlign.start,
                           style: Theme.of(context).textTheme.titleLarge),
                       Padding(
-                          padding: EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.only(top: 8),
                           child: Text(
-                              "Ein großes Dankeschön an dich, dass du mir hilfst das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit ${state.sponsoredValue} ausgeholfen, und somit die Weiterentwicklung voran getrieben.",
-                              style: TextStyle(fontSize: 16))),
+                              tr('sponsor.overview.info.sponsorship.description'),
+                              style: const TextStyle(fontSize: 16))),
                       state.activeSubscription != null
                           ? Padding(
-                              padding: EdgeInsets.only(top: 4),
+                              padding: const EdgeInsets.only(top: 4),
                               child: Text(
-                                  "Zur Zeit hast du das Abonnement „${state.activeSubscription}“ aktiv.",
-                                  style: TextStyle(fontSize: 16)))
+                                  tr('sponsor.overview.info.sponsorship.active_subscription',
+                                      args: [state.activeSubscription!]),
+                                  style: const TextStyle(fontSize: 16)))
                           : Container(),
                       Padding(
-                          padding: EdgeInsets.only(top: 4),
+                          padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                              "Du wirst weiter unten als Sponsor gelistet. Du kannst einen Namen angeben, und zusätzlich einen Kommentar hinterlassen. Diese Angaben sind für alle Nutzer sichtbar.",
-                              style: TextStyle(fontSize: 16))),
+                              tr('sponsor.overview.info.sponsorship.comment_hint'),
+                              style: const TextStyle(fontSize: 16))),
                     ]))
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                    child: Text("tankste! braucht dich!",
+                    padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                    child: Text(tr('sponsor.overview.info.new.title'),
                         textAlign: TextAlign.start,
                         style: Theme.of(context).textTheme.titleLarge),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 8, left: 16, right: 16),
-                    child: Text(
-                        "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft kostenlos und werbefrei!",
-                        style: TextStyle(fontSize: 16)),
+                    padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
+                    child: Text(tr('sponsor.overview.info.new.description'),
+                        style: const TextStyle(fontSize: 16)),
                   ),
                   //TODO: add more information link
                 ],
               ),
         state.items.isNotEmpty
             ? Padding(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                 child: Text(state.title,
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.titleLarge),
               )
             : Container(),
         ...state.items.map((item) => Padding(
-            padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -157,7 +161,7 @@ class OfferContainer extends StatelessWidget {
                                 .titleLarge
                                 ?.copyWith(color: Colors.white)),
                         Padding(
-                            padding: EdgeInsets.only(left: 4),
+                            padding: const EdgeInsets.only(left: 4),
                             child: Text(item.labelType,
                                 style: Theme.of(context)
                                     .textTheme
@@ -166,7 +170,7 @@ class OfferContainer extends StatelessWidget {
                       ]),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(left: 4),
+                    padding: const EdgeInsets.only(left: 4),
                     child: Text(item.hint,
                         style: Theme.of(context).textTheme.bodySmall)),
               ],
@@ -174,12 +178,12 @@ class OfferContainer extends StatelessWidget {
         state.items.isNotEmpty && Platform.isIOS
             ? Center(
                 child: Padding(
-                    padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
                     child: TextButton(
                         onPressed: () {
                           context.read<OfferCubit>().onRestoreClicked();
                         },
-                        child: Text("Restore purchases"))))
+                        child: Text(tr('sponsor.overview.restore')))))
             : Container(),
         //TODO: add later more options to sponsor
         // Center(

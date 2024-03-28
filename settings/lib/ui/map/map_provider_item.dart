@@ -1,12 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:settings/model/map_destination_model.dart';
 import 'package:settings/model/map_provider_model.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_cubit.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_state.dart';
 import 'package:settings/ui/navigation/cubit/map_destination_item_cubit.dart';
-import 'package:settings/ui/navigation/cubit/map_destination_item_state.dart';
-import 'package:settings/ui/navigation/map_destination_selection_dialog.dart';
 
 class MapProviderItem extends StatelessWidget {
   const MapProviderItem({Key? key}) : super(key: key);
@@ -19,7 +17,7 @@ class MapProviderItem extends StatelessWidget {
             listener: (context, state) {
           if (state is SaveErrorMapProviderItemState) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Ein Fehler ist aufgetreten"),
+              content: Text(tr('generic.error.short')),
             ));
           }
         }, builder: (context, state) {
@@ -29,10 +27,10 @@ class MapProviderItem extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, MapProviderItemState state) {
     if (state is LoadingMapProviderItemState) {
-      return const ListTile(
+      return ListTile(
           minLeadingWidth: 10,
           leading: Icon(Icons.map),
-          title: Text("Kartenanbieter"),
+          title: Text(tr('settings.app.map_provider.title')),
           subtitle: Text("..."));
     } else if (state is ErrorMapProviderItemState) {
       return ListTile(
@@ -41,9 +39,9 @@ class MapProviderItem extends StatelessWidget {
           },
           minLeadingWidth: 10,
           leading: const Icon(Icons.map),
-          title: const Text("Kartenanbieter"),
+          title: Text(tr('settings.app.map_provider.title')),
           subtitle:
-              Text("Es ist ein Fehler aufgetreten! Zum Wiederholen klicken."));
+              Text(tr('settings.app.map_provider.error')));
     } else if (state is ProvidersMapProviderItemState) {
       return ListTile(
           onTap: () {
@@ -51,7 +49,7 @@ class MapProviderItem extends StatelessWidget {
           },
           minLeadingWidth: 10,
           leading: const Icon(Icons.map),
-          title: const Text("Kartenanbieter"),
+          title: Text(tr('settings.app.map_provider.title')),
           subtitle: Text(state.selectedProvider.item2));
     }
 
@@ -64,7 +62,7 @@ class MapProviderItem extends StatelessWidget {
         context: context,
         builder: (ctx) {
           return SimpleDialog(
-              title: const Text("Kartenanbieter"),
+              title: Text(tr('settings.app.map_provider.title')),
               children: state.availableProviders.entries
                       .map<Widget>((provider) => RadioListTile<MapProvider>(
                             title: Text(provider.value),
@@ -89,7 +87,7 @@ class MapProviderItem extends StatelessWidget {
                           const Spacer(),
                           TextButton(
                               onPressed: () => Navigator.of(context).pop(null),
-                              child: const Text('Abbrechen'))
+                              child: Text(tr('generic.cancel')))
                         ],
                       ),
                     )

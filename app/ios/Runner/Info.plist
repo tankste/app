@@ -78,5 +78,11 @@
 	<string>$(GOOGLE_MAPS_KEY)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>CFBundleLocalizations</key>
+    <array>
+        <string>de</string>
+        <string>en</string>
+        <string>is</string>
+    </array>
 </dict>
 </plist>
