@@ -16,14 +16,9 @@ class TanksteWebPriceRepository extends PriceRepository {
   static final TanksteWebPriceRepository _instance =
       TanksteWebPriceRepository._internal();
 
-  late CurrencyRepository _currencyRepository;
   late ConfigRepository _configRepository;
 
-  factory TanksteWebPriceRepository(
-  CurrencyRepository currencyRepository,
-      ConfigRepository configRepository
-      ) {
-    _instance._currencyRepository = currencyRepository;
+  factory TanksteWebPriceRepository(ConfigRepository configRepository) {
     _instance._configRepository = configRepository;
     return _instance;
   }
@@ -38,8 +33,6 @@ class TanksteWebPriceRepository extends PriceRepository {
 
   Future<Result<List<PriceModel>, Exception>> _listAsync(int stationId) async {
     try {
-      List<CurrencyModel> currencies = (await _currencyRepository.list().first).tryGetSuccess()!;
-
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
       if (configResult.isError()) {
@@ -56,7 +49,7 @@ class TanksteWebPriceRepository extends PriceRepository {
 
         List<PriceModel> prices = jsonResponse
             .map((e) => PriceDto.fromJson(e))
-            .map((dto) => dto.toModel(currencies))
+            .map((dto) => dto.toModel())
             .toList();
 
         return Result.success(prices);

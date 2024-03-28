@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:station/di/station_module_factory.dart';
-import 'package:station/model/currency_model.dart';
 import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
+import 'package:station/model/station_model.dart';
 import 'package:station/repository/open_time_repository.dart';
 import 'package:station/repository/origin_repository.dart';
 import 'package:station/repository/price_repository.dart';
@@ -60,7 +60,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
                         ?.iconImageUrl
                         .toString() ??
                     "",
-                prices: _genPricesList(prices),
+                prices: _genPricesList(station, prices),
                 lastPriceUpdate: _genPriceUpdate(prices),
                 openTimes: _genOpenTimeList(openTimes),
                 openTimesOriginIconUrl: origins
@@ -111,18 +111,18 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     _fetchStation();
   }
 
-  List<Price> _genPricesList(List<PriceModel> prices) {
+  List<Price> _genPricesList(StationModel station, List<PriceModel> prices) {
     List<Price?> items = [];
 
-    items.add(_genPriceItem(FuelType.e5, prices));
-    items.add(_genPriceItem(FuelType.e10, prices));
-    items.add(_genPriceItem(FuelType.diesel, prices));
+    items.add(_genPriceItem(station, FuelType.e5, prices));
+    items.add(_genPriceItem(station, FuelType.e10, prices));
+    items.add(_genPriceItem(station, FuelType.diesel, prices));
 
     return items.whereNotNull().toList();
   }
 
   //TODO: should show not available prices, or hide completely?
-  Price? _genPriceItem(FuelType fuelType, List<PriceModel> prices) {
+  Price? _genPriceItem(StationModel station, FuelType fuelType, List<PriceModel> prices) {
     String fuelLabel = "";
     bool isSelected = false;
     switch (fuelType) {
@@ -139,7 +139,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         isSelected = activeGasPriceFilter == "diesel";
         break;
       default:
-        fuelLabel = tr('generic.unknown');;
+        fuelLabel = tr('generic.unknown');
     }
 
     PriceModel? price = prices.firstWhereOrNull((p) => p.fuelType == fuelType);
@@ -151,33 +151,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     return Price(
         fuel: fuelLabel,
         isHighlighted: isSelected,
-        price: PriceFormat.formatPrice(price, true),
+        price: PriceFormat.format(price.price, station.currency, true),
         originIconUrl: "");
-  }
-
-  String _priceText(double price) {
-    String priceText;
-    if (price == 0) {
-      priceText = "-,--\u{207B}";
-    } else {
-      priceText = price.toStringAsFixed(3).replaceAll('.', ',');
-    }
-
-    if (priceText.length == 5) {
-      priceText = priceText
-          .replaceFirst('0', '\u{2070}', 4)
-          .replaceFirst('1', '\u{00B9}', 4)
-          .replaceFirst('2', '\u{00B2}', 4)
-          .replaceFirst('3', '\u{00B3}', 4)
-          .replaceFirst('4', '\u{2074}', 4)
-          .replaceFirst('5', '\u{2075}', 4)
-          .replaceFirst('6', '\u{2076}', 4)
-          .replaceFirst('7', '\u{2077}', 4)
-          .replaceFirst('8', '\u{2078}', 4)
-          .replaceFirst('9', '\u{2079}', 4);
-    }
-
-    return "$priceText €";
   }
 
   List<OpenTime> _genOpenTimeList(List<OpenTimeModel> openTimes) {

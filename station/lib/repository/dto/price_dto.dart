@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-import 'package:station/model/currency_model.dart';
 import 'package:station/model/price_model.dart';
 
 class PriceDto {
@@ -7,7 +5,6 @@ class PriceDto {
   final int? originId;
   final String? type;
   final double? price;
-  final String? currency;
   final String? lastChangedDate;
 
   PriceDto({
@@ -15,7 +12,6 @@ class PriceDto {
     required this.originId,
     required this.type,
     required this.price,
-    required this.currency,
     required this.lastChangedDate,
   });
 
@@ -25,7 +21,6 @@ class PriceDto {
       originId: parsedJson['originId'],
       type: parsedJson['type'],
       price: parsedJson['price'],
-      currency: parsedJson['currency'],
       lastChangedDate: parsedJson['lastChangesAt'],
     );
   }
@@ -36,7 +31,6 @@ class PriceDto {
       'originId': originId,
       'type': type,
       'price': price,
-      'currency': currency,
       'lastChangedDate': lastChangedDate,
     };
   }
@@ -47,19 +41,18 @@ class PriceDto {
       originId: model.originId,
       type: _fuelTypeToJson(model.fuelType),
       price: model.price,
-      currency: model.currency.currency.name,
       lastChangedDate: model.lastChangedDate?.toIso8601String(),
     );
   }
 
-  PriceModel toModel(List<CurrencyModel> currencies) {
+  PriceModel toModel() {
     return PriceModel(
       id: id ?? -1,
       originId: originId ?? -1,
       fuelType: _parseFuelType(type),
       price: price ?? -1,
-      currency: currencies.firstWhereOrNull((c) => c.currency.name == currency) ?? CurrencyModel.unknown(),
-      lastChangedDate: lastChangedDate != null ? DateTime.parse(lastChangedDate!) : null,
+      lastChangedDate:
+          lastChangedDate != null ? DateTime.parse(lastChangedDate!) : null,
     );
   }
 
@@ -91,6 +84,6 @@ class PriceDto {
 
   @override
   String toString() {
-    return 'PriceDto{id: $id, type: $type, price: $price, currency: $currency, lastChangedDate: $lastChangedDate}';
+    return 'PriceDto{id: $id, type: $type, price: $price, lastChangedDate: $lastChangedDate}';
   }
 }

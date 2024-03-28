@@ -1,14 +1,19 @@
 
 import 'package:station/model/currency_model.dart';
+import 'package:station/model/marker_model.dart';
 import 'package:station/model/price_model.dart';
 
 class PriceFormat {
 
-  static String formatPrice(PriceModel price, bool withCurrencySymbol) {
-    return formatValue(price.price, price.currency, withCurrencySymbol);
-  }
+  // static String formatPrice(PriceModel price, bool withCurrencySymbol) {
+  //   return formatValue(price.price, price.currency, withCurrencySymbol);
+  // }
 
-  static String formatValue(double price, CurrencyModel currency, bool withCurrencySymbol) {
+  // static String formatMarkerPrice(MarkerPrice price, bool withCurrencySymbol) {
+  //   return formatValue(price.price, price.currency, withCurrencySymbol);
+  // }
+
+  static String format(double price, CurrencyModel currency, bool withCurrencySymbol) {
     if (currency.currency == CurrencyType.eur) {
       return _formatThreeDecimal(price, withCurrencySymbol ? currency.symbol : null);
     }

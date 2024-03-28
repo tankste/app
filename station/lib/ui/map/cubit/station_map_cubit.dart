@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:collection/collection.dart';
 import 'package:core/log/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,11 +17,15 @@ import 'package:settings/di/settings_module_factory.dart';
 import 'package:settings/model/permission_model.dart';
 import 'package:settings/repository/permission_repository.dart';
 import 'package:station/di/station_module_factory.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/marker_model.dart';
+import 'package:station/model/price_model.dart';
+import 'package:station/repository/currency_repository.dart';
 import 'package:station/repository/marker_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
+import 'package:station/ui/price_format.dart';
 
 final CameraPosition initialCameraPosition =
     CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
@@ -35,6 +40,8 @@ final CameraPosition initialCameraPosition =
 class StationMapCubit extends Cubit<StationMapState>
     with WidgetsBindingObserver {
   final double _minZoom = 10.5;
+  final CurrencyRepository _currencyRepository =
+      StationModuleFactory.createCurrencyRepository();
   final MarkerRepository _markerRepository =
       StationModuleFactory.createMarkerRepository();
   final PermissionRepository _permissionRepository =
@@ -46,6 +53,7 @@ class StationMapCubit extends Cubit<StationMapState>
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
   CameraPosition _position = initialCameraPosition;
   CameraPosition? _lastRequestPosition;
+  CurrencyModel? _homeCurrency;
   Filter? _filter;
   DateTime? _lastRequestTime;
   Future? _stationRequest;
@@ -62,7 +70,14 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void _init() {
-    _fetchInitGasFilter().then((_) => _moveToInitPosition());
+    _currencyRepository.getSelected().listen((result) {
+      result.when((currency) {
+        _homeCurrency = currency;
+        _fetchInitGasFilter().then((_) => _moveToInitPosition());
+      }, (error) {
+        emit(ErrorStationMapState(errorDetails: error.toString()));
+      });
+    });
   }
 
   //TODO: outsource to repository
@@ -144,7 +159,7 @@ class StationMapCubit extends Cubit<StationMapState>
           result.when((markers) {
             Future.wait(markers.map((marker) async => MarkerAnnotation(
                 id:
-                    "${marker.id}-${filter.gas}#${Object.hash(marker.e5Price, marker.e5PriceState, marker.e10Price, marker.e10PriceState, marker.dieselPrice, marker.dieselPriceState, showLabelMarkers ? "label" : "dot")}",
+                    "${marker.id}-${filter.gas}#${Object.hash(marker.prices, showLabelMarkers ? "label" : "dot")}",
                 marker: marker,
                 icon: await _genMarkerBitmap(
                     marker, showLabelMarkers)))).then((markers) {
@@ -462,52 +477,31 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   Future<ByteData> _genDotMarkerBitmap(MarkerModel marker) async {
-    String path;
-
+    MarkerPrice? markerPrice;
     if (_filter?.gas == "e5") {
-      switch (marker.e5PriceState) {
-        case PriceState.expensive:
-          path = 'assets/images/markers/red.png';
-          break;
-        case PriceState.medium:
-          path = 'assets/images/markers/orange.png';
-          break;
-        case PriceState.cheap:
-          path = 'assets/images/markers/green.png';
-          break;
-        default:
-          path = 'assets/images/markers/grey.png';
-      }
+      markerPrice =
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e5);
     } else if (_filter?.gas == "e10") {
-      switch (marker.e10PriceState) {
-        case PriceState.expensive:
-          path = 'assets/images/markers/red.png';
-          break;
-        case PriceState.medium:
-          path = 'assets/images/markers/orange.png';
-          break;
-        case PriceState.cheap:
-          path = 'assets/images/markers/green.png';
-          break;
-        default:
-          path = 'assets/images/markers/grey.png';
-      }
+      markerPrice =
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e10);
     } else if (_filter?.gas == "diesel") {
-      switch (marker.dieselPriceState) {
-        case PriceState.expensive:
-          path = 'assets/images/markers/red.png';
-          break;
-        case PriceState.medium:
-          path = 'assets/images/markers/orange.png';
-          break;
-        case PriceState.cheap:
-          path = 'assets/images/markers/green.png';
-          break;
-        default:
-          path = 'assets/images/markers/grey.png';
-      }
-    } else {
-      path = 'assets/images/markers/grey.png';
+      markerPrice =
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);
+    }
+
+    String path;
+    switch (markerPrice?.state) {
+      case PriceState.expensive:
+        path = 'assets/images/markers/red.png';
+        break;
+      case PriceState.medium:
+        path = 'assets/images/markers/orange.png';
+        break;
+      case PriceState.cheap:
+        path = 'assets/images/markers/green.png';
+        break;
+      default:
+        path = 'assets/images/markers/grey.png';
     }
 
     String resolutionName = await AssetImage(path)
@@ -518,6 +512,18 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   Future<ByteData> _genLabelMarkerBitmap(MarkerModel marker) async {
+    MarkerPrice? markerPrice;
+    if (_filter?.gas == "e5") {
+      markerPrice =
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e5);
+    } else if (_filter?.gas == "e10") {
+      markerPrice =
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e10);
+    } else if (_filter?.gas == "diesel") {
+      markerPrice =
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);
+    }
+
     double ratio = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
         .devicePixelRatio;
 
@@ -525,7 +531,7 @@ class StationMapCubit extends Cubit<StationMapState>
     double padding = 1.6 * ratio;
     double textPadding = 3.2 * ratio;
     double triangleSize = 8.0 * ratio;
-    double maxWidth = 51.2 * ratio;
+    double maxWidth = 54.2 * ratio;
     double brandFontSize = 8.0 * ratio;
     double priceFontSize = 14.4 * ratio;
 
@@ -545,37 +551,14 @@ class StationMapCubit extends Cubit<StationMapState>
                   : marker.label))
             .build();
 
-    String priceText;
-
-    double? price;
-    if (_filter?.gas == "e5") {
-      price = marker.e5Price;
-    } else if (_filter?.gas == "e10") {
-      price = marker.e10Price;
-    } else if (_filter?.gas == "diesel") {
-      price = marker.dieselPrice;
-    } else {
-      price = null;
-    }
-
-    if (price == null || price == 0) {
-      priceText = "-,--\u{207B}";
-    } else {
-      priceText = price.toStringAsFixed(3).replaceAll('.', ',');
-    }
-
-    if (priceText.length == 5) {
-      priceText = priceText
-          .replaceFirst('0', '\u{2070}', 4)
-          .replaceFirst('1', '\u{00B9}', 4)
-          .replaceFirst('2', '\u{00B2}', 4)
-          .replaceFirst('3', '\u{00B3}', 4)
-          .replaceFirst('4', '\u{2074}', 4)
-          .replaceFirst('5', '\u{2075}', 4)
-          .replaceFirst('6', '\u{2076}', 4)
-          .replaceFirst('7', '\u{2077}', 4)
-          .replaceFirst('8', '\u{2078}', 4)
-          .replaceFirst('9', '\u{2079}', 4);
+    String priceText = PriceFormat.format(
+        marker.currency.convertTo(markerPrice?.price ?? 0.0,
+                _homeCurrency?.currency ?? CurrencyType.unknown) ??
+            0.0,
+        _homeCurrency ?? CurrencyModel.unknown(),
+        false);
+    if (marker.currency.currency != _homeCurrency?.currency) {
+      priceText = "≈$priceText";
     }
 
     var priceParagraph =
@@ -594,50 +577,18 @@ class StationMapCubit extends Cubit<StationMapState>
 
     // Create background rect
     final backgroundPaint = Paint();
-    if (_filter?.gas == "e5") {
-      switch (marker.e5PriceState) {
-        case PriceState.expensive:
-          backgroundPaint.color = Colors.red;
-          break;
-        case PriceState.medium:
-          backgroundPaint.color = Colors.orange;
-          break;
-        case PriceState.cheap:
-          backgroundPaint.color = Colors.green;
-          break;
-        default:
-          backgroundPaint.color = Colors.grey;
-      }
-    } else if (_filter?.gas == "e10") {
-      switch (marker.e10PriceState) {
-        case PriceState.expensive:
-          backgroundPaint.color = Colors.red;
-          break;
-        case PriceState.medium:
-          backgroundPaint.color = Colors.orange;
-          break;
-        case PriceState.cheap:
-          backgroundPaint.color = Colors.green;
-          break;
-        default:
-          backgroundPaint.color = Colors.grey;
-      }
-    } else if (_filter?.gas == "diesel") {
-      switch (marker.dieselPriceState) {
-        case PriceState.expensive:
-          backgroundPaint.color = Colors.red;
-          break;
-        case PriceState.medium:
-          backgroundPaint.color = Colors.orange;
-          break;
-        case PriceState.cheap:
-          backgroundPaint.color = Colors.green;
-          break;
-        default:
-          backgroundPaint.color = Colors.grey;
-      }
-    } else {
-      backgroundPaint.color = Colors.grey;
+    switch (markerPrice?.state) {
+      case PriceState.expensive:
+        backgroundPaint.color = Colors.red;
+        break;
+      case PriceState.medium:
+        backgroundPaint.color = Colors.orange;
+        break;
+      case PriceState.cheap:
+        backgroundPaint.color = Colors.green;
+        break;
+      default:
+        backgroundPaint.color = Colors.grey;
     }
 
     final labelHeight = padding +

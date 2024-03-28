@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:station/model/config_model.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/marker_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:station/repository/config_repository.dart';
+import 'package:station/repository/currency_repository.dart';
 import 'package:station/repository/dto/marker_dto.dart';
 
 abstract class MarkerRepository {
@@ -18,9 +19,12 @@ class TanksteWebMarkerRepository extends MarkerRepository {
   static final TanksteWebMarkerRepository _instance =
       TanksteWebMarkerRepository._internal();
 
+  late CurrencyRepository _currencyRepository;
   late ConfigRepository _configRepository;
 
-  factory TanksteWebMarkerRepository(ConfigRepository configRepository) {
+  factory TanksteWebMarkerRepository(CurrencyRepository currencyRepository,
+      ConfigRepository configRepository) {
+    _instance._currencyRepository = currencyRepository;
     _instance._configRepository = configRepository;
     return _instance;
   }
@@ -38,6 +42,9 @@ class TanksteWebMarkerRepository extends MarkerRepository {
   Future<Result<List<MarkerModel>, Exception>> _listAsync(
       List<CoordinateModel> coordinates) async {
     try {
+      List<CurrencyModel> currencies =
+          (await _currencyRepository.list().first).tryGetSuccess()!;
+
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
       if (configResult.isError()) {
@@ -58,7 +65,7 @@ class TanksteWebMarkerRepository extends MarkerRepository {
 
         List<MarkerModel> markers = jsonResponse
             .map((e) => MarkerDto.fromJson(e))
-            .map((dto) => dto.toModel())
+            .map((dto) => dto.toModel(currencies))
             .toList();
 
         return Result.success(markers);

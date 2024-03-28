@@ -1,5 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:navigation/coordinate_model.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/marker_model.dart';
+import 'package:station/model/price_model.dart';
 
 class MarkerDto {
   final int? id;
@@ -13,6 +16,7 @@ class MarkerDto {
   final String? e10PriceState;
   final double? dieselPrice;
   final String? dieselPriceState;
+  final String? currency;
 
   MarkerDto({
     this.id,
@@ -26,6 +30,7 @@ class MarkerDto {
     this.e10PriceState,
     this.dieselPrice,
     this.dieselPriceState,
+    this.currency,
   });
 
   factory MarkerDto.fromJson(Map<String, dynamic> parsedJson) {
@@ -41,57 +46,38 @@ class MarkerDto {
       e10PriceState: parsedJson['e10PriceState'],
       dieselPrice: parsedJson['dieselPrice'],
       dieselPriceState: parsedJson['dieselPriceState'],
+      currency: parsedJson['currency'],
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'stationId': stationId,
-      'label': label,
-      'latitude': latitude,
-      'longitude': longitude,
-      'e5Price': e5Price,
-      'e5PriceState': e5PriceState,
-      'e10Price': e10Price,
-      'e10PriceState': e10PriceState,
-      'dieselPrice': dieselPrice,
-      'dieselPriceState': dieselPriceState,
-    };
-  }
-
-  factory MarkerDto.fromModel(MarkerModel model) {
-    return MarkerDto(
-      id: model.id,
-      stationId: model.stationId,
-      label: model.label,
-      latitude: model.coordinate.latitude,
-      longitude: model.coordinate.longitude,
-      e5Price: model.e5Price,
-      e5PriceState: model.e5PriceState.toString(),
-      e10Price: model.e10Price,
-      e10PriceState: model.e10PriceState.toString(),
-      dieselPrice: model.dieselPrice,
-      dieselPriceState: model.dieselPriceState.toString(),
-    );
-  }
-
-  MarkerModel toModel() {
+  MarkerModel toModel(List<CurrencyModel> currencies) {
     return MarkerModel(
-      id: id ?? -1,
-      stationId: stationId ?? -1,
-      label: label ?? "",
-      coordinate: CoordinateModel(
-        latitude: latitude ?? 0.0,
-        longitude: longitude ?? 0.0,
-      ),
-      e5Price: e5Price ?? 0.0,
-      e5PriceState: _parsePriceState(e5PriceState),
-      e10Price: e10Price ?? 0.0,
-      e10PriceState: _parsePriceState(e10PriceState),
-      dieselPrice: dieselPrice ?? 0.0,
-      dieselPriceState: _parsePriceState(dieselPriceState),
-    );
+        id: id ?? -1,
+        stationId: stationId ?? -1,
+        label: label ?? "",
+        coordinate: CoordinateModel(
+          latitude: latitude ?? 0.0,
+          longitude: longitude ?? 0.0,
+        ),
+        prices: [
+          MarkerPrice(
+              fuelType: FuelType.e5,
+              price: e5Price ?? 0.0,
+              state: _parsePriceState(e5PriceState)),
+          MarkerPrice(
+            fuelType: FuelType.e10,
+            price: e10Price ?? 0.0,
+            state: _parsePriceState(e10PriceState),
+          ),
+          MarkerPrice(
+            fuelType: FuelType.diesel,
+            price: dieselPrice ?? 0.0,
+            state: _parsePriceState(dieselPriceState),
+          ),
+        ],
+        currency:
+            currencies.firstWhereOrNull((c) => c.currency.name == currency) ??
+                CurrencyModel.unknown());
   }
 
   PriceState _parsePriceState(String? value) {
@@ -111,6 +97,6 @@ class MarkerDto {
 
   @override
   String toString() {
-    return 'MarkerDto{id: $id, stationId: $stationId, label: $label, latitude: $latitude, longitude: $longitude, e5Price: $e5Price, e5PriceState: $e5PriceState, e10Price: $e10Price, e10PriceState: $e10PriceState, dieselPrice: $dieselPrice, dieselPriceState: $dieselPriceState}';
+    return 'MarkerDto{id: $id, stationId: $stationId, label: $label, latitude: $latitude, longitude: $longitude, e5Price: $e5Price, e5PriceState: $e5PriceState, e10Price: $e10Price, e10PriceState: $e10PriceState, dieselPrice: $dieselPrice, dieselPriceState: $dieselPriceState, currency: $currency}';
   }
 }

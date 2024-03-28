@@ -9,16 +9,17 @@ import 'package:core/di/core_module_factory.dart';
 
 class StationModuleFactory {
   static MarkerRepository createMarkerRepository() {
-    return TanksteWebMarkerRepository(createConfigRepository());
+    return TanksteWebMarkerRepository(
+        createCurrencyRepository(), createConfigRepository());
   }
 
   static StationRepository createStationRepository() {
-    return TanksteWebStationRepository(createConfigRepository());
+    return TanksteWebStationRepository(
+        createCurrencyRepository(), createConfigRepository());
   }
 
   static PriceRepository createPriceRepository() {
-    return TanksteWebPriceRepository(
-        createCurrencyRepository(), createConfigRepository());
+    return TanksteWebPriceRepository(createConfigRepository());
   }
 
   static OpenTimeRepository createOpenTimeRepository() {
