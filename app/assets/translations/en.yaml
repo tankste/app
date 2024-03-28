@@ -34,6 +34,18 @@ generic:
       long: "{} Minutes"
   send: Send
   system_default: System default
+  currency:
+    default: eur
+    eur:
+      label: Euro
+    chf:
+      label: Swiss francs
+    dkk:
+      label: Danish krone
+    pln:
+      label: Złoty
+    isk:
+      label: Icelandic krona
 
 sponsor:
   overview:
@@ -72,6 +84,7 @@ sponsor:
 
 settings:
   title: Settings
+  item_error: Something went wrong! Click for retry.
   app:
     title: App
     design:
@@ -83,9 +96,10 @@ settings:
       map_libre: MapLibre
       google_maps: Google Maps
       apple_maps: Apple Maps
-      error: Something went wrong! Click for retry.
     navigation_map:
       title: Start navigations with…
+    currency:
+      title: Home currency
   open_source:
     title: Support us
     sponsor:

@@ -34,6 +34,18 @@ generic:
       long: "{} Minuten"
   send: Senden
   system_default: Systemstandard
+  currency:
+    default: eur
+    eur:
+      label: Euro
+    chf:
+      label: Schweizer Franken
+    dkk:
+      label: Dänische Krone
+    pln:
+      label: Złoty
+    isk:
+      label: Isländische Krone
 
 sponsor:
   overview:
@@ -86,6 +98,8 @@ settings:
       error: Es ist ein Fehler aufgetreten! Zum Wiederholen klicken.
     navigation_map:
       title: Navigation starten mit…
+    currency:
+      title: Heimatwährung
   open_source:
     title: Unterstütze uns
     sponsor:

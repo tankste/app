@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:settings/ui/currency/currency_item.dart';
 import 'package:settings/ui/developer/developer_card.dart';
 import 'package:settings/ui/map/map_provider_item.dart';
 import 'package:settings/ui/navigation/map_destination_item.dart';
@@ -34,9 +35,12 @@ class SettingsPage extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     return [
-      SettingsCard(
-          title: tr('settings.app.title'),
-          items: [ThemeItem(), MapProviderItem(), MapDestinationItem()]),
+      SettingsCard(title: tr('settings.app.title'), items: [
+        ThemeItem(),
+        MapProviderItem(),
+        MapDestinationItem(),
+        CurrencyItem()
+      ]),
       SettingsCard(title: tr('settings.open_source.title'), items: [
         ListTile(
           onTap: () {
@@ -50,7 +54,8 @@ class SettingsPage extends StatelessWidget {
         ),
         ListTile(
           onTap: () {
-            _openUrl("https://translation.liveyourproject.com/projects/tankste/");
+            _openUrl(
+                "https://translation.liveyourproject.com/projects/tankste/");
           },
           minLeadingWidth: 8,
           leading: const Icon(Icons.translate),
