@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
 import 'package:station/model/config_model.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/repository/config_repository.dart';
+import 'package:station/repository/currency_repository.dart';
 import 'package:station/repository/dto/price_dto.dart';
 
 abstract class PriceRepository {
@@ -14,9 +16,14 @@ class TanksteWebPriceRepository extends PriceRepository {
   static final TanksteWebPriceRepository _instance =
       TanksteWebPriceRepository._internal();
 
+  late CurrencyRepository _currencyRepository;
   late ConfigRepository _configRepository;
 
-  factory TanksteWebPriceRepository(ConfigRepository configRepository) {
+  factory TanksteWebPriceRepository(
+  CurrencyRepository currencyRepository,
+      ConfigRepository configRepository
+      ) {
+    _instance._currencyRepository = currencyRepository;
     _instance._configRepository = configRepository;
     return _instance;
   }
@@ -31,6 +38,8 @@ class TanksteWebPriceRepository extends PriceRepository {
 
   Future<Result<List<PriceModel>, Exception>> _listAsync(int stationId) async {
     try {
+      List<CurrencyModel> currencies = (await _currencyRepository.list().first).tryGetSuccess()!;
+
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
       if (configResult.isError()) {
@@ -47,7 +56,7 @@ class TanksteWebPriceRepository extends PriceRepository {
 
         List<PriceModel> prices = jsonResponse
             .map((e) => PriceDto.fromJson(e))
-            .map((dto) => dto.toModel())
+            .map((dto) => dto.toModel(currencies))
             .toList();
 
         return Result.success(prices);

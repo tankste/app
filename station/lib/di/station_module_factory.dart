@@ -17,7 +17,8 @@ class StationModuleFactory {
   }
 
   static PriceRepository createPriceRepository() {
-    return TanksteWebPriceRepository(createConfigRepository());
+    return TanksteWebPriceRepository(
+        createCurrencyRepository(), createConfigRepository());
   }
 
   static OpenTimeRepository createOpenTimeRepository() {

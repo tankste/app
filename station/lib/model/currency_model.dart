@@ -5,6 +5,14 @@ class CurrencyModel {
 
   CurrencyModel({required this.currency, required this.symbol, required this.label});
 
+  factory CurrencyModel.unknown() {
+    return CurrencyModel(
+      currency: CurrencyType.unknown,
+      symbol: "?",
+      label: "Unknown",
+    );
+  }
+
   @override
   String toString() {
     return 'CurrencyModel{currency: $currency, symbol: $symbol, label: $label}';

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:station/di/station_module_factory.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/repository/open_time_repository.dart';
@@ -11,6 +12,7 @@ import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/repository/station_repository.dart';
 import 'package:rxdart/streams.dart';
 import 'package:collection/collection.dart';
+import 'package:station/ui/price_format.dart';
 
 class StationDetailsCubit extends Cubit<StationDetailsState> {
   final int stationId;
@@ -140,11 +142,16 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         fuelLabel = tr('generic.unknown');;
     }
 
+    PriceModel? price = prices.firstWhereOrNull((p) => p.fuelType == fuelType);
+    //TODO: change this, while closed station then will have NO PRICES
+    if (price == null) {
+      return null;
+    }
+
     return Price(
         fuel: fuelLabel,
         isHighlighted: isSelected,
-        price: _priceText(
-            prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ?? 0),
+        price: PriceFormat.formatPrice(price, true),
         originIconUrl: "");
   }
 
