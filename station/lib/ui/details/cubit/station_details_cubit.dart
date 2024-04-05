@@ -121,7 +121,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     _fetchStation();
   }
 
-  List<Price> _genPricesList(StationModel station, CurrencyModel homeCurrency, List<PriceModel> prices) {
+  List<Price> _genPricesList(StationModel station, CurrencyModel homeCurrency,
+      List<PriceModel> prices) {
     List<Price?> items = [];
 
     items.add(_genPriceItem(station, homeCurrency, FuelType.e5, prices));
@@ -132,7 +133,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   }
 
   //TODO: should show not available prices, or hide completely?
-  Price? _genPriceItem(StationModel station, CurrencyModel homeCurrency, FuelType fuelType, List<PriceModel> prices) {
+  Price? _genPriceItem(StationModel station, CurrencyModel homeCurrency,
+      FuelType fuelType, List<PriceModel> prices) {
     String fuelLabel = "";
     bool isSelected = false;
     switch (fuelType) {
@@ -166,7 +168,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     if (station.currency.currency != homeCurrency.currency) {
       homePriceText = "≈$homePriceText";
 
-      originalPriceText = "(${PriceFormat.format(price.price, station.currency, true)})";
+      originalPriceText =
+          "(${PriceFormat.format(price.price, station.currency, true)})";
     }
 
     return Price(

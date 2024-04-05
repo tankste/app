@@ -36,44 +36,43 @@ class LocalCurrencyRepository extends CurrencyRepository {
           exchangeRates: {
             CurrencyType.eur: 1.0,
             CurrencyType.isk: 150.3,
-            CurrencyType.chf: 0.97,
-            CurrencyType.pln: 4.31,
-            CurrencyType.dkk: 7.46
-          }
-        ),
-      CurrencyModel(
-          currency: CurrencyType.chf,
-          symbol: "Fr",
-          label: tr('generic.currency.chf.label'),
-          exchangeRates: {
-            CurrencyType.eur: 0,
-            CurrencyType.isk: 0,
-            CurrencyType.chf: 1.0,
-            CurrencyType.pln: 0,
-            CurrencyType.dkk: 0,
+            // CurrencyType.chf: 0.97,
+            // CurrencyType.pln: 4.31,
+            // CurrencyType.dkk: 7.46
           }),
-      CurrencyModel(
-          currency: CurrencyType.dkk,
-          symbol: "dkr",
-          label: tr('generic.currency.dkk.label'),
-          exchangeRates: {
-            CurrencyType.eur: 0,
-            CurrencyType.isk: 0,
-            CurrencyType.chf: 0,
-            CurrencyType.pln: 0,
-            CurrencyType.dkk: 1.0
-          }),
-      CurrencyModel(
-          currency: CurrencyType.pln,
-          symbol: "zł",
-          label: tr('generic.currency.pln.label'),
-          exchangeRates: {
-            CurrencyType.eur: 0,
-            CurrencyType.isk: 0,
-            CurrencyType.chf: 0,
-            CurrencyType.pln: 1.0,
-            CurrencyType.dkk: 0,
-          }),
+      // CurrencyModel(
+      //     currency: CurrencyType.chf,
+      //     symbol: "Fr",
+      //     label: tr('generic.currency.chf.label'),
+      //     exchangeRates: {
+      //       CurrencyType.eur: 0,
+      //       CurrencyType.isk: 0,
+      //       CurrencyType.chf: 1.0,
+      //       CurrencyType.pln: 0,
+      //       CurrencyType.dkk: 0,
+      //     }),
+      // CurrencyModel(
+      //     currency: CurrencyType.dkk,
+      //     symbol: "dkr",
+      //     label: tr('generic.currency.dkk.label'),
+      //     exchangeRates: {
+      //       CurrencyType.eur: 0,
+      //       CurrencyType.isk: 0,
+      //       CurrencyType.chf: 0,
+      //       CurrencyType.pln: 0,
+      //       CurrencyType.dkk: 1.0
+      //     }),
+      // CurrencyModel(
+      //     currency: CurrencyType.pln,
+      //     symbol: "zł",
+      //     label: tr('generic.currency.pln.label'),
+      //     exchangeRates: {
+      //       CurrencyType.eur: 0,
+      //       CurrencyType.isk: 0,
+      //       CurrencyType.chf: 0,
+      //       CurrencyType.pln: 1.0,
+      //       CurrencyType.dkk: 0,
+      //     }),
       CurrencyModel(
           currency: CurrencyType.isk,
           symbol: "ikr",
@@ -81,9 +80,9 @@ class LocalCurrencyRepository extends CurrencyRepository {
           exchangeRates: {
             CurrencyType.eur: 0.0067,
             CurrencyType.isk: 1.0,
-            CurrencyType.chf: 0.0065,
-            CurrencyType.pln: 0.029,
-            CurrencyType.dkk: 0.050,
+            // CurrencyType.chf: 0.0065,
+            // CurrencyType.pln: 0.029,
+            // CurrencyType.dkk: 0.050,
           }),
     ]));
   }

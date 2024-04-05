@@ -33,4 +33,11 @@ class CurrencyModel {
   }
 }
 
-enum CurrencyType { unknown, eur, isk, chf, pln, dkk }
+enum CurrencyType {
+  unknown,
+  eur,
+  isk,
+  // chf,
+  // pln,
+  // dkk
+}
