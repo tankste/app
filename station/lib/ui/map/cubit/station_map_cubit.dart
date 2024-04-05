@@ -527,11 +527,22 @@ class StationMapCubit extends Cubit<StationMapState>
     double ratio = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
         .devicePixelRatio;
 
-    // Ratio version *
+    String priceText = PriceFormat.format(
+        marker.currency.convertTo(markerPrice?.price ?? 0.0,
+                _homeCurrency?.currency ?? CurrencyType.unknown) ??
+            0.0,
+        _homeCurrency ?? CurrencyModel.unknown(),
+        false);
+    if (marker.currency.currency != _homeCurrency?.currency) {
+      priceText = "≈$priceText";
+    }
+
     double padding = 1.6 * ratio;
     double textPadding = 3.2 * ratio;
     double triangleSize = 8.0 * ratio;
-    double maxWidth = 54.2 * ratio;
+    double width =
+        (max(38, 7.6 * priceText.length) + (padding * 1) + (textPadding * 1)) *
+            ratio;
     double brandFontSize = 8.0 * ratio;
     double priceFontSize = 14.4 * ratio;
 
@@ -551,16 +562,6 @@ class StationMapCubit extends Cubit<StationMapState>
                   : marker.label))
             .build();
 
-    String priceText = PriceFormat.format(
-        marker.currency.convertTo(markerPrice?.price ?? 0.0,
-                _homeCurrency?.currency ?? CurrencyType.unknown) ??
-            0.0,
-        _homeCurrency ?? CurrencyModel.unknown(),
-        false);
-    if (marker.currency.currency != _homeCurrency?.currency) {
-      priceText = "≈$priceText";
-    }
-
     var priceParagraph =
         (ui.ParagraphBuilder(ui.ParagraphStyle(textAlign: ui.TextAlign.left))
               ..pushStyle(ui.TextStyle(
@@ -570,8 +571,7 @@ class StationMapCubit extends Cubit<StationMapState>
               ..addText(priceText))
             .build();
 
-    ui.ParagraphConstraints constraints =
-        ui.ParagraphConstraints(width: maxWidth);
+    ui.ParagraphConstraints constraints = ui.ParagraphConstraints(width: width);
     brandParagraph.layout(constraints);
     priceParagraph.layout(constraints);
 
@@ -597,21 +597,20 @@ class StationMapCubit extends Cubit<StationMapState>
         priceParagraph.height +
         padding;
 
-    var rect = Rect.fromLTWH(0, 0, maxWidth, labelHeight);
+    var rect = Rect.fromLTWH(0, 0, width, labelHeight);
     var rrect = RRect.fromRectXY(rect, 12, 12);
 
     // Create triangle path
     var trianglePath = Path();
     trianglePath.moveTo(
-        maxWidth / 2, labelHeight + triangleSize - (1 * ratio)); // Bottom
+        width / 2, labelHeight + triangleSize - (1 * ratio)); // Bottom
     trianglePath.lineTo(
-        maxWidth / 2 - triangleSize, labelHeight - (1 * ratio)); // Top-Left
+        width / 2 - triangleSize, labelHeight - (1 * ratio)); // Top-Left
     trianglePath.lineTo(
-        maxWidth / 2 + triangleSize, labelHeight - (1 * ratio)); // Top-Right
+        width / 2 + triangleSize, labelHeight - (1 * ratio)); // Top-Right
     trianglePath.close();
 
     // Draw background
-    // canvas.drawRect(rect, backgroundPaint);
     canvas.drawRRect(rrect, backgroundPaint);
 
     // Draw text
@@ -625,7 +624,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
     final img = await pictureRecorder
         .endRecording()
-        .toImage(maxWidth.toInt(), labelHeight.toInt() + triangleSize.toInt());
+        .toImage(width.toInt(), labelHeight.toInt() + triangleSize.toInt());
 
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     return data!;
