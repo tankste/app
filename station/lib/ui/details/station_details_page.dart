@@ -147,7 +147,21 @@ class StationDetailsPage extends StatelessWidget {
                                               ),
                                               Expanded(
                                                   flex: 1,
-                                                  child: Text(price.price,
+                                                  child: price.originalPrice != null
+                                                      ? Text(
+                                                          price.originalPrice ??
+                                                              "",
+                                                          style: TextStyle(
+                                                              fontWeight: price
+                                                                      .isHighlighted
+                                                                  ? FontWeight
+                                                                      .bold
+                                                                  : FontWeight
+                                                                      .normal))
+                                                      : Container()),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: Text(price.homePrice,
                                                       style: TextStyle(
                                                           fontWeight: price
                                                                   .isHighlighted
