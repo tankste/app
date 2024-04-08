@@ -18,6 +18,9 @@ dependencies:
   map:
     path: '../map'
 
+  station:
+    path: '../station'
+
   # BLoC - https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^8.1.4
 

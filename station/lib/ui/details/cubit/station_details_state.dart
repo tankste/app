@@ -40,13 +40,15 @@ class DetailStationDetailsState extends StationDetailsState {
 
 class Price {
   final String fuel;
-  final String price;
+  final String? originalPrice;
+  final String homePrice;
   final bool isHighlighted;
   final String originIconUrl;
 
   Price(
       {required this.fuel,
-      required this.price,
+      required this.originalPrice,
+      required this.homePrice,
       required this.isHighlighted,
       required this.originIconUrl});
 }

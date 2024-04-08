@@ -1,3 +1,5 @@
+import 'package:station/model/currency_model.dart';
+
 class PriceModel {
   final int id;
   final int originId;

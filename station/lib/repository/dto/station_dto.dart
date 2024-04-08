@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:navigation/coordinate_model.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/station_model.dart';
 
 class StationDto {
@@ -9,6 +11,7 @@ class StationDto {
   final LocationDto location;
   final AddressDto address;
   final bool? isOpen;
+  final String? currency;
 
   StationDto({
     required this.id,
@@ -18,6 +21,7 @@ class StationDto {
     required this.location,
     required this.address,
     required this.isOpen,
+    required this.currency,
   });
 
   factory StationDto.fromJson(Map<String, dynamic> parsedJson) {
@@ -38,6 +42,7 @@ class StationDto {
         addressCountry: parsedJson['address']['country'],
       ),
       isOpen: parsedJson['isOpen'],
+      currency: parsedJson['currency'],
     );
   }
 
@@ -58,6 +63,7 @@ class StationDto {
         'country': address.addressCountry,
       },
       'isOpen': isOpen,
+      'currency': currency,
     };
   }
 
@@ -79,33 +85,36 @@ class StationDto {
         addressCountry: model.address.country,
       ),
       isOpen: model.isOpen,
+      currency: model.currency.currency.name,
     );
   }
 
-  StationModel toModel() {
+  StationModel toModel(List<CurrencyModel> currencies) {
     return StationModel(
-      id: id ?? -1,
-      originId: originId ?? -1,
-      name: name ?? "",
-      brand: brand ?? "",
-      coordinate: CoordinateModel(
-        latitude: location.locationLatitude ?? 0,
-        longitude: location.locationLongitude ?? 0,
-      ),
-      address: StationAddressModel(
-        street: address.addressStreet ?? "",
-        houseNumber: address.addressHouseNumber ?? "",
-        postCode: address.addressPostCode ?? "",
-        city: address.addressCity ?? "",
-        country: address.addressCountry ?? "",
-      ),
-      isOpen: isOpen ?? false,
-    );
+        id: id ?? -1,
+        originId: originId ?? -1,
+        name: name ?? "",
+        brand: brand ?? "",
+        coordinate: CoordinateModel(
+          latitude: location.locationLatitude ?? 0,
+          longitude: location.locationLongitude ?? 0,
+        ),
+        address: StationAddressModel(
+          street: address.addressStreet ?? "",
+          houseNumber: address.addressHouseNumber ?? "",
+          postCode: address.addressPostCode ?? "",
+          city: address.addressCity ?? "",
+          country: address.addressCountry ?? "",
+        ),
+        isOpen: isOpen ?? false,
+        currency:
+            currencies.firstWhereOrNull((c) => c.currency.name == currency) ??
+                CurrencyModel.unknown());
   }
 
   @override
   String toString() {
-    return 'StationDto{id: $id, name: $name, brand: $brand, location: $location, address: $address, isOpen: $isOpen}';
+    return 'StationDto{id: $id, name: $name, brand: $brand, location: $location, address: $address, isOpen: $isOpen, currency: $currency}';
   }
 }
 

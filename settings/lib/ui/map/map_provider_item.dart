@@ -41,7 +41,7 @@ class MapProviderItem extends StatelessWidget {
           leading: const Icon(Icons.map),
           title: Text(tr('settings.app.map_provider.title')),
           subtitle:
-              Text(tr('settings.app.map_provider.error')));
+              Text(tr('settings.item_error')));
     } else if (state is ProvidersMapProviderItemState) {
       return ListTile(
           onTap: () {

@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
 import 'package:station/model/config_model.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/station_model.dart';
 import 'package:station/repository/config_repository.dart';
+import 'package:station/repository/currency_repository.dart';
 import 'package:station/repository/dto/station_dto.dart';
 
 abstract class StationRepository {
@@ -14,9 +16,12 @@ class TanksteWebStationRepository extends StationRepository {
   static final TanksteWebStationRepository _instance =
       TanksteWebStationRepository._internal();
 
+  late CurrencyRepository _currencyRepository;
   late ConfigRepository _configRepository;
 
-  factory TanksteWebStationRepository(ConfigRepository configRepository) {
+  factory TanksteWebStationRepository(CurrencyRepository currencyRepository,
+      ConfigRepository configRepository) {
+    _instance._currencyRepository = currencyRepository;
     _instance._configRepository = configRepository;
     return _instance;
   }
@@ -31,6 +36,9 @@ class TanksteWebStationRepository extends StationRepository {
 
   Future<Result<StationModel, Exception>> _getAsync(int id) async {
     try {
+      List<CurrencyModel> currencies =
+          (await _currencyRepository.list().first).tryGetSuccess()!;
+
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
       if (configResult.isError()) {
@@ -46,7 +54,7 @@ class TanksteWebStationRepository extends StationRepository {
             json.decode(response.body) as Map<String, dynamic>;
 
         StationDto stationDto = StationDto.fromJson(jsonResponse);
-        StationModel station = stationDto.toModel();
+        StationModel station = stationDto.toModel(currencies);
 
         return Result.success(station);
       } else {

@@ -34,6 +34,18 @@ generic:
       long: "{} Mínútur"
   send: Senda
   system_default: Kerfisbundið sjálfgefið
+  currency:
+    default: isk
+    eur:
+      label: Evra
+    chf:
+      label: Sveitsískir frankar
+    dkk:
+      label: Dönsk króna
+    pln:
+      label: Złoty
+    isk:
+      label: Íslensk króna
 
 sponsor:
   overview:
@@ -86,6 +98,8 @@ settings:
       error: Eitthvað fór úrskeiðis! Smelltu til að reyna aftur.
     navigation_map:
       title: Byrja vegvísun með…
+    currency:
+      title: Heimavalúta
   open_source:
     title: Styðja okkur
     sponsor:

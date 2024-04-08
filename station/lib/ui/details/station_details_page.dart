@@ -77,7 +77,7 @@ class StationDetailsPage extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text(tr('core.error.details.title')),
+                      title: Text(tr('generic.error.details.title')),
                       content: Text(state.errorDetails),
                       actions: <Widget>[
                         TextButton(
@@ -87,7 +87,7 @@ class StationDetailsPage extends StatelessWidget {
                     );
                   });
             },
-            child: Text(tr('core.error.details.show'))),
+            child: Text(tr('generic.error.details.show'))),
         Spacer(),
       ]));
     } else if (state is DetailStationDetailsState) {
@@ -147,7 +147,21 @@ class StationDetailsPage extends StatelessWidget {
                                               ),
                                               Expanded(
                                                   flex: 1,
-                                                  child: Text(price.price,
+                                                  child: price.originalPrice != null
+                                                      ? Text(
+                                                          price.originalPrice ??
+                                                              "",
+                                                          style: TextStyle(
+                                                              fontWeight: price
+                                                                      .isHighlighted
+                                                                  ? FontWeight
+                                                                      .bold
+                                                                  : FontWeight
+                                                                      .normal))
+                                                      : Container()),
+                                              Expanded(
+                                                  flex: 1,
+                                                  child: Text(price.homePrice,
                                                       style: TextStyle(
                                                           fontWeight: price
                                                                   .isHighlighted

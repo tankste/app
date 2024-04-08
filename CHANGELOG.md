@@ -9,7 +9,8 @@ CHANGELOG
 
 ## Upcoming version ##
 
-- 🌟 Add translations
+- 🌟 Add currency ([#65](https://github.com/tankste/app/issues/65))
+- 🌟 Add translations ([#18](https://github.com/tankste/app/issues/18))
 
 ## 2.0.1 (12.02.204) ##
 

@@ -173,7 +173,7 @@ class StationMapPageState extends State<StationMapPage> {
                                         .read<StationMapCubit>()
                                         .onRetryClicked();
                                   },
-                                  child: Text(tr('generic.retry.long'))))
+                                  child: Text(tr('generic.retry.short'))))
                         ],
                       ),
                     )

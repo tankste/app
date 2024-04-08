@@ -2,8 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:station/di/station_module_factory.dart';
+import 'package:station/model/currency_model.dart';
 import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
+import 'package:station/model/station_model.dart';
+import 'package:station/repository/currency_repository.dart';
 import 'package:station/repository/open_time_repository.dart';
 import 'package:station/repository/origin_repository.dart';
 import 'package:station/repository/price_repository.dart';
@@ -11,11 +14,15 @@ import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/repository/station_repository.dart';
 import 'package:rxdart/streams.dart';
 import 'package:collection/collection.dart';
+import 'package:station/ui/price_format.dart';
 
 class StationDetailsCubit extends Cubit<StationDetailsState> {
   final int stationId;
   final String markerLabel;
   final String activeGasPriceFilter; //TODO: use repository for filter storage
+
+  final CurrencyRepository _currencyRepository =
+      StationModuleFactory.createCurrencyRepository();
 
   final StationRepository stationRepository =
       StationModuleFactory.createStationRepository();
@@ -38,46 +45,51 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   void _fetchStation() {
     emit(LoadingStationDetailsState(title: markerLabel));
 
-    CombineLatestStream.combine4(
+    CombineLatestStream.combine5(
+            _currencyRepository.getSelected(),
             stationRepository.get(stationId),
             priceRepository.list(stationId),
             openTimeRepository.list(stationId),
-            _originRepository.list(),
-            (stationResult, priceResult, openTimesResult, originsResult) {
-      return stationResult.when((station) {
-        return priceResult.when((prices) {
-          return openTimesResult.when((openTimes) {
-            return originsResult.when((origins) {
-              return DetailStationDetailsState(
-                title: station.brand,
-                coordinate: station.coordinate,
-                address:
-                    "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
-                addressOriginIconUrl: origins
-                        .firstWhereOrNull((o) => o.id == station.originId)
-                        ?.iconImageUrl
-                        .toString() ??
-                    "",
-                prices: _genPricesList(prices),
-                lastPriceUpdate: _genPriceUpdate(prices),
-                openTimes: _genOpenTimeList(openTimes),
-                openTimesOriginIconUrl: origins
-                        .firstWhereOrNull(
-                            (o) => o.id == openTimes.firstOrNull?.originId)
-                        ?.iconImageUrl
-                        .toString() ??
-                    "",
-                origins: origins
-                    .where((o) => ([station.originId] +
-                            prices.map((p) => p.originId).toList() +
-                            prices.map((ot) => ot.originId).toList())
-                        .contains(o.id))
-                    .map((o) => Origin(
-                        iconUrl: o.iconImageUrl.toString(),
-                        name: o.name,
-                        websiteUrl: o.websiteUrl.toString()))
-                    .toList(),
-              );
+            _originRepository.list(), (homeCurrencyResult, stationResult,
+                priceResult, openTimesResult, originsResult) {
+      return homeCurrencyResult.when((homeCurrency) {
+        return stationResult.when((station) {
+          return priceResult.when((prices) {
+            return openTimesResult.when((openTimes) {
+              return originsResult.when((origins) {
+                return DetailStationDetailsState(
+                  title: station.brand,
+                  coordinate: station.coordinate,
+                  address:
+                      "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
+                  addressOriginIconUrl: origins
+                          .firstWhereOrNull((o) => o.id == station.originId)
+                          ?.iconImageUrl
+                          .toString() ??
+                      "",
+                  prices: _genPricesList(station, homeCurrency, prices),
+                  lastPriceUpdate: _genPriceUpdate(prices),
+                  openTimes: _genOpenTimeList(openTimes),
+                  openTimesOriginIconUrl: origins
+                          .firstWhereOrNull(
+                              (o) => o.id == openTimes.firstOrNull?.originId)
+                          ?.iconImageUrl
+                          .toString() ??
+                      "",
+                  origins: origins
+                      .where((o) => ([station.originId] +
+                              prices.map((p) => p.originId).toList() +
+                              prices.map((ot) => ot.originId).toList())
+                          .contains(o.id))
+                      .map((o) => Origin(
+                          iconUrl: o.iconImageUrl.toString(),
+                          name: o.name,
+                          websiteUrl: o.websiteUrl.toString()))
+                      .toList(),
+                );
+              },
+                  (error) => ErrorStationDetailsState(
+                      errorDetails: error.toString(), title: markerLabel));
             },
                 (error) => ErrorStationDetailsState(
                     errorDetails: error.toString(), title: markerLabel));
@@ -109,18 +121,20 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     _fetchStation();
   }
 
-  List<Price> _genPricesList(List<PriceModel> prices) {
+  List<Price> _genPricesList(StationModel station, CurrencyModel homeCurrency,
+      List<PriceModel> prices) {
     List<Price?> items = [];
 
-    items.add(_genPriceItem(FuelType.e5, prices));
-    items.add(_genPriceItem(FuelType.e10, prices));
-    items.add(_genPriceItem(FuelType.diesel, prices));
+    items.add(_genPriceItem(station, homeCurrency, FuelType.e5, prices));
+    items.add(_genPriceItem(station, homeCurrency, FuelType.e10, prices));
+    items.add(_genPriceItem(station, homeCurrency, FuelType.diesel, prices));
 
     return items.whereNotNull().toList();
   }
 
   //TODO: should show not available prices, or hide completely?
-  Price? _genPriceItem(FuelType fuelType, List<PriceModel> prices) {
+  Price? _genPriceItem(StationModel station, CurrencyModel homeCurrency,
+      FuelType fuelType, List<PriceModel> prices) {
     String fuelLabel = "";
     bool isSelected = false;
     switch (fuelType) {
@@ -137,40 +151,33 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         isSelected = activeGasPriceFilter == "diesel";
         break;
       default:
-        fuelLabel = tr('generic.unknown');;
+        fuelLabel = tr('generic.unknown');
+    }
+
+    PriceModel? price = prices.firstWhereOrNull((p) => p.fuelType == fuelType);
+    //TODO: change this, while closed station then will have NO PRICES
+    if (price == null) {
+      return null;
+    }
+
+    String? originalPriceText;
+    String homePriceText = PriceFormat.format(
+        station.currency.convertTo(price.price, homeCurrency.currency) ?? 0.0,
+        homeCurrency,
+        true);
+    if (station.currency.currency != homeCurrency.currency) {
+      homePriceText = "≈$homePriceText";
+
+      originalPriceText =
+          "(${PriceFormat.format(price.price, station.currency, true)})";
     }
 
     return Price(
         fuel: fuelLabel,
         isHighlighted: isSelected,
-        price: _priceText(
-            prices.firstWhereOrNull((p) => p.fuelType == fuelType)?.price ?? 0),
+        originalPrice: originalPriceText,
+        homePrice: homePriceText,
         originIconUrl: "");
-  }
-
-  String _priceText(double price) {
-    String priceText;
-    if (price == 0) {
-      priceText = "-,--\u{207B}";
-    } else {
-      priceText = price.toStringAsFixed(3).replaceAll('.', ',');
-    }
-
-    if (priceText.length == 5) {
-      priceText = priceText
-          .replaceFirst('0', '\u{2070}', 4)
-          .replaceFirst('1', '\u{00B9}', 4)
-          .replaceFirst('2', '\u{00B2}', 4)
-          .replaceFirst('3', '\u{00B3}', 4)
-          .replaceFirst('4', '\u{2074}', 4)
-          .replaceFirst('5', '\u{2075}', 4)
-          .replaceFirst('6', '\u{2076}', 4)
-          .replaceFirst('7', '\u{2077}', 4)
-          .replaceFirst('8', '\u{2078}', 4)
-          .replaceFirst('9', '\u{2079}', 4);
-    }
-
-    return "$priceText €";
   }
 
   List<OpenTime> _genOpenTimeList(List<OpenTimeModel> openTimes) {
@@ -278,10 +285,12 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         changeDate.month == today.month &&
         changeDate.day == today.day) {
       DateFormat dateFormat = DateFormat(tr('generic.date.time.format'));
-      return tr('generic.date.time.clock', args: [dateFormat.format(changeDate)]);
+      return tr('generic.date.time.clock',
+          args: [dateFormat.format(changeDate)]);
     } else {
       DateFormat dateFormat = DateFormat(tr('generic.date.date_time.format'));
-      return tr('generic.date.time.clock', args: [dateFormat.format(changeDate)]);
+      return tr('generic.date.time.clock',
+          args: [dateFormat.format(changeDate)]);
     }
   }
 }
