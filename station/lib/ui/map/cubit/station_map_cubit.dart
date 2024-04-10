@@ -389,7 +389,9 @@ class StationMapCubit extends Cubit<StationMapState>
       Result<PermissionModel, Exception> locationPermissionResult =
           await _permissionRepository.getLocationPermission().first;
       if (locationPermissionResult.isError()) {
-        return Result.error(locationPermissionResult.tryGetError()!);
+        Exception error = locationPermissionResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
       }
 
       PermissionModel locationPermission =

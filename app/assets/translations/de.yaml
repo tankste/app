@@ -154,6 +154,8 @@ settings:
     view_logs:
       title: Logs
       description: Anzeigen der letzten Logs
+      share:
+        label: "tankste! Logs"
   about:
     title: Über
     status:

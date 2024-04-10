@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:settings/model/permission_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,6 +42,7 @@ class LocalPermissionRepository extends PermissionRepository {
               preferences.getBool('permission_location_requested') ?? false);
       return Result.success(permission);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -66,6 +68,7 @@ class LocalPermissionRepository extends PermissionRepository {
           'permission_location_requested', permission.hasRequested);
       return Result.success(permission);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -86,8 +89,9 @@ class LocalPermissionRepository extends PermissionRepository {
     try {
       final SharedPreferences preferences = await _getPreferences();
       await preferences.remove('permission_location_requested');
-      return Result.success(null);
+      return const Result.success(null);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

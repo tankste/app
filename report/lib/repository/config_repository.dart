@@ -1,3 +1,4 @@
+import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:report/model/config_model.dart';
 import 'package:core/config/model/config_model.dart' as core;
@@ -36,6 +37,7 @@ class LocalConfigRepository extends ConfigRepository {
         apiBaseUrl: jsonStationConfig["apiBaseUrl"] ?? "",
       ));
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

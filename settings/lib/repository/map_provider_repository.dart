@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:core/log/log.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:settings/model/map_provider_model.dart';
@@ -63,6 +64,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
 
       return Result.success(availableProviders);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -79,7 +81,9 @@ class LocalMapProviderRepository extends MapProviderRepository {
       Result<List<MapProviderModel>, Exception> availableResult =
           await listAvailable().first;
       if (availableResult.isError()) {
-        return Result.error(availableResult.tryGetError()!);
+        Exception error = availableResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
       }
 
       List<MapProviderModel> availableProviders =
@@ -103,6 +107,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
             return Result.success(provider);
           });
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -129,6 +134,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
 
       return Result.success(mapProvider);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

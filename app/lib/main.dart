@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:core/cubit/base_state.dart';
+import 'package:core/log/log.dart';
 import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,8 @@ import 'package:easy_localization/easy_localization.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+
+  await Log.init();
 
   runApp(EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('de'), Locale('is')],

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
+import 'package:core/log/log.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -114,6 +115,7 @@ class LocalCurrencyRepository extends CurrencyRepository {
         return Result.success(defaultCurrency);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -138,6 +140,7 @@ class LocalCurrencyRepository extends CurrencyRepository {
 
       return Result.success(currency);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
