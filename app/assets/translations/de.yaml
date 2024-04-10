@@ -148,7 +148,10 @@ settings:
       success: App Cache wurde zurückgesetzt
   support:
     title: Support
-    logs:
+    log_enabled:
+      title: Logs erfassen
+      description: Aktiviere lokales Logging
+    view_logs:
       title: Logs
       description: Anzeigen der letzten Logs
   about:

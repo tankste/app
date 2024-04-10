@@ -148,7 +148,10 @@ settings:
       success: Cache has been reset
   support:
     title: Support
-    logs:
+    log_enabled:
+      title: Collect logs
+      description: Control local logging
+    view_logs:
       title: Logs
       description: View last logs
   about:

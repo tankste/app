@@ -148,7 +148,10 @@ settings:
       success: Skyndiminni hefur verið hreinsað
   support:
     title: Styðja
-    logs:
+    log_enabled:
+      title: Safna skráðum upplýsingum
+      description: Virkja staðværa skráningu
+    view_logs:
       title: Skrár
       description: Skoða síðustu skrár
   about:
