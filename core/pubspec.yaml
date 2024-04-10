@@ -30,6 +30,9 @@ dependencies:
   # Logger - https://pub.dev/packages/logger
   logger: ^2.1.0
 
+  # Path Provider - https://pub.dev/packages/path_provider
+  path_provider: ^2.1.2
+
 dependency_overrides:
   # Force `package_info_plus` using newest `web` version (see: https://github.com/fluttercommunity/plus_plugins/issues/2653)
   web: ^0.5.0

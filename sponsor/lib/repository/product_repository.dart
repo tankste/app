@@ -155,7 +155,9 @@ class MobileProductRepository extends ProductRepository {
           await _waitForPurchaseResultAsync();
 
       if (purchaseDetailsResult.isError()) {
-        return Result.error(purchaseDetailsResult.tryGetError()!);
+        Exception error = purchaseDetailsResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
       }
 
       PurchaseDetails purchaseDetails = purchaseDetailsResult.tryGetSuccess()!;
@@ -209,7 +211,9 @@ class MobileProductRepository extends ProductRepository {
       Result<PurchaseDetails, Exception> purchaseDetailsResult =
           await _waitForPurchaseResultAsync();
       if (purchaseDetailsResult.isError()) {
-        return Result.error(purchaseDetailsResult.tryGetError()!);
+        Exception error = purchaseDetailsResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
       }
 
       PurchaseDetails purchaseDetails = purchaseDetailsResult.tryGetSuccess()!;

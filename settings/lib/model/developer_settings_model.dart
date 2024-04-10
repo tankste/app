@@ -30,4 +30,4 @@ class DeveloperSettingsModel {
   }
 }
 
-enum Feature { logging }
+enum Feature { placeholder }

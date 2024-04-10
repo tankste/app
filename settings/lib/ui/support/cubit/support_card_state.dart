@@ -2,6 +2,18 @@ abstract class SupportCardState {}
 
 class LoadingSupportCardState extends SupportCardState {}
 
-class EnabledSupportCardState extends SupportCardState {}
+class ErrorSupportCardState extends SupportCardState {
+  final String errorDetails;
 
-class DisabledSupportCardState extends SupportCardState {}
+  ErrorSupportCardState({required this.errorDetails});
+}
+
+class DataSupportCardState extends SupportCardState {
+  final bool isLogEnabled;
+  final bool isViewLogsVisible;
+
+  DataSupportCardState({
+    required this.isLogEnabled,
+    required this.isViewLogsVisible,
+  });
+}

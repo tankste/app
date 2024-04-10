@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:core/device/model/device_model.dart';
+import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -42,6 +43,7 @@ class LocalDeviceRepository extends DeviceRepository {
 
       return Result.success(DeviceModel(id: id));
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -63,6 +65,7 @@ class LocalDeviceRepository extends DeviceRepository {
 
       return Result.success(device);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

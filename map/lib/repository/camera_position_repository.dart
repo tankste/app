@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:core/log/log.dart';
 import 'package:map/model/camera_position_model.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +50,7 @@ class LocalCameraPositionRepository extends CameraPositionRepository {
           latitude: latitude, longitude: longitude, zoom: zoom);
       return Result.success(cameraPosition);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -78,6 +80,7 @@ class LocalCameraPositionRepository extends CameraPositionRepository {
           'camera_position_last_zoom', cameraPosition.zoom);
       return Result.success(cameraPosition);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }
@@ -100,8 +103,9 @@ class LocalCameraPositionRepository extends CameraPositionRepository {
       await preferences.remove('camera_position_last_latitude');
       await preferences.remove('camera_position_last_longitude');
       await preferences.remove('camera_position_last_zoom');
-      return Result.success(null);
+      return const Result.success(null);
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

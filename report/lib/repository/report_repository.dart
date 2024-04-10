@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:core/device/model/device_model.dart';
 import 'package:core/device/repository/device_repository.dart';
+import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:report/model/config_model.dart';
 import 'package:report/model/report_model.dart';
@@ -40,14 +41,18 @@ class TanksteWebReportRepository implements ReportRepository {
       Result<ConfigModel, Exception> configResult =
           await _configRepository.get().first;
       if (configResult.isError()) {
-        return Result.error(configResult.tryGetError()!);
+        Exception exception = configResult.tryGetError()!;
+        Log.exception(exception);
+        return Result.error(exception);
       }
       ConfigModel config = configResult.tryGetSuccess()!;
 
       Result<DeviceModel, Exception> deviceResult =
           await _deviceRepository.get().first;
       if (deviceResult.isError()) {
-        return Result.error(deviceResult.tryGetError()!);
+        Exception exception = deviceResult.tryGetError()!;
+        Log.exception(exception);
+        return Result.error(exception);
       }
       DeviceModel device = deviceResult.tryGetSuccess()!;
 
@@ -66,9 +71,12 @@ class TanksteWebReportRepository implements ReportRepository {
 
         return Result.success(report);
       } else {
-        return Result.error(Exception("API Error!\n\n${response.body}"));
+        Exception error = Exception("API Error!\n\n${response.body}");
+        Log.exception(error);
+        return Result.error(error);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

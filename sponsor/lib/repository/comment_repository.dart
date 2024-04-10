@@ -180,6 +180,7 @@ class TanksteWebCommentRepository extends CommentRepository {
         return Result.error(error);
       }
     } on Exception catch (e) {
+      Log.exception(e);
       return Result.error(e);
     }
   }

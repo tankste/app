@@ -9,6 +9,10 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🧹 Finalize logging
+  - Add options to settings
+  - Log all errors
+  - Allow share logs
 - 🌟 Add currency ([#65](https://github.com/tankste/app/issues/65))
 - 🌟 Add translations ([#18](https://github.com/tankste/app/issues/18))
 
