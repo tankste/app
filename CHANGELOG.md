@@ -9,7 +9,10 @@ CHANGELOG
 
 ## Upcoming version ##
 
-- 🧹 Finalize logging
+## 2.1.0 (2024-04-19) ##
+
+- 🐞 Fix not-overlapping MapLibre symbols
+- 🧹 Finalize logging ([#66](https://github.com/tankste/app/issues/66))
   - Add options to settings
   - Log all errors
   - Allow share logs

@@ -127,8 +127,6 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       marker?.onTap?.call();
     });
 
-    mapController.setSymbolIconAllowOverlap(true);
-
     _updateMarkers();
     _updatePolylines();
   }
@@ -142,6 +140,9 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     if (!_isStyleLoaded) {
       return;
     }
+
+    mapController.setSymbolIconAllowOverlap(true);
+    mapController.setSymbolIconIgnorePlacement(true);
 
     // Remove current symbols
     mapController.removeSymbols(_symbols);
