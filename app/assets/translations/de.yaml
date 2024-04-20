@@ -167,6 +167,8 @@ settings:
 
 station:
   title: Tankstelle
+  internal_id: "Interne ID: {}"
+  external_id: "Externe ID: {}"
   gas:
     label: Spritsorte
     super_e5: Super E5

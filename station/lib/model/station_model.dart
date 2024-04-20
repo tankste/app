@@ -3,6 +3,7 @@ import 'package:station/model/currency_model.dart';
 
 class StationModel {
   final int id;
+  final String externalId;
   final int originId;
   final String name;
   final String brand;
@@ -13,6 +14,7 @@ class StationModel {
 
   StationModel(
       {required this.id,
+      required this.externalId,
       required this.originId,
       required this.name,
       required this.brand,
@@ -23,7 +25,7 @@ class StationModel {
 
   @override
   String toString() {
-    return 'StationModel{id: $id, originId: $originId, name: $name, brand: $brand, address: $address, coordinate: $coordinate, isOpen: $isOpen, currency: $currency}';
+    return 'StationModel{id: $id, externalId: $externalId, originId: $originId, name: $name, brand: $brand, address: $address, coordinate: $coordinate, isOpen: $isOpen, currency: $currency}';
   }
 }
 

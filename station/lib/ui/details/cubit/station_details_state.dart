@@ -26,6 +26,9 @@ class DetailStationDetailsState extends StationDetailsState {
   final String openTimesOriginIconUrl;
   final List<Origin> origins;
 
+  final String? internalId;
+  final String? externalId;
+
   DetailStationDetailsState(
       {required this.coordinate,
       required this.address,
@@ -35,6 +38,8 @@ class DetailStationDetailsState extends StationDetailsState {
       required this.openTimes,
       required this.openTimesOriginIconUrl,
       required this.origins,
+      required this.internalId,
+      required this.externalId,
       required super.title});
 }
 

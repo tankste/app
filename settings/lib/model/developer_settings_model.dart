@@ -30,4 +30,4 @@ class DeveloperSettingsModel {
   }
 }
 
-enum Feature { placeholder }
+enum Feature { stationMetaInfo }

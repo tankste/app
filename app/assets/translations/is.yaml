@@ -165,6 +165,8 @@ settings:
 
 station:
   title: Stöð
+  internal_id: "Innra auðkenni: {}"
+  external_id: "Ytri auðkenni: {}"
   gas:
     label: Eldsneytisgerð
     super_e5: Super E5

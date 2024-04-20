@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:settings/di/settings_module_factory.dart';
+import 'package:settings/model/developer_settings_model.dart';
+import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/currency_model.dart';
 import 'package:station/model/open_time.dart';
@@ -36,6 +39,9 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   final OriginRepository _originRepository =
       StationModuleFactory.createOriginRepository();
 
+  final DeveloperSettingsRepository _developerSettingsRepository =
+      SettingsModuleFactory.createDeveloperSettingsRepository();
+
   StationDetailsCubit(
       this.stationId, this.markerLabel, this.activeGasPriceFilter)
       : super(LoadingStationDetailsState(title: markerLabel)) {
@@ -45,13 +51,18 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   void _fetchStation() {
     emit(LoadingStationDetailsState(title: markerLabel));
 
-    CombineLatestStream.combine5(
+    CombineLatestStream.combine6(
             _currencyRepository.getSelected(),
             stationRepository.get(stationId),
             priceRepository.list(stationId),
             openTimeRepository.list(stationId),
-            _originRepository.list(), (homeCurrencyResult, stationResult,
-                priceResult, openTimesResult, originsResult) {
+            _originRepository.list(),
+            _developerSettingsRepository.get(), (homeCurrencyResult,
+                stationResult,
+                priceResult,
+                openTimesResult,
+                originsResult,
+                developerSettings) {
       return homeCurrencyResult.when((homeCurrency) {
         return stationResult.when((station) {
           return priceResult.when((prices) {
@@ -86,6 +97,14 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
                           name: o.name,
                           websiteUrl: o.websiteUrl.toString()))
                       .toList(),
+                  internalId:
+                      developerSettings.isFeatureEnabled(Feature.stationMetaInfo)
+                          ? station.id.toString()
+                          : null,
+                  externalId:
+                      developerSettings.isFeatureEnabled(Feature.stationMetaInfo)
+                          ? station.externalId
+                          : null,
                 );
               },
                   (error) => ErrorStationDetailsState(

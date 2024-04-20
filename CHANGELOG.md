@@ -9,8 +9,10 @@ CHANGELOG
 
 ## Upcoming version ##
 
-## 2.1.0 (2024-04-19) ##
 
+## 2.1.0 (2024-04-20) ##
+
+- 🌟 Show station IDs on details page
 - 🐞 Fix not-overlapping MapLibre symbols
 - 🧹 Finalize logging ([#66](https://github.com/tankste/app/issues/66))
   - Add options to settings

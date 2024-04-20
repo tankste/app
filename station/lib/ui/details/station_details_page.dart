@@ -41,7 +41,7 @@ class StationDetailsPage extends StatelessWidget {
                                     builder: (context) => ReportFormPage(
                                         stationId: this.stationId)));
                           },
-                          icon: Icon(Icons.report))
+                          icon: const Icon(Icons.report))
                     ],
                   ),
                   body: SafeArea(child: _buildBody(context, state)));
@@ -54,11 +54,11 @@ class StationDetailsPage extends StatelessWidget {
     } else if (state is ErrorStationDetailsState) {
       return Center(
           child: Column(children: [
-        Spacer(),
+        const Spacer(),
         Text(tr('generic.error.title'),
             style: Theme.of(context).textTheme.headline5),
         Padding(
-            padding: EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: 8),
             child: Text(
               (tr('generic.error.long')),
               style: Theme.of(context).textTheme.bodyMedium,
@@ -88,7 +88,7 @@ class StationDetailsPage extends StatelessWidget {
                   });
             },
             child: Text(tr('generic.error.details.show'))),
-        Spacer(),
+        const Spacer(),
       ]));
     } else if (state is DetailStationDetailsState) {
       return RefreshIndicator(
@@ -137,8 +137,9 @@ class StationDetailsPage extends StatelessWidget {
                                                               : FontWeight
                                                                   .normal)),
                                                   Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 8),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
                                                       child: Image.network(
                                                           state
                                                               .openTimesOriginIconUrl,
@@ -147,7 +148,8 @@ class StationDetailsPage extends StatelessWidget {
                                               ),
                                               Expanded(
                                                   flex: 1,
-                                                  child: price.originalPrice != null
+                                                  child: price.originalPrice !=
+                                                          null
                                                       ? Text(
                                                           price.originalPrice ??
                                                               "",
@@ -172,7 +174,7 @@ class StationDetailsPage extends StatelessWidget {
                                           )))
                                       .toList()),
                                   Padding(
-                                      padding: EdgeInsets.only(top: 16),
+                                      padding: const EdgeInsets.only(top: 16),
                                       child: Text(
                                         tr('station.prices.last_price_changes_at',
                                             args: [state.lastPriceUpdate]),
@@ -197,7 +199,8 @@ class StationDetailsPage extends StatelessWidget {
                                                   .textTheme
                                                   .headline6),
                                           Padding(
-                                              padding: EdgeInsets.only(left: 8),
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
                                               child: Image.network(
                                                   state.openTimesOriginIconUrl,
                                                   height: 14))
@@ -263,15 +266,50 @@ class StationDetailsPage extends StatelessWidget {
                                                   height: 14),
                                               Padding(
                                                   padding:
-                                                      EdgeInsets.only(left: 8),
+                                                      const EdgeInsets.only(
+                                                          left: 8),
                                                   child: Text(
                                                     origin.name,
-                                                    style:
-                                                        TextStyle(fontSize: 12),
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
                                                   ))
                                             ],
                                           ))))
                                   .toList()),
+                              state.internalId != null
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 24),
+                                      child: Text(
+                                        tr('station.internal_id',
+                                            args: [state.internalId ?? ""]),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall
+                                            ?.copyWith(
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.light
+                                                    ? Colors.black54
+                                                    : Colors.white54),
+                                      ))
+                                  : Container(),
+                              state.externalId != null
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 2),
+                                      child: Text(
+                                        tr('station.external_id',
+                                            args: [state.externalId ?? ""]),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall
+                                            ?.copyWith(
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.light
+                                                    ? Colors.black54
+                                                    : Colors.white54),
+                                      ))
+                                  : Container(),
                             ]))
                   ]))));
     }

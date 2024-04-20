@@ -5,6 +5,7 @@ import 'package:station/model/station_model.dart';
 
 class StationDto {
   final int? id;
+  final String? externalId;
   final int? originId;
   final String? name;
   final String? brand;
@@ -15,6 +16,7 @@ class StationDto {
 
   StationDto({
     required this.id,
+    required this.externalId,
     required this.originId,
     required this.name,
     required this.brand,
@@ -27,6 +29,7 @@ class StationDto {
   factory StationDto.fromJson(Map<String, dynamic> parsedJson) {
     return StationDto(
       id: parsedJson['id'],
+      externalId: parsedJson['externalId'],
       originId: parsedJson['originId'],
       name: parsedJson['name'],
       brand: parsedJson['brand'],
@@ -49,6 +52,7 @@ class StationDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'externalId': externalId,
       'name': name,
       'brand': brand,
       'location': {
@@ -70,6 +74,7 @@ class StationDto {
   factory StationDto.fromModel(StationModel model) {
     return StationDto(
       id: model.id,
+      externalId: model.externalId,
       originId: model.originId,
       name: model.name,
       brand: model.brand,
@@ -92,6 +97,7 @@ class StationDto {
   StationModel toModel(List<CurrencyModel> currencies) {
     return StationModel(
         id: id ?? -1,
+        externalId: externalId ?? "",
         originId: originId ?? -1,
         name: name ?? "",
         brand: brand ?? "",
@@ -114,7 +120,7 @@ class StationDto {
 
   @override
   String toString() {
-    return 'StationDto{id: $id, name: $name, brand: $brand, location: $location, address: $address, isOpen: $isOpen, currency: $currency}';
+    return 'StationDto{id: $id, externalId: $externalId, originId: $originId, name: $name, brand: $brand, location: $location, address: $address, isOpen: $isOpen, currency: $currency}';
   }
 }
 

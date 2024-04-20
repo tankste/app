@@ -165,6 +165,8 @@ settings:
 
 station:
   title: Station
+  internal_id: "Internal ID: {}"
+  external_id: "External ID: {}"
   gas:
     label: Fuel type
     super_e5: Super E5
