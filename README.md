@@ -12,9 +12,10 @@ Your open source fuel price app. The mission is to give you one app that you can
 
 ## Availability ##
 
-| Flag  | Country |
-| ----- | ------- |
-| 🇩🇪    | Germany |
+| Flag      | Country |
+| --------- | ------- |
+| :de:      | Germany |
+| :iceland: | Iceland |
 
 ## Data sources ##
 
@@ -38,7 +39,7 @@ auto-generated created by build scripts.
 ### Modules ###
 
 | Name         | Description                     |
-|--------------|---------------------------------|
+| ------------ | ------------------------------- |
 | `app`        | App entry point                 |
 | `station`    | Station and gas price things    |
 | `navigation` | Routing utils and widgets       |
@@ -57,7 +58,8 @@ to improve the code.
 ## Special thanks ##
 
 - [Tankerkönig](https://creativecommons.tankerkoenig.de/) that provides a free API for German gas stations. I would never have started the project without this offer.
-- Tim Brückner from [Teuer Tanken](https://teuer-tanken.app/) for your help to implement the MTS-K API.
+- [Tim Brückner](https://twitter.com/cupofsoftware) from [Teuer Tanken](https://teuer-tanken.app/) for your help to implement the MTS-K API.
+- [Sveinn Flóki Guðmundsson](https://github.com/Loknar) who builds [Gasvaktin](https://github.com/gasvaktin/gasvaktin). That project provides a free API for Iceland gas stations.
 
 ## License ##
 
