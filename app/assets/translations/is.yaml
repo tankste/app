@@ -73,7 +73,7 @@ sponsor:
       sponsorship:
         title: "Þú styður tankste!"
         description: "Stór þakkir til þín fyrir að hjálpa mér að halda lífi í tankste! verkefninu! Þú hefur þegar hjálpað verkefninu með {} og þannig dreift því áfram."
-        active_subscription: "Þú ert núna með áskriftina "{}" virka."
+        active_subscription: "Þú ert núna með áskriftina „{}“ virka."
         comment_hint: "Þú verður skráður hér að neðan sem styrktaraðili. Þú getur sláð inn nafnið þitt og skilaboð. Þessar upplýsingar eru sjáanlegar öllum notendum."
     comments:
       anonymous: "Nafnlaus"

@@ -73,7 +73,7 @@ sponsor:
       sponsorship:
         title: "You support tankste!"
         description: "A big thank you to you for helping me keep the tankste! project alive! You have already helped out the project with {} and thus driven its further development."
-        active_subscription: "You currently have the subscription "{}" active."
+        active_subscription: "You currently have the subscription „{}“ active."
         comment_hint: "You will be listed below as a sponsor. You can enter your name and leave a comment. This information is visible to all users."
     comments:
       anonymous: "Anonymous"
