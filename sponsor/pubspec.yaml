@@ -44,6 +44,9 @@ dependencies:
   # Easy Localization - https://pub.dev/packages/easy_localization
   easy_localization: ^3.0.5
 
+  # URL Launcher - https://pub.dev/packages/url_launcher
+  url_launcher: ^6.2.5
+
 dependency_overrides:
   # Force `package_info_plus` using newest `web` version (see: https://github.com/fluttercommunity/plus_plugins/issues/2653)
   web: ^0.5.0

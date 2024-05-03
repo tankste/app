@@ -10,8 +10,10 @@ CHANGELOG
 ## Upcoming version ##
 
 
-## 2.1.0 (2024-04-20) ##
+## 2.1.0 (2024-05-03) ##
 
+- 🧹 Add terms & privacy also to purchase screen to conform Apple review rules
+- 🧹 Replace subscriptions by one-time purchases to conform Apple review rules
 - 🐞 Fix hanging map when re-open from background (Android only)
 - 🌟 Show station IDs on details page
 - 🐞 Fix not-overlapping MapLibre symbols

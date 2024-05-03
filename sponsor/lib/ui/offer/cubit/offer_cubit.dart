@@ -21,78 +21,76 @@ class OfferCubit extends Cubit<OfferState> {
   void _fetchItems() {
     emit(LoadingOfferState());
 
-    CombineLatestStream.combine6(
+    CombineLatestStream.combine7(
         _sponsorshipRepository.get(),
-        _productRepository.get('app.tankste.sponsor.sub.yearly.12'),
-        _productRepository.get('app.tankste.sponsor.sub.monthly.2'),
+        _productRepository.get('app.tankste.sponsor.product.50'),
+        _productRepository.get('app.tankste.sponsor.product.20'),
         _productRepository.get('app.tankste.sponsor.product.10'),
+        _productRepository.get('app.tankste.sponsor.product.5'),
         _productRepository.get('app.tankste.sponsor.product.2'),
         _productRepository.get('app.tankste.sponsor.product.1'),
         (sponsorshipResult,
-            yearlySubscriptionProductResult,
-            monthlySubscriptionProductResult,
+            onceFiftyProductResult,
+            onceTwentyProductResult,
             onceTenProductResult,
+            onceFiveProductResult,
             onceTwoProductResult,
             onceOneProductResult) {
       return sponsorshipResult.when((sponsorship) {
-        return yearlySubscriptionProductResult.when(
-            (yearlySubscriptionProduct) {
-          return monthlySubscriptionProductResult.when(
-              (monthlySubscriptionProduct) {
+        return onceFiftyProductResult.when((onceFiftyProduct) {
+          return onceTwentyProductResult.when((onceTwentyProduct) {
             return onceTenProductResult.when((onceTenProduct) {
-              return onceTwoProductResult.when((onceTwoProduct) {
-                return onceOneProductResult.when((onceOneProduct) {
-                  List<OfferItem> items = [];
-                  if (sponsorship.activeSubscriptionId == null) {
-                    items.add(OfferItem(
-                        id: yearlySubscriptionProduct.id,
-                        labelPrice: yearlySubscriptionProduct.priceLabel,
-                        labelType: tr('sponsor.overview.options.year.by'),
-                        hint: tr('sponsor.overview.options.year.hint', args: [yearlySubscriptionProduct.priceLabel])));
+              return onceFiveProductResult.when((onceFiveProduct) {
+                return onceTwoProductResult.when((onceTwoProduct) {
+                  return onceOneProductResult.when((onceOneProduct) {
+                    List<OfferItem> items = [
+                      OfferItem(
+                          id: onceFiftyProduct.id,
+                          labelPrice: onceFiftyProduct.priceLabel,
+                          labelType: tr('sponsor.overview.options.single.by'),
+                          hint: tr('sponsor.overview.options.single.hint',
+                              args: [onceFiftyProduct.priceLabel])),
+                      OfferItem(
+                          id: onceTwentyProduct.id,
+                          labelPrice: onceTwentyProduct.priceLabel,
+                          labelType: tr('sponsor.overview.options.single.by'),
+                          hint: tr('sponsor.overview.options.single.hint',
+                              args: [onceTwentyProduct.priceLabel])),
+                      OfferItem(
+                          id: onceTenProduct.id,
+                          labelPrice: onceTenProduct.priceLabel,
+                          labelType: tr('sponsor.overview.options.single.by'),
+                          hint: tr('sponsor.overview.options.single.hint',
+                              args: [onceTenProduct.priceLabel])),
+                      OfferItem(
+                          id: onceFiveProduct.id,
+                          labelPrice: onceFiveProduct.priceLabel,
+                          labelType: tr('sponsor.overview.options.single.by'),
+                          hint: tr('sponsor.overview.options.single.hint',
+                              args: [onceFiveProduct.priceLabel])),
+                      OfferItem(
+                          id: onceTwoProduct.id,
+                          labelPrice: onceTwoProduct.priceLabel,
+                          labelType: tr('sponsor.overview.options.single.by'),
+                          hint: tr('sponsor.overview.options.single.hint',
+                              args: [onceTwoProduct.priceLabel])),
+                      OfferItem(
+                          id: onceOneProduct.id,
+                          labelPrice: onceOneProduct.priceLabel,
+                          labelType: tr('sponsor.overview.options.single.by'),
+                          hint: tr('sponsor.overview.options.single.hint',
+                              args: [onceOneProduct.priceLabel])),
+                    ];
 
-                    items.add(OfferItem(
-                        id: monthlySubscriptionProduct.id,
-                        labelPrice: monthlySubscriptionProduct.priceLabel,
-                        labelType: tr('sponsor.overview.options.month.by'),
-                        hint: tr('sponsor.overview.options.month.hint', args: [monthlySubscriptionProduct.priceLabel])));
-
-                    items.add(OfferItem(
-                        id: onceTenProduct.id,
-                        labelPrice: onceTenProduct.priceLabel,
-                        labelType: tr('sponsor.overview.options.single.by'),
-                        hint: tr('sponsor.overview.options.single.hint', args: [onceTenProduct.priceLabel])));
-
-                    items.add(OfferItem(
-                        id: onceTwoProduct.id,
-                        labelPrice: onceTwoProduct.priceLabel,
-                        labelType: tr('sponsor.overview.options.single.by'),
-                        hint: tr('sponsor.overview.options.single.hint', args: [onceTwoProduct.priceLabel])));
-
-                    items.add(OfferItem(
-                        id: onceOneProduct.id,
-                        labelPrice: onceOneProduct.priceLabel,
-                        labelType: tr('sponsor.overview.options.single.by'),
-                        hint: tr('sponsor.overview.options.single.hint', args: [onceOneProduct.priceLabel])));
-                  }
-
-                  return OffersOfferState(
-                      title: sponsorship.activeSubscriptionId != null
-                          ? tr('sponsor.overview.options.title.extended')
-                          : tr('sponsor.overview.options.title.new'),
-                      isSponsorshipInfoVisible: sponsorship.value > 0,
-                      sponsoredValue: "${sponsorship.value.round()} €",
-                      activeSubscription:
-                          sponsorship.activeSubscriptionId != null
-                              ? [
-                                  yearlySubscriptionProduct,
-                                  monthlySubscriptionProduct
-                                ]
-                                  .firstWhereOrNull((element) =>
-                                      element.id ==
-                                      sponsorship.activeSubscriptionId)
-                                  ?.title
-                              : null,
-                      items: items);
+                    return OffersOfferState(
+                        title: tr('sponsor.overview.options.title.new'),
+                        isSponsorshipInfoVisible: sponsorship.value > 0,
+                        sponsoredValue: "${sponsorship.value.round()} €",
+                        activeSubscription: null,
+                        items: items);
+                  },
+                      (error) =>
+                          ErrorOfferState(errorDetails: error.toString()));
                 }, (error) => ErrorOfferState(errorDetails: error.toString()));
               }, (error) => ErrorOfferState(errorDetails: error.toString()));
             }, (error) => ErrorOfferState(errorDetails: error.toString()));

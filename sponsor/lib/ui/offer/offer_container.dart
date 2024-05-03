@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sponsor/ui/offer/cubit/offer_cubit.dart';
 import 'package:sponsor/ui/offer/cubit/offer_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OfferContainer extends StatelessWidget {
   const OfferContainer({super.key});
@@ -121,7 +122,8 @@ class OfferContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                    padding:
+                        const EdgeInsets.only(top: 16, left: 16, right: 16),
                     child: Text(tr('sponsor.overview.info.new.title'),
                         textAlign: TextAlign.start,
                         style: Theme.of(context).textTheme.titleLarge),
@@ -185,16 +187,37 @@ class OfferContainer extends StatelessWidget {
                         },
                         child: Text(tr('sponsor.overview.restore')))))
             : Container(),
-        //TODO: add later more options to sponsor
-        // Center(
-        //     child: Padding(
-        //         padding: EdgeInsets.only(left: 8, right: 8),
-        //         child: TextButton(
-        //             onPressed: () {},
-        //             child: Text("Weitere Möglichkeiten anzeigen")))),
+        Padding(padding: const EdgeInsets.only(top: 16), child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Flexible(
+                flex: 1,
+                child: TextButton(
+                    onPressed: () {
+                      _openUrl("https://tankste.app/datenschutz");
+                    },
+                    child: Text(tr('settings.legal.privacy.title')))),
+            Flexible(
+                flex: 1,
+                child: TextButton(
+                    onPressed: () {
+                      _openUrl("https://tankste.app/nutzungsbedingungen/");
+                    },
+                    child: Text(tr('settings.legal.terms.title')))),
+          ],
+        ))
       ]);
     } else {
       return Container();
+    }
+  }
+
+  void _openUrl(String url) async {
+    Uri uri = Uri.tryParse(url)!;
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      //TODO: handle this case
+//        throw 'Could not launch $url';
     }
   }
 }
