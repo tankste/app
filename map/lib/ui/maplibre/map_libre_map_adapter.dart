@@ -131,7 +131,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     _updatePolylines();
   }
 
-  void _updateMarkers() {
+  void _updateMarkers() async {
     map_libre_maps.MaplibreMapController? mapController = _mapController;
     if (mapController == null) {
       return;
@@ -141,15 +141,15 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       return;
     }
 
-    mapController.setSymbolIconAllowOverlap(true);
-    mapController.setSymbolIconIgnorePlacement(true);
+    await mapController.setSymbolIconAllowOverlap(true);
+    await mapController.setSymbolIconIgnorePlacement(true);
 
     // Remove current symbols
-    mapController.removeSymbols(_symbols);
+    await mapController.removeSymbols(_symbols);
     _symbols.clear();
 
     for (var marker in widget.markers) {
-      mapController
+      await mapController
           .addImage("${marker.id}-image", marker.icon!.buffer.asUint8List())
           .then((_) {
         return mapController.addSymbol(
@@ -164,7 +164,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     }
   }
 
-  void _updatePolylines() {
+  void _updatePolylines() async {
     map_libre_maps.MaplibreMapController? mapController = _mapController;
     if (mapController == null) {
       return;
@@ -175,11 +175,11 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     }
 
     // Remove current lines
-    mapController.removeLines(_lines);
+    await mapController.removeLines(_lines);
     _lines.clear();
 
     for (var polyline in widget.polylines) {
-      mapController
+      await mapController
           .addLine(map_libre_maps.LineOptions(
             lineColor: polyline.color.toHexStringRGB(),
             lineWidth: polyline.width.toDouble(),

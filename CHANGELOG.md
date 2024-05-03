@@ -12,6 +12,7 @@ CHANGELOG
 
 ## 2.1.0 (2024-04-20) ##
 
+- 🐞 Fix hanging map when re-open from background (Android only)
 - 🌟 Show station IDs on details page
 - 🐞 Fix not-overlapping MapLibre symbols
 - 🧹 Finalize logging ([#66](https://github.com/tankste/app/issues/66))
