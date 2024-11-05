@@ -13,8 +13,7 @@ class GoogleMapAdapter extends MapAdapter {
       super.onCameraMove,
       super.markers,
       super.polylines,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   State<StatefulWidget> createState() => GoogleMapAdapterState();
@@ -124,7 +123,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
         .map((m) => google_maps.Marker(
             markerId: google_maps.MarkerId(m.id),
             icon: m.icon != null
-                ? google_maps.BitmapDescriptor.fromBytes(
+                ? google_maps.BitmapDescriptor.bytes(
                     m.icon!.buffer.asUint8List())
                 : google_maps.BitmapDescriptor.defaultMarkerWithHue(
                     google_maps.BitmapDescriptor.hueAzure),

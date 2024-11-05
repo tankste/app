@@ -25,8 +25,7 @@ class GenericMap extends StatelessWidget {
       this.onCameraMove,
       this.markers = const <Marker>{},
       this.polylines = const <Polyline>{},
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -102,13 +101,15 @@ class CameraPosition {
   CameraPosition({required this.latLng, required this.zoom});
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CameraPosition &&
+          runtimeType == other.runtimeType &&
+          latLng == other.latLng &&
+          zoom == other.zoom;
 
-    return other is CameraPosition &&
-        other.latLng == latLng &&
-        other.zoom == zoom;
-  }
+  @override
+  int get hashCode => latLng.hashCode ^ zoom.hashCode;
 
   @override
   String toString() {
@@ -123,13 +124,15 @@ class LatLng {
   LatLng(this.latitude, this.longitude);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LatLng &&
+          runtimeType == other.runtimeType &&
+          latitude == other.latitude &&
+          longitude == other.longitude;
 
-    return other is LatLng &&
-        other.latitude == latitude &&
-        other.longitude == longitude;
-  }
+  @override
+  int get hashCode => latitude.hashCode ^ longitude.hashCode;
 
   @override
   String toString() {

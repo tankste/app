@@ -4,8 +4,7 @@ class SettingsCard extends StatelessWidget {
   final String title;
   final List<Widget> items;
 
-  const SettingsCard({required this.title, required this.items, Key? key})
-      : super(key: key);
+  const SettingsCard({required this.title, required this.items, super.key});
 
   @override
   Widget build(BuildContext context) {

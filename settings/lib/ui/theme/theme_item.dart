@@ -6,7 +6,7 @@ import 'package:settings/ui/theme/cubit/theme_item_state.dart';
 import 'package:settings/ui/theme/theme_selection_dialog.dart';
 
 class ThemeItem extends StatelessWidget {
-  const ThemeItem({Key? key}) : super(key: key);
+  const ThemeItem({super.key});
 
   @override
   Widget build(BuildContext context) {

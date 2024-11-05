@@ -9,7 +9,7 @@ import 'package:settings/ui/settings/settings_card.dart';
 import 'package:settings/ui/custom_switch_list_tile.dart';
 
 class DeveloperCard extends StatelessWidget {
-  const DeveloperCard({Key? key}) : super(key: key);
+  const DeveloperCard({super.key});
 
   @override
   Widget build(BuildContext context) {

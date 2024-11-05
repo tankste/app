@@ -18,8 +18,7 @@ class StationDetailsPage extends StatelessWidget {
       {required this.stationId,
       this.markerLabel,
       this.activeGasPriceFilter,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class StationDetailsPage extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ReportFormPage(
-                                        stationId: this.stationId)));
+                                        stationId: stationId)));
                           },
                           icon: const Icon(Icons.report))
                     ],

@@ -19,6 +19,5 @@ abstract class MapAdapter extends StatefulWidget {
       this.onCameraMove,
       this.markers = const <Marker>{},
       this.polylines = const <Polyline>{},
-      Key? key})
-      : super(key: key);
+      super.key});
 }

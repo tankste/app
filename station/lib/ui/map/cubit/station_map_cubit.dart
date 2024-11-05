@@ -421,7 +421,8 @@ class StationMapCubit extends Cubit<StationMapState>
     Position? position = await Geolocator.getLastKnownPosition();
     if (position == null) {
       position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.medium);
+          locationSettings:
+              LocationSettings(accuracy: LocationAccuracy.medium));
     } else {
       // Run get position in background, to be sure, next time we always getting the correct position on last-known request
       Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);

@@ -7,7 +7,7 @@ import 'package:settings/ui/feature/cubit/feature_settings_cubit.dart';
 import 'package:settings/ui/feature/cubit/feature_settings_state.dart';
 
 class FeatureSettingsPage extends StatelessWidget {
-  const FeatureSettingsPage({Key? key}) : super(key: key);
+  const FeatureSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ import 'package:settings/ui/map/cubit/map_provider_item_state.dart';
 import 'package:settings/ui/navigation/cubit/map_destination_item_cubit.dart';
 
 class MapProviderItem extends StatelessWidget {
-  const MapProviderItem({Key? key}) : super(key: key);
+  const MapProviderItem({super.key});
 
   @override
   Widget build(BuildContext context) {

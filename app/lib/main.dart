@@ -30,7 +30,7 @@ void main() async {
 }
 
 class TanksteApp extends StatelessWidget {
-  const TanksteApp({Key? key}) : super(key: key);
+  const TanksteApp({super.key});
 
   @override
   Widget build(BuildContext context) {

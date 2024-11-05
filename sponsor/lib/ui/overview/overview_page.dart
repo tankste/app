@@ -9,6 +9,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 //TODO: extract duplicated layouts to functions / widgets
 class OverviewPage extends StatelessWidget {
+  const OverviewPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -71,7 +73,7 @@ class OverviewPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-            Container(
+            SizedBox(
                 height: 240,
                 child: SfRadialGauge(
                   axes: <RadialAxis>[

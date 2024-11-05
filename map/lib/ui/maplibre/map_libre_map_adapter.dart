@@ -19,8 +19,7 @@ class MapLibreMapAdapter extends MapAdapter {
       super.onCameraMove,
       super.markers,
       super.polylines,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   State<StatefulWidget> createState() => MapLibreMapAdapterState();
@@ -29,7 +28,7 @@ class MapLibreMapAdapter extends MapAdapter {
 class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   final Set<map_libre_maps.Symbol> _symbols = <map_libre_maps.Symbol>{};
   final Set<map_libre_maps.Line> _lines = <map_libre_maps.Line>{};
-  map_libre_maps.MaplibreMapController? _mapController;
+  map_libre_maps.MapLibreMapController? _mapController;
   bool _isStyleLoaded = false;
   map_libre_maps.CameraPosition? _lastCameraPosition;
 
@@ -48,7 +47,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
 
   @override
   Widget build(BuildContext context) {
-    return map_libre_maps.MaplibreMap(
+    return map_libre_maps.MapLibreMap(
       initialCameraPosition: map_libre_maps.CameraPosition(
           target: map_libre_maps.LatLng(
               widget.initialCameraPosition.latLng.latitude,
@@ -56,7 +55,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
           zoom: widget.initialCameraPosition.zoom),
       onMapCreated: (mapController) => _mapCreated(mapController),
       onMapIdle: () {
-        map_libre_maps.MaplibreMapController? mapController = _mapController;
+        map_libre_maps.MapLibreMapController? mapController = _mapController;
         if (mapController == null) {
           return;
         }
@@ -87,7 +86,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
           ? widget.styleUrlDark
           : widget.styleUrlLight,
       attributionButtonPosition:
-          map_libre_maps.AttributionButtonPosition.BottomLeft,
+          map_libre_maps.AttributionButtonPosition.bottomLeft,
       attributionButtonMargins: const Point(8, 8),
       trackCameraPosition: true,
       compassEnabled: false,
@@ -97,7 +96,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
         _updateMarkers();
         _updatePolylines();
       },
-      myLocationTrackingMode: map_libre_maps.MyLocationTrackingMode.None,
+      myLocationTrackingMode: map_libre_maps.MyLocationTrackingMode.none,
     );
   }
 
@@ -118,7 +117,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     }
   }
 
-  void _mapCreated(map_libre_maps.MaplibreMapController mapController) {
+  void _mapCreated(map_libre_maps.MapLibreMapController mapController) {
     _mapController = mapController;
     widget.onMapCreated(MapLibreMapController(mapController));
 
@@ -132,7 +131,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   }
 
   void _updateMarkers() async {
-    map_libre_maps.MaplibreMapController? mapController = _mapController;
+    map_libre_maps.MapLibreMapController? mapController = _mapController;
     if (mapController == null) {
       return;
     }
@@ -165,7 +164,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   }
 
   void _updatePolylines() async {
-    map_libre_maps.MaplibreMapController? mapController = _mapController;
+    map_libre_maps.MapLibreMapController? mapController = _mapController;
     if (mapController == null) {
       return;
     }
@@ -194,7 +193,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
 }
 
 class MapLibreMapController extends MapController {
-  map_libre_maps.MaplibreMapController childController;
+  map_libre_maps.MapLibreMapController childController;
 
   MapLibreMapController(this.childController);
 

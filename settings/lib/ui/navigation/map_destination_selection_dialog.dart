@@ -7,8 +7,7 @@ class MapDestinationSelectionDialog extends StatefulWidget {
   final MapDestinationDestination selection;
 
   const MapDestinationSelectionDialog(
-      {required this.availableMaps, required this.selection, Key? key})
-      : super(key: key);
+      {required this.availableMaps, required this.selection, super.key});
 
   @override
   State<StatefulWidget> createState() => MapDestinationSelectionDialogState();

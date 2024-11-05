@@ -28,7 +28,7 @@ class Log {
           lineLength: 200,
           colors: false,
           printEmojis: true,
-          printTime: true,
+          dateTimeFormat: DateTimeFormat.dateAndTime,
         ),
         level: Level.all);
   }

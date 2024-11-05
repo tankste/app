@@ -5,7 +5,7 @@ ThemeData tanksteTheme = ThemeData(
     useMaterial3: false,
     primaryColor: const Color(0xFF9253a4),
     primarySwatch: const MaterialColor(0xFF9253a4, {
-      50: Color(0xFF),
+      50: Color(0xFFFFFFFF),
       100: Color(0xFFe9dcec),
       200: Color(0xFFdecbe3),
       300: Color(0xFFd3bada),

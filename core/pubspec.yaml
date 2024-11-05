@@ -13,7 +13,7 @@ dependencies:
     path: '../settings'
 
   # Package Info - https://pub.dev/packages/package_info_plus
-  package_info_plus: ^5.0.1
+  package_info_plus: ^8.1.0
 
   # Tuple - https://pub.dev/packages/tuple
   tuple: ^2.0.2
@@ -22,28 +22,26 @@ dependencies:
   multiple_result: ^5.1.0
 
   # Shared Preferences - https://pub.dev/packages/shared_preferences
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.3.2
 
   # UUID - https://pub.dev/packages/uuid
-  uuid: ^4.3.3
+  uuid: ^4.5.1
 
   # Logger - https://pub.dev/packages/logger
-  logger: ^2.1.0
+  logger: ^2.4.0
 
   # Path Provider - https://pub.dev/packages/path_provider
-  path_provider: ^2.1.2
+  path_provider: ^2.1.5
 
-dependency_overrides:
-  # Force `package_info_plus` using newest `web` version (see: https://github.com/fluttercommunity/plus_plugins/issues/2653)
-  web: ^0.5.0
-
-  # Force `flutter_localizations` using newest `intl`
-  intl: ^0.19.0
+#dependency_overrides:
+#  # Force `package_info_plus` using newest `web` version (see: https://github.com/fluttercommunity/plus_plugins/issues/2653)
+#  web: ^0.5.0
+#
+#  # Force `flutter_localizations` using newest `intl`
+#  intl: ^0.19.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^5.0.0
 
 flutter:
   assets:

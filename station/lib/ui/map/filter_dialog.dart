@@ -6,12 +6,12 @@ class FilterDialog extends StatefulWidget {
   final ValueChanged<Filter> onSubmit;
   final VoidCallback onCancel;
 
-  FilterDialog({
+  const FilterDialog({
     required this.currentFilter,
     required this.onSubmit,
     required this.onCancel,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   FilterDialogState createState() => FilterDialogState();

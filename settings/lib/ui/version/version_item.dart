@@ -5,7 +5,7 @@ import 'package:settings/ui/version/cubit/version_item_cubit.dart';
 import 'package:settings/ui/version/cubit/version_item_state.dart';
 
 class VersionItem extends StatelessWidget {
-  const VersionItem({Key? key}) : super(key: key);
+  const VersionItem({super.key});
 
   @override
   Widget build(BuildContext context) {

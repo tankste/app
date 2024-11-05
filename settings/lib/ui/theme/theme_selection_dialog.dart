@@ -5,8 +5,7 @@ class ThemeSelectionDialog extends StatefulWidget {
   final ThemeMode selection;
 
   const ThemeSelectionDialog(
-      {required this.selection, Key? key})
-      : super(key: key);
+      {required this.selection, super.key});
 
   @override
   State<StatefulWidget> createState() => ThemeSelectionDialogState();

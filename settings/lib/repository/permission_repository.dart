@@ -24,7 +24,7 @@ class LocalPermissionRepository extends PermissionRepository {
 
   LocalPermissionRepository._internal();
 
-  StreamController<Result<PermissionModel, Exception>>
+  final StreamController<Result<PermissionModel, Exception>>
       _getLocationPermissionController = StreamController.broadcast();
 
   @override

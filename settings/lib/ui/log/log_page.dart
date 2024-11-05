@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 class LogPage extends StatelessWidget {
-  const LogPage({Key? key}) : super(key: key);
+  const LogPage({super.key});
 
   @override
   Widget build(BuildContext context) {

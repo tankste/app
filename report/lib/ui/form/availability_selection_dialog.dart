@@ -5,8 +5,7 @@ class AvailabilitySelectionDialog extends StatefulWidget {
   final String selection;
 
   const AvailabilitySelectionDialog(
-      {required this.selection, Key? key})
-      : super(key: key);
+      {required this.selection, super.key});
 
   @override
   State<StatefulWidget> createState() => AvailabilitySelectionDialogState();

@@ -119,7 +119,7 @@ class CustomSwitchListTile extends StatelessWidget {
   /// * [value] determines whether this switch is on or off.
   /// * [onChanged] is called when the user toggles the switch on or off.
   const CustomSwitchListTile({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     this.tileColor,
@@ -150,8 +150,7 @@ class CustomSwitchListTile extends StatelessWidget {
         assert(isThreeLine != null),
         assert(!isThreeLine || subtitle != null),
         assert(selected != null),
-        assert(autofocus != null),
-        super(key: key);
+        assert(autofocus != null);
 
   /// Creates a Material [ListTile] with an adaptive [Switch], following
   /// Material design's
@@ -166,7 +165,7 @@ class CustomSwitchListTile extends StatelessWidget {
   /// ignored: [activeTrackColor], [inactiveThumbColor], [inactiveTrackColor],
   /// [activeThumbImage], [inactiveThumbImage].
   const CustomSwitchListTile.adaptive({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     this.tileColor,
@@ -197,8 +196,7 @@ class CustomSwitchListTile extends StatelessWidget {
         assert(isThreeLine != null),
         assert(!isThreeLine || subtitle != null),
         assert(selected != null),
-        assert(autofocus != null),
-        super(key: key);
+        assert(autofocus != null);
 
   /// Whether this switch is checked.
   ///

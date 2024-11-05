@@ -12,8 +12,7 @@ class AppleMapAdapter extends MapAdapter {
       super.onCameraMove,
       super.markers,
       super.polylines,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   State<StatefulWidget> createState() => AppleMapAdapterState();

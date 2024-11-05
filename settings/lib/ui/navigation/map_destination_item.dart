@@ -7,7 +7,7 @@ import 'package:settings/ui/navigation/cubit/map_destination_item_state.dart';
 import 'package:settings/ui/navigation/map_destination_selection_dialog.dart';
 
 class MapDestinationItem extends StatelessWidget {
-  const MapDestinationItem({Key? key}) : super(key: key);
+  const MapDestinationItem({super.key});
 
   @override
   Widget build(BuildContext context) {
