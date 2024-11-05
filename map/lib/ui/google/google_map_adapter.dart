@@ -24,6 +24,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
   Set<google_maps.Marker> _markers = <google_maps.Marker>{};
   google_maps.GoogleMapController? _mapController;
   google_maps.CameraPosition? _lastPosition;
+  String? mapStyle;
   bool? _isDark;
 
   @override
@@ -35,13 +36,14 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
             widget.initialCameraPosition.latLng.longitude),
         zoom: widget.initialCameraPosition.zoom);
 
-    _checkTheme();
+    _loadTheme();
     _convertMarkers();
   }
 
   @override
   Widget build(BuildContext context) {
     return google_maps.GoogleMap(
+      style: mapStyle,
       initialCameraPosition: google_maps.CameraPosition(
           target: google_maps.LatLng(
               widget.initialCameraPosition.latLng.latitude,
@@ -87,7 +89,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
   @override
   void didUpdateWidget(GoogleMapAdapter oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _checkTheme();
+    _loadTheme();
 
     // Convert markers only on changes, to prevent expensive work
     if (!setEquals(oldWidget.markers.map((m) => m.id).toSet(),
@@ -101,11 +103,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
     widget.onMapCreated(GoogleMapController(mapController));
   }
 
-  void _checkTheme() {
-    if (_mapController == null) {
-      return;
-    }
-
+  void _loadTheme() {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     if (_isDark == isDark) {
       return;
@@ -116,9 +114,9 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
       path = "assets/google_maps/styles/dark.json";
     }
 
-    rootBundle
-        .loadString(path)
-        .then((value) => _mapController?.setMapStyle(value));
+    rootBundle.loadString(path).then((value) => setState(() {
+          mapStyle = value;
+        }));
   }
 
   Future _convertMarkers() async {

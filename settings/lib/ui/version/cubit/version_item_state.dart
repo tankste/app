@@ -1,5 +1,4 @@
 import 'package:core/cubit/base_state.dart';
-import 'package:flutter/material.dart';
 
 class VersionItemState extends BaseState {
   final String? version;

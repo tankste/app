@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:report/di/report_module_factory.dart';
 import 'package:report/model/report_model.dart';

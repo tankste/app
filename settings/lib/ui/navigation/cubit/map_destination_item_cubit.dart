@@ -6,7 +6,7 @@ import 'package:core/common/future.dart';
 
 class MapDestinationItemCubit extends Cubit<MapDestinationItemState> {
   final MapDestinationRepository mapDestinationRepository =
-      LocalMapDestinationRepository();
+  LocalMapDestinationRepository();
 
   MapDestinationItemCubit() : super(MapDestinationItemState.loading()) {
     _fetchMapDestination();
@@ -16,7 +16,7 @@ class MapDestinationItemCubit extends Cubit<MapDestinationItemState> {
     emit(MapDestinationItemState.loading());
 
     waitConcurrently2(mapDestinationRepository.listAvailable(),
-            mapDestinationRepository.get())
+        mapDestinationRepository.get())
         .then((result) {
       List<MapDestinationModel> availableDestinations = result.item1;
       MapDestinationModel currentMapDestination = result.item2;
@@ -27,7 +27,7 @@ class MapDestinationItemCubit extends Cubit<MapDestinationItemState> {
 
       emit(MapDestinationItemState.success(currentMapDestination.destination,
           currentMapDestination.label, availableDestinations));
-    }).catchError((error) => emit(MapDestinationItemState.failure(error)));
+    });
   }
 
   void onMapChanged(MapDestinationDestination mapDestination) {

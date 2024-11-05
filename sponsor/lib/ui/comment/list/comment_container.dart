@@ -30,7 +30,7 @@ class CommentContainer extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 32),
           child: Column(children: [
             Text(tr('generic.error.title'),
-                style: Theme.of(context).textTheme.headline5),
+                style: Theme.of(context).textTheme.bodyMedium),
             Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(

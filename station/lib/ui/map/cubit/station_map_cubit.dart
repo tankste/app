@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:core/log/log.dart';
 import 'package:flutter/material.dart';
@@ -526,8 +527,8 @@ class StationMapCubit extends Cubit<StationMapState>
           marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);
     }
 
-    double ratio = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-        .devicePixelRatio;
+    double ratio =
+        WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
 
     String priceText = PriceFormat.format(
         marker.currency.convertTo(markerPrice?.price ?? 0.0,

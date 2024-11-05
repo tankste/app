@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:settings/di/settings_module_factory.dart';
 import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
@@ -269,7 +268,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         return null;
       } else {
         return OpenTime(
-            day: dayLabel, isHighlighted: isTodayFallback, time: "Geschlossen");
+            day: dayLabel, isHighlighted: isTodayFallback, time: "Geschlossen"); //TODO: translate
       }
     }
 

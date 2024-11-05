@@ -28,10 +28,10 @@ class FilterDialogState extends State<FilterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
           widget.onCancel();
-          return Future.value(false);
         },
         child: Scaffold(
             body: SafeArea(
@@ -74,7 +74,9 @@ class FilterDialogState extends State<FilterDialog> {
                                                       spacing: 8,
                                                       children: <Widget>[
                                                         FilterChip(
-                                                            label: Text(tr('station.gas.super_e5'),
+                                                            label: Text(
+                                                                tr(
+                                                                    'station.gas.super_e5'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),
@@ -92,7 +94,9 @@ class FilterDialogState extends State<FilterDialog> {
                                                               });
                                                             }),
                                                         FilterChip(
-                                                            label: Text(tr('station.gas.super_e10'),
+                                                            label: Text(
+                                                                tr(
+                                                                    'station.gas.super_e10'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),
@@ -110,7 +114,9 @@ class FilterDialogState extends State<FilterDialog> {
                                                               });
                                                             }),
                                                         FilterChip(
-                                                            label: Text(tr('station.gas.diesel'),
+                                                            label: Text(
+                                                                tr(
+                                                                    'station.gas.diesel'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),
@@ -157,7 +163,8 @@ class FilterDialogState extends State<FilterDialog> {
                                                                 widget.onSubmit(
                                                                     filter);
                                                               },
-                                                              child: Text(tr('generic.save')),
+                                                              child: Text(tr(
+                                                                  'generic.save')),
                                                             ),
                                                           ))
                                                         ])))

@@ -31,7 +31,7 @@ class OverviewPage extends StatelessWidget {
       return Center(
           child: Column(children: [
         Spacer(),
-        Text(tr('generic.error.title'), style: Theme.of(context).textTheme.headline5),
+        Text(tr('generic.error.title'), style: Theme.of(context).textTheme.bodyMedium),
         Padding(
             padding: EdgeInsets.only(top: 8),
             child: Text(

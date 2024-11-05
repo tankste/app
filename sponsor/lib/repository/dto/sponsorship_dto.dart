@@ -1,4 +1,3 @@
-import 'package:sponsor/model/balance_model.dart';
 import 'package:sponsor/model/comment_model.dart';
 import 'package:sponsor/model/sponsorship_model.dart';
 

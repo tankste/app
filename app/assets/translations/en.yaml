@@ -24,7 +24,7 @@ generic:
   date:
     time:
       format: "HH:mm"
-      clock: "{} Uhr"
+      clock: "{}"
     date_time:
       format: "dd.MM.yyyy, HH:mm"
   units:

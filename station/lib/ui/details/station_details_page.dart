@@ -56,7 +56,7 @@ class StationDetailsPage extends StatelessWidget {
           child: Column(children: [
         const Spacer(),
         Text(tr('generic.error.title'),
-            style: Theme.of(context).textTheme.headline5),
+            style: Theme.of(context).textTheme.bodyMedium),
         Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(
@@ -116,7 +116,7 @@ class StationDetailsPage extends StatelessWidget {
                                     child: Text(tr('station.prices.title'),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6),
+                                            .bodyMedium),
                                   ),
                                   ...(state.prices
                                       .map((price) => Padding(
@@ -197,7 +197,7 @@ class StationDetailsPage extends StatelessWidget {
                                           Text(tr('station.open_times.title'),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline6),
+                                                  .bodyMedium),
                                           Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 8),

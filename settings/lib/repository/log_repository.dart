@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:core/log/log.dart';
-import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

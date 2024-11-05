@@ -15,7 +15,7 @@ class SettingsCard extends StatelessWidget {
       children: [
         Padding(
             padding: const EdgeInsets.all(16),
-            child: Text(title, style: Theme.of(context).textTheme.headline6)),
+            child: Text(title, style: Theme.of(context).textTheme.bodyLarge)),
         ...items
       ],
     ));

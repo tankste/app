@@ -19,7 +19,7 @@ ThemeData tanksteTheme = ThemeData(
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         foregroundColor: Colors.white, backgroundColor: Color(0xFF9253a4)),
     radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.all(const Color(0xFF9253a4)),
+      fillColor: WidgetStateProperty.all(const Color(0xFF9253a4)),
     ));
 
 ThemeData tanksteThemeDark = ThemeData(
@@ -40,22 +40,21 @@ ThemeData tanksteThemeDark = ThemeData(
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         foregroundColor: Colors.black, backgroundColor: Color(0xFFBD97C8)),
     radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.all(const Color(0xFFBD97C8)),
+      fillColor: WidgetStateProperty.all(const Color(0xFFBD97C8)),
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-        if (states.contains(MaterialState.selected)) {
+      thumbColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
           return const Color(0xFFBD97C8);
         }
 
         return const Color(0xFF3B3B3B);
       }),
-      trackColor: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-        if (states.contains(MaterialState.selected)) {
+      trackColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
           return const Color(0xFFDECBE3);
         }
 
         return const Color(0xFFCCCCCC);
       }),
-    )
-);
+    ));

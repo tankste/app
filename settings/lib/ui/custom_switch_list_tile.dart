@@ -2,8 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // Examples can assume:
 // void setState(VoidCallback fn) { }
@@ -400,7 +401,7 @@ class CustomSwitchListTile extends StatelessWidget {
 
     return MergeSemantics(
       child: ListTileTheme.merge(
-        selectedColor: activeColor ?? Theme.of(context).toggleableActiveColor,
+        selectedColor: activeColor ?? Theme.of(context).toggleButtonsTheme.selectedColor,
         child: ListTile(
           leading: leading,
           title: title,

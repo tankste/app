@@ -52,7 +52,7 @@ class StationMapPageState extends State<StationMapPage> {
 
     return Stack(children: <Widget>[
       Container(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           child: GenericMap(
             initialCameraPosition: initialCameraPosition,
             onMapCreated: (mapController) {
@@ -135,11 +135,11 @@ class StationMapPageState extends State<StationMapPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(tr('generic.error.title'),
-                        style: Theme.of(context).textTheme.headline6),
+                        style: Theme.of(context).textTheme.bodyLarge),
                     Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(tr('generic.error.long'),
-                            style: Theme.of(context).textTheme.bodyText2)),
+                            style: Theme.of(context).textTheme.bodyMedium)),
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Row(

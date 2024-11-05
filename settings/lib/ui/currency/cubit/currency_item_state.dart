@@ -1,5 +1,3 @@
-import 'package:core/cubit/base_state.dart';
-import 'package:settings/model/map_destination_model.dart';
 import 'package:station/model/currency_model.dart';
 
 abstract class CurrencyItemState {}
