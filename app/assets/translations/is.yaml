@@ -38,12 +38,8 @@ generic:
     default: isk
     eur:
       label: Evra
-    chf:
-      label: Sveitsískir frankar
     dkk:
       label: Dönsk króna
-    pln:
-      label: Złoty
     isk:
       label: Íslensk króna
 
@@ -84,6 +80,7 @@ sponsor:
 
 settings:
   title: Stillingar
+  item_error: Eitthvað fór úrskeiðis. Smelltu til að reyna aftur.
   app:
     title: Forrit
     design:
@@ -95,7 +92,6 @@ settings:
       map_libre: MapLibre
       google_maps: Google Maps
       apple_maps: Apple Maps
-      error: Eitthvað fór úrskeiðis! Smelltu til að reyna aftur.
     navigation_map:
       title: Byrja vegvísun með…
     currency:

@@ -38,12 +38,8 @@ generic:
     default: eur
     eur:
       label: Euro
-    chf:
-      label: Swiss francs
     dkk:
       label: Danish krone
-    pln:
-      label: Złoty
     isk:
       label: Icelandic krona
 

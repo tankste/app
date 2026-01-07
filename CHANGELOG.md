@@ -9,6 +9,8 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🌟 Add Danish translation
+- 🌟 Add Danish kroner currency
 
 ## 2.1.0 (2024-05-03) ##
 

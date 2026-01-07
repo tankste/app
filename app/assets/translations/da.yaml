@@ -1,0 +1,221 @@
+app:
+  title:
+    short: "tankste!"
+    full: "tankste! - Din Benzinpris App"
+    slogan: "Din Benzinpris App"
+
+generic:
+  cancel: Annuller
+  ok: OK
+  edit: Rediger
+  error:
+    title: Fejl
+    details:
+      title: Fejldetaljer
+      show: Vis detaljer
+    short: Noget gik galt!
+    long: Noget gik galt. Tjek din internetforbindelse, og prøv igen.
+  retry:
+    short: Prøv igen
+    long: Forsøg igen
+  name: Navn
+  save: Gem
+  unknown: Ukendt
+  date:
+    time:
+      format: "HH:mm"
+      clock: "{}"
+    date_time:
+      format: "dd.MM.yyyy, HH:mm"
+  units:
+    kilometers:
+      short: "{} km"
+    minutes:
+      long: "{} Minutter"
+  send: Send
+  system_default: Systemstandard
+  currency:
+    default: eur
+    eur:
+      label: Euro
+    dkk:
+      label: Dansk krone
+    isk:
+      label: Islandsk krone
+
+sponsor:
+  overview:
+    title: "Donér"
+    balance: "{} € af {} €"
+    sponsors: Sponsorer
+    options:
+      title:
+        new: Muligheder
+        extended: Flere muligheder
+      single:
+        by: "/ Én gang"
+        hint: "Støt tankste! med en enkelt betaling på {}."
+      month:
+        by: "/ Månedligt"
+        hint: "Støt tankste! med en månedlig betaling på {}."
+      year:
+        by: "/ Årligt"
+        hint: "Støt tankste! med en årlig betaling på {}."
+    restore: "Gendan køb"
+    info:
+      new:
+        title: "tankste! har brug for dig!"
+        description: "For at dække de løbende udgifter er jeg afhængig af din økonomiske hjælp.\nSparer du regelmæssigt penge på brændstof med tankste! Så donér et lille beløb til projektet.\nSå forbliver appen gratis og reklamefri i fremtiden!"
+      sponsorship:
+        title: "Du støtter tankste!"
+        description: "En stor tak til dig for at hjælpe mig med at holde tankste! projektet i live! Du har allerede hjulpet projektet med {} og dermed fremmet dets udvikling."
+        active_subscription: "Du har i øjeblikket abonnementet „{}“ aktivt."
+        comment_hint: "Du vil blive vist nedenfor som en sponsor. Du kan indtaste dit navn og efterlade en kommentar. Disse oplysninger er synlige for alle brugere."
+    comments:
+      anonymous: "Anonym"
+      comment: "Kommentar"
+      value: "{} €"
+      footer: "Tak til hver eneste støtter! {}"
+      edit: "Rediger kommentar"
+
+settings:
+  title: Indstillinger
+  item_error: Noget gik galt. Klik for at prøve igen.
+  app:
+    title: App
+    design:
+      title: Design
+      light: Lys
+      dark: Mørk
+    map_provider:
+      title: Korttjeneste
+      map_libre: MapLibre
+      google_maps: Google Maps
+      apple_maps: Apple Maps
+    navigation_map:
+      title: Start navigation med…
+    currency:
+      title: Hjemvaluta
+  open_source:
+    title: Støt os
+    sponsor:
+      title: Donér
+      description: Bliv en tankste! sponsor
+    translation:
+      title: Oversættelse
+      description: Oversæt tankste! til dit sprog
+    source_code:
+      title: Kildekode
+      description: Fork mig på Github
+  contact:
+    title: Kontakt
+    website:
+      title: Website
+      description: tankste.app
+    email:
+      title: E-Mail
+      description: "hey@tankste.app"
+    instagram:
+      title: Instagram
+      description: "@tankste.app"
+    twitter:
+      title: Twitter
+      description: "@tankste_app"
+  legal:
+    title: Juridisk
+    data_source:
+      title: Datakilder
+    terms:
+      title: Brugsbetingelser
+    privacy:
+      title: Privatlivspolitik
+  developer:
+    title: Udvikler
+    developer_mode:
+      title: Udviklertilstand
+      description: Deaktiver udviklertilstand
+      enabled: Udviklertilstand aktiveret
+    feature_flags:
+      title: Eksperimentelle funktioner
+      description: Aktivér eksperimentelle funktioner
+    clear_cache:
+      title: Nulstil cache
+      description: Slet alle cache-parametre
+      success: Cache er blevet nulstillet
+  support:
+    title: Support
+    log_enabled:
+      title: Indsaml logfiler
+      description: Aktivér lokal logføring
+    view_logs:
+      title: Logfiler
+      description: Vis seneste logfiler
+  about:
+    title: Om
+    status:
+      title: Status
+    version:
+      title: Version
+  footer:
+    note: Lavet med {} og {} i {}.
+
+station:
+  title: Tankstation
+  internal_id: "Intern ID: {}"
+  external_id: "Ekstern ID: {}"
+  gas:
+    label: Brændstoftype
+    super_e5: Super E5
+    super_e10: Super E10
+    diesel: Diesel
+  map:
+    too_far_zoomed_out: "For langt væk, zoom ind."
+  open_times:
+    title: Åbningstider
+    monday: Mandag
+    tuesday: Tirsdag
+    wednesday: Onsdag
+    thursday: Torsdag
+    friday: Fredag
+    saturday: Lørdag
+    sunday: Søndag
+    public_holiday: Helligdag
+  prices:
+    title: Brændstofpriser
+    last_price_changes_at: "Sidste prisændring: {}"
+  data_source:
+    title: Datakilde
+
+report:
+  title: "Rapportér forkerte data"
+  open_times:
+    title: I øjeblikket åbent?
+    open: Åbent
+    closed: Lukket
+  availability:
+    title: Tilgængelighed
+    available: Tilgængelig
+    temporarily_closed: "Midlertidigt lukket"
+    permanently_closed: "Permanent lukket"
+  general:
+    title: Generelt
+    name: Navn
+    brand: "Mærke (Firmanavn)"
+  address:
+    title: Adresse
+    street: Gade
+    house_number: Husnummer
+    post_code: Postnummer
+    city: By
+    country: Land
+  location:
+    title: Placering
+    latitude: Breddegrad
+    longitude: Længdegrad
+  misc:
+    title: "Andet"
+    comment:
+      label: Kommentarer
+      hint: "Fortæl os, hvad problemet er på denne tankstation."
+  form:
+    sent: "Rapporten blev sendt med succes."
