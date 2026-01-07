@@ -12,9 +12,6 @@ dependencies:
   core:
     path: '../core'
 
-  sponsor:
-    path: '../sponsor'
-
   map:
     path: '../map'
 
