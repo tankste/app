@@ -7,6 +7,9 @@ function pub_get () {
 }
 
 pub_get core
+pub_get sponsor/core
+pub_get sponsor/data_closed
+pub_get sponsor/ui
 pub_get settings
 pub_get report
 pub_get map

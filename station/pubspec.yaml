@@ -24,6 +24,9 @@ dependencies:
   report:
     path: '../report'
 
+  sponsor_ui:
+    path: '../sponsor/ui'
+
   # BLoC - https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^9.1.1
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map/ui/generic/generic_map.dart';
 import 'package:settings/ui/settings/settings_page.dart';
+import 'package:sponsor_ui/ui/item/membership_map_item.dart';
 import 'package:station/ui/details/station_details_page.dart';
 import 'package:station/ui/map/cubit/station_map_cubit.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
@@ -181,6 +182,11 @@ class StationMapPageState extends State<StationMapPage> {
                 ),
               ))))
           : Container(),
+      Positioned(
+          top: 8,
+          left: 8,
+          child: SafeArea(
+              child: MembershipMapItem())),
       Positioned(
           top: 8,
           right: 8,

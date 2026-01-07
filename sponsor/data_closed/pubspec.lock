@@ -65,26 +65,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
-  connectivity_plus:
-    dependency: transitive
-    description:
-      name: connectivity_plus
-      sha256: b5e72753cf63becce2c61fd04dfe0f1c430cc5278b53a1342dc5ad839eab29ec
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.5"
-  connectivity_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: connectivity_plus_platform_interface
-      sha256: "42657c1715d48b167930d5f34d00222ac100475f73d10162ddf43e714932f204"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   core:
     dependency: "direct main"
     description:
-      path: "../core"
+      path: "../../core"
       relative: true
     source: path
     version: "0.0.0"
@@ -112,38 +96,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  csv:
-    dependency: transitive
-    description:
-      name: csv
-      sha256: c6aa2679b2a18cb57652920f674488d89712efaf4d3fdf2e537215b35fc19d6c
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.0"
-  dbus:
-    dependency: transitive
-    description:
-      name: dbus
-      sha256: "79e0c23480ff85dc68de79e2cd6334add97e48f7f4865d17686dd6ea81a47e8c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.11"
   easy_localization:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: easy_localization
       sha256: "2ccdf9db8fe4d9c5a75c122e6275674508fd0f0d49c827354967b8afcc56bbed"
       url: "https://pub.dev"
     source: hosted
     version: "3.0.8"
-  easy_localization_loader:
-    dependency: "direct main"
-    description:
-      name: easy_localization_loader
-      sha256: cc0ca78f5f9013f3cdb80480a2efab10c9abadc82560dc412e977c372b09268f
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.2"
   easy_logger:
     dependency: transitive
     description:
@@ -198,7 +158,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_bloc:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_bloc
       sha256: cf51747952201a455a1c840f8171d273be009b932c75093020f9af64f2123e38
@@ -368,7 +328,7 @@ packages:
     source: hosted
     version: "4.7.2"
   in_app_purchase:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: in_app_purchase
       sha256: "5cddd7f463f3bddb1d37a72b95066e840d5822d66291331d7f8f05ce32c24b6c"
@@ -376,7 +336,7 @@ packages:
     source: hosted
     version: "3.2.3"
   in_app_purchase_android:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: in_app_purchase_android
       sha256: abb254ae159a5a9d4f867795ecb076864faeba59ce015ab81d4cca380f23df45
@@ -392,7 +352,7 @@ packages:
     source: hosted
     version: "1.4.0"
   in_app_purchase_storekit:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: in_app_purchase_storekit
       sha256: f7cbbd7fb47ab5a4fb736fc3f20ae81a4f6def0af9297b3c525ca727761e2589
@@ -456,9 +416,9 @@ packages:
     source: hosted
     version: "2.6.2"
   map:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "../map"
+      path: "../../map"
       relative: true
     source: path
     version: "0.0.0"
@@ -519,7 +479,7 @@ packages:
     source: hosted
     version: "2.0.0"
   multiple_result:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: multiple_result
       sha256: "7a1f3c2ee7de44a545fffbad0eefa3f3ac64641932316cd5663bb3cdcf53399b"
@@ -527,9 +487,9 @@ packages:
     source: hosted
     version: "5.2.0"
   navigation:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "../navigation"
+      path: "../../navigation"
       relative: true
     source: path
     version: "0.0.0"
@@ -541,14 +501,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  nm:
-    dependency: transitive
-    description:
-      name: nm
-      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.0"
   package_info_plus:
     dependency: transitive
     description:
@@ -664,12 +616,12 @@ packages:
   report:
     dependency: transitive
     description:
-      path: "../report"
+      path: "../../report"
       relative: true
     source: path
     version: "0.0.0"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
@@ -685,9 +637,9 @@ packages:
     source: hosted
     version: "2.1.0"
   settings:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "../settings"
+      path: "../../settings"
       relative: true
     source: path
     version: "0.0.0"
@@ -777,30 +729,23 @@ packages:
     source: hosted
     version: "1.10.1"
   sponsor_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      path: "../sponsor/core"
-      relative: true
-    source: path
-    version: "0.0.0"
-  sponsor_data_closed:
-    dependency: transitive
-    description:
-      path: "../sponsor/data_closed"
+      path: "../core"
       relative: true
     source: path
     version: "0.0.0"
   sponsor_ui:
     dependency: transitive
     description:
-      path: "../sponsor/ui"
+      path: "../ui"
       relative: true
     source: path
     version: "0.0.0"
   station:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "../station"
+      path: "../../station"
       relative: true
     source: path
     version: "0.0.0"
@@ -956,14 +901,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.6.1"
-  yaml:
-    dependency: transitive
-    description:
-      name: yaml
-      sha256: b9da305ac7c39faa3f030eccd175340f968459dae4af175130b3fc47e40d76ce
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.3"
 sdks:
   dart: ">=3.9.0 <4.0.0"
   flutter: ">=3.35.0"
