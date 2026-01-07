@@ -19,6 +19,7 @@ import 'package:settings/model/permission_model.dart';
 import 'package:settings/repository/permission_repository.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/currency_model.dart';
+import 'package:station/model/fuel_type.dart';
 import 'package:station/model/marker_model.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/repository/currency_repository.dart';

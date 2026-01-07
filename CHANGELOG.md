@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🌟 Show price history chart on station details
 - 🌟 Add Danish translation
 - 🌟 Add Danish kroner currency
 

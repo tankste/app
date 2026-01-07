@@ -76,7 +76,7 @@ class FilterDialogState extends State<FilterDialog> {
                                                         FilterChip(
                                                             label: Text(
                                                                 tr(
-                                                                    'station.gas.super_e5'),
+                                                                    'station.gas.e5'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),
@@ -96,7 +96,7 @@ class FilterDialogState extends State<FilterDialog> {
                                                         FilterChip(
                                                             label: Text(
                                                                 tr(
-                                                                    'station.gas.super_e10'),
+                                                                    'station.gas.e10'),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         16)),

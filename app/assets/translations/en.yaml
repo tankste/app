@@ -27,6 +27,9 @@ generic:
       clock: "{}"
     date_time:
       format: "dd.MM.yyyy, HH:mm"
+    date:
+      weekday: "EEE"
+      dayMonth: "dd/MM"
   units:
     kilometers:
       short: "{} km"
@@ -56,7 +59,7 @@ sponsor:
         by: "/ One-Time"
         hint: "Support tankste! with a one-time payment of {}."
       month:
-        by : "/ Monthly"
+        by: "/ Monthly"
         hint: "Support tankste! with a monthly payment of {}."
       year:
         by: "/ Yearly"
@@ -165,9 +168,18 @@ station:
   external_id: "External ID: {}"
   gas:
     label: Fuel type
-    super_e5: Super E5
-    super_e10: Super E10
+    petrol: Benzin
+    e5: Super E5
+    e10: Super E10
+    petrol_super_plus: Super Plus
+    petrol_shell_power: Shell V-Power Racing
+    petrol_aral_ultimate: Aral Ultimate
     diesel: Diesel
+    diesel_hvo100: Diesel HVO100
+    diesel_truck: Truck Diesel
+    diesel_shel_power: Shell V-Power Diesel
+    diesel_aral_ultimate: Aral Ultimate Diesel
+    lpg: Autogas
   map:
     too_far_zoomed_out: "Too far away, please zoom in."
   open_times:
@@ -183,6 +195,14 @@ station:
   prices:
     title: Fuel prices
     last_price_changes_at: "Last price changes: {}"
+  price_history:
+    title: "Price trends"
+    date_range:
+      day: "24 hours"
+      week: "7 days"
+      two_weeks: "14 days"
+      month: "30 days"
+    empty: "No history data available yet. Come back in a few days again."
   data_source:
     title: Data source
 

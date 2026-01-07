@@ -5,6 +5,7 @@ import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/currency_model.dart';
+import 'package:station/model/fuel_type.dart';
 import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/model/station_model.dart';
@@ -157,11 +158,11 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     bool isSelected = false;
     switch (fuelType) {
       case FuelType.e5:
-        fuelLabel = tr('station.gas.super_e5');
+        fuelLabel = tr('station.gas.e5');
         isSelected = activeGasPriceFilter == "e5";
         break;
       case FuelType.e10:
-        fuelLabel = tr('station.gas.super_e10');
+        fuelLabel = tr('station.gas.e10');
         isSelected = activeGasPriceFilter == "e10";
         break;
       case FuelType.diesel:

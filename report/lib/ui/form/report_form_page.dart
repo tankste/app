@@ -338,7 +338,7 @@ class ReportFormPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
                   decoration:  InputDecoration(
-                    labelText: tr('station.gas.super_e5'),
+                    labelText: tr('station.gas.e5'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,
@@ -352,7 +352,7 @@ class ReportFormPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: tr('station.gas.super_e10'),
+                    labelText: tr('station.gas.e10'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText: null,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navigation/ui/preview/route_preview.dart';
 import 'package:station/ui/details/cubit/station_details_cubit.dart';
 import 'package:station/ui/details/cubit/station_details_state.dart';
+import 'package:station/ui/history/price_history_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:report/ui/form/report_form_page.dart';
 
@@ -37,8 +38,8 @@ class StationDetailsPage extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ReportFormPage(
-                                        stationId: stationId)));
+                                    builder: (context) =>
+                                        ReportFormPage(stationId: stationId)));
                           },
                           icon: const Icon(Icons.report))
                     ],
@@ -55,12 +56,12 @@ class StationDetailsPage extends StatelessWidget {
           child: Column(children: [
         const Spacer(),
         Text(tr('generic.error.title'),
-            style: Theme.of(context).textTheme.bodyMedium),
+            style: Theme.of(context).textTheme.titleLarge),
         Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(
               (tr('generic.error.long')),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             )),
         Padding(
@@ -115,7 +116,7 @@ class StationDetailsPage extends StatelessWidget {
                                     child: Text(tr('station.prices.title'),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyMedium),
+                                            .titleLarge),
                                   ),
                                   ...(state.prices
                                       .map((price) => Padding(
@@ -196,7 +197,7 @@ class StationDetailsPage extends StatelessWidget {
                                           Text(tr('station.open_times.title'),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyMedium),
+                                                  .titleLarge),
                                           Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 8),
@@ -235,6 +236,7 @@ class StationDetailsPage extends StatelessWidget {
                                           )))
                                       .toList()),
                                 ]))),
+                    PriceHistoryCard(stationId: stationId, activateGasPriceFilter: activeGasPriceFilter),
                     Padding(
                         padding: const EdgeInsets.only(
                             top: 32, bottom: 16, left: 8, right: 8),

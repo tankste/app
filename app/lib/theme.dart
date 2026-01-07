@@ -24,6 +24,7 @@ ThemeData tanksteTheme = ThemeData(
 
 ThemeData tanksteThemeDark = ThemeData(
     brightness: Brightness.dark,
+    useMaterial3: false,
     primaryColor: const Color(0xFFBD97C8),
     primarySwatch: const MaterialColor(0xFFBD97C8, {
       50: Color(0xFFF8F4F9),
