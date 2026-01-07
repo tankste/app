@@ -55,7 +55,7 @@ class SettingsPage extends StatelessWidget {
         ListTile(
           onTap: () {
             _openUrl(
-                "https://translation.liveyourproject.com/projects/tankste/");
+                "https://github.com/tankste/app/tree/main/app/assets/translations");
           },
           minLeadingWidth: 8,
           leading: const Icon(Icons.translate),
