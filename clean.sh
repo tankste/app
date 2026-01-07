@@ -8,7 +8,6 @@ function clean () {
 
 clean core
 clean settings
-clean sponsor
 clean report
 clean map
 clean navigation

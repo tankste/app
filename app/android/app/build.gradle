@@ -23,30 +23,21 @@ if (flutterVersionName == null) {
     flutterVersionName = '0.0.0'
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 android {
     namespace 'app.tankste'
 
-    compileSdkVersion 34
-    ndkVersion '25.1.8937393'
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+    compileSdkVersion 36
+    ndkVersion '28.1.13356709'
 
     defaultConfig {
         applicationId "app.tankste"
 
-        minSdkVersion 21
-        targetSdkVersion 34
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
 
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
