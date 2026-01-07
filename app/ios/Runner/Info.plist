@@ -79,10 +79,11 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleLocalizations</key>
-    <array>
-        <string>de</string>
-        <string>en</string>
-        <string>is</string>
-    </array>
+	<array>
+		<string>en</string>
+		<string>de</string>
+		<string>da</string>
+		<string>is</string>
+	</array>
 </dict>
 </plist>
