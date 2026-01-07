@@ -12,10 +12,11 @@ Your open source fuel price app. The mission is to give you one app that you can
 
 ## Availability ##
 
-| Flag      | Country |
-| --------- | ------- |
-| :de:      | Germany |
-| :iceland: | Iceland |
+| Flag      | Country | since   |
+|-----------|---------|---------|
+| :de:      | Germany |         |
+| :denmark: | Denmark | 01/2026 |
+| :iceland: | Iceland | 55/2024 |
 
 ## Data sources ##
 

@@ -38,12 +38,8 @@ generic:
     default: eur
     eur:
       label: Euro
-    chf:
-      label: Schweizer Franken
     dkk:
       label: Dänische Krone
-    pln:
-      label: Złoty
     isk:
       label: Isländische Krone
 
@@ -84,6 +80,7 @@ sponsor:
 
 settings:
   title: Einstellungen
+  item_error: Ein Fehler ist aufgetreten. Zum wiederholen klicken.
   app:
     title: App
     design:
@@ -95,7 +92,6 @@ settings:
       map_libre: MapLibre
       google_maps: Google Maps
       apple_maps: Apple Maps
-      error: Es ist ein Fehler aufgetreten! Zum Wiederholen klicken.
     navigation_map:
       title: Navigation starten mit…
     currency:
@@ -154,8 +150,6 @@ settings:
     view_logs:
       title: Logs
       description: Anzeigen der letzten Logs
-      share:
-        label: "tankste! Logs"
   about:
     title: Über
     status:

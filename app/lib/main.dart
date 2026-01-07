@@ -21,7 +21,7 @@ void main() async {
   await initializeMapRenderer();
 
   runApp(EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('de'), Locale('is')],
+      supportedLocales: const [Locale('en'), Locale('de'), Locale('is'), Locale('da')],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
       useOnlyLangCode: true,

@@ -37,7 +37,5 @@ enum CurrencyType {
   unknown,
   eur,
   isk,
-  // chf,
-  // pln,
-  // dkk
+  dkk,
 }
