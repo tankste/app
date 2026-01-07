@@ -8,6 +8,7 @@ import 'package:report/repository/report_repository.dart';
 import 'package:report/ui/form/cubit/report_form_state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:station/di/station_module_factory.dart';
+import 'package:station/model/fuel_type.dart';
 import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/repository/open_time_repository.dart';

@@ -1,3 +1,4 @@
+import 'package:station/model/fuel_type.dart';
 import 'package:station/model/price_model.dart';
 
 class PriceDto {

@@ -27,6 +27,9 @@ generic:
       clock: "{} klst."
     date_time:
       format: "dd.MM.yyyy, HH:mm"
+    date:
+      weekday: "EEE"
+      dayMonth: "dd.MM."
   units:
     kilometers:
       short: "{} km"
@@ -165,9 +168,18 @@ station:
   external_id: "Ytri auðkenni: {}"
   gas:
     label: Eldsneytisgerð
-    super_e5: Super E5
-    super_e10: Super E10
-    diesel: Dísel
+    petrol: Bensín
+    e5: Super E5
+    e10: Super E10
+    petrol_super_plus: Super Plus
+    petrol_shell_power: Shell V-Power Racing
+    petrol_aral_ultimate: Aral Ultimate
+    diesel: Dísil
+    diesel_hvo100: Dísil HVO100
+    diesel_truck: Lestarvagnadísil
+    diesel_shel_power: Shell V-Power Dísil
+    diesel_aral_ultimate: Aral Ultimate Dísil
+    lpg: Bílagas
   map:
     too_far_zoomed_out: "Of langt í burtu, vins
 
@@ -185,6 +197,14 @@ amlegast zooma inn."
   prices:
     title: Verð á eldsneyti
     last_price_changes_at: "Síðustu verðbreytingar: {}"
+  price_history:
+    title: "Verðssaga"
+    date_range:
+      day: "24 Tímar"
+      week: "7 Dagar"
+      two_weeks: "14 Dagar"
+      month: "30 Dagar"
+    empty: "Engin söguleg gögn eru til staðar ennþá. Athugaðu aftur eftir nokkra daga."
   data_source:
     title: Gagnagrunnur
 

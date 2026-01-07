@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:navigation/coordinate_model.dart';
 import 'package:station/model/currency_model.dart';
+import 'package:station/model/fuel_type.dart';
 import 'package:station/model/marker_model.dart';
 import 'package:station/model/price_model.dart';
 

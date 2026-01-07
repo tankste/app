@@ -5,6 +5,7 @@ import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/currency_model.dart';
+import 'package:station/model/fuel_type.dart';
 import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/model/station_model.dart';
@@ -77,7 +78,12 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
                           ?.iconImageUrl
                           .toString() ??
                       "",
-                  prices: _genPricesList(station, homeCurrency, prices),
+                  prices: prices
+                      .sortedBy<num>((p) => p.fuelType.index)
+                      .map((p) => _genPriceItem(
+                          station, homeCurrency, p.fuelType, prices))
+                      .nonNulls
+                      .toList(growable: false),
                   lastPriceUpdate: _genPriceUpdate(prices),
                   openTimes: _genOpenTimeList(openTimes),
                   openTimesOriginIconUrl: origins
@@ -96,14 +102,14 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
                           name: o.name,
                           websiteUrl: o.websiteUrl.toString()))
                       .toList(),
-                  internalId:
-                      developerSettings.isFeatureEnabled(Feature.stationMetaInfo)
-                          ? station.id.toString()
-                          : null,
-                  externalId:
-                      developerSettings.isFeatureEnabled(Feature.stationMetaInfo)
-                          ? station.externalId
-                          : null,
+                  internalId: developerSettings
+                          .isFeatureEnabled(Feature.stationMetaInfo)
+                      ? station.id.toString()
+                      : null,
+                  externalId: developerSettings
+                          .isFeatureEnabled(Feature.stationMetaInfo)
+                      ? station.externalId
+                      : null,
                 );
               },
                   (error) => ErrorStationDetailsState(
@@ -139,37 +145,23 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     _fetchStation();
   }
 
-  List<Price> _genPricesList(StationModel station, CurrencyModel homeCurrency,
-      List<PriceModel> prices) {
-    List<Price?> items = [];
-
-    items.add(_genPriceItem(station, homeCurrency, FuelType.e5, prices));
-    items.add(_genPriceItem(station, homeCurrency, FuelType.e10, prices));
-    items.add(_genPriceItem(station, homeCurrency, FuelType.diesel, prices));
-
-    return items.whereNotNull().toList();
-  }
-
   //TODO: should show not available prices, or hide completely?
   Price? _genPriceItem(StationModel station, CurrencyModel homeCurrency,
       FuelType fuelType, List<PriceModel> prices) {
-    String fuelLabel = "";
+    String fuelLabel = tr('station.gas.${fuelType.name}');
     bool isSelected = false;
     switch (fuelType) {
       case FuelType.e5:
-        fuelLabel = tr('station.gas.super_e5');
         isSelected = activeGasPriceFilter == "e5";
         break;
       case FuelType.e10:
-        fuelLabel = tr('station.gas.super_e10');
         isSelected = activeGasPriceFilter == "e10";
         break;
       case FuelType.diesel:
-        fuelLabel = tr('station.gas.diesel');
         isSelected = activeGasPriceFilter == "diesel";
         break;
       default:
-        fuelLabel = tr('generic.unknown');
+        break;
     }
 
     PriceModel? price = prices.firstWhereOrNull((p) => p.fuelType == fuelType);
@@ -268,7 +260,9 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         return null;
       } else {
         return OpenTime(
-            day: dayLabel, isHighlighted: isTodayFallback, time: "Geschlossen"); //TODO: translate
+            day: dayLabel,
+            isHighlighted: isTodayFallback,
+            time: "Geschlossen"); //TODO: translate
       }
     }
 

@@ -27,6 +27,9 @@ generic:
       clock: "{}"
     date_time:
       format: "dd.MM.yyyy, HH:mm"
+    date:
+      weekday: "EEE"
+      dayMonth: "dd.MM."
   units:
     kilometers:
       short: "{} km"
@@ -165,8 +168,8 @@ station:
   external_id: "Ekstern ID: {}"
   gas:
     label: Brændstoftype
-    super_e5: Super E5
-    super_e10: Super E10
+    e5: Super E5
+    e10: Super E10
     diesel: Diesel
   map:
     too_far_zoomed_out: "For langt væk, zoom ind."
@@ -183,6 +186,14 @@ station:
   prices:
     title: Brændstofpriser
     last_price_changes_at: "Sidste prisændring: {}"
+  price_history:
+    title: "Prisudvikling"
+    date_range:
+      day: "24 Timer"
+      week: "7 Dage"
+      two_weeks: "14 Dage"
+      month: "30 Dage"
+    empty: "Der er endnu ingen historiske data tilgængelige. Kom tilbage om et par dage."
   data_source:
     title: Datakilde
 

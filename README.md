@@ -16,7 +16,7 @@ Your open source fuel price app. The mission is to give you one app that you can
 |-----------|---------|---------|
 | :de:      | Germany |         |
 | :denmark: | Denmark | 01/2026 |
-| :iceland: | Iceland | 55/2024 |
+| :iceland: | Iceland | 05/2024 |
 
 ## Data sources ##
 

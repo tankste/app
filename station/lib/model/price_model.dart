@@ -1,3 +1,5 @@
+import 'package:station/model/fuel_type.dart';
+
 class PriceModel {
   final int id;
   final int originId;
@@ -16,11 +18,4 @@ class PriceModel {
   String toString() {
     return 'PriceModel{id: $id, originId: $originId, fuelType: $fuelType, price: $price, lastChangedDate: $lastChangedDate}';
   }
-}
-
-enum FuelType {
-  unknown,
-  e5,
-  e10,
-  diesel,
 }
