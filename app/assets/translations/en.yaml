@@ -47,47 +47,27 @@ generic:
       label: Icelandic krona
 
 sponsor:
-
+  become:
+    title: "Become a tankste! Supporter"
+  membership:
+    title: "Thank you for your support!"
+  teaser: "Your support enables..."
+  points:
+    1: "Expansion of fuel types"
+    2: "Inclusion of new countries"
+    3: "Inclusion of new gas stations"
+    4: "Future new features"
+    5: "Permanent ad-free experience"
+    6: "Permanent exclusion of data miners"
+  note: "Please note that no benefits arise from purchasing the subscription. The tankste! app is available to the same extent regardless of payment. Payment is voluntary."
   product:
     month:
       by: " / month"
     year:
       by: " / year"
-
-
-  overview:
-    title: "Donates"
-    balance: "{} € von {} €"
-    sponsors: Sponsors
-    options:
-      title:
-        new: Options
-        extended: More options
-      single:
-        by: "/ One-Time"
-        hint: "Support tankste! with a one-time payment of {}."
-      month:
-        by: "/ Monthly"
-        hint: "Support tankste! with a monthly payment of {}."
-      year:
-        by: "/ Yearly"
-        hint: "Support tankste! with a yearly payment of {}"
-    restore: "Restore purchases"
-    info:
-      new:
-        title: "tankste! needs you!"
-        description: "To cover the running costs, I am dependent on your financial help.\nDo you regularly save money on gas with tankste! Then donate a small amount to the project.\nSo the app will remain free and ad-free in the future!"
-      sponsorship:
-        title: "You support tankste!"
-        description: "A big thank you to you for helping me keep the tankste! project alive! You have already helped out the project with {} and thus driven its further development."
-        active_subscription: "You currently have the subscription „{}“ active."
-        comment_hint: "You will be listed below as a sponsor. You can enter your name and leave a comment. This information is visible to all users."
-    comments:
-      anonymous: "Anonymous"
-      comment: "Comment"
-      value: "{} €"
-      footer: "Thanks to every single supporter! {}"
-      edit: "Edit comment"
+  symbol_option: "Display supporter symbol on the map"
+  bought: "It worked. Thank you very much! Your support ensures the future viability of the tankste! project."
+  error: "Could not load products."
 
 settings:
   title: Settings

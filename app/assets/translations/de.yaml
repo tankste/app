@@ -47,57 +47,27 @@ generic:
       label: Isländische Krone
 
 sponsor:
+  become:
+    title: "Werde tankste! Unterstützer"
+  membership:
+    title: "Danke für deine Unterstützung!",
+  teaser: "Deine Unterstützung ermöglicht.."
   points:
-    #Werde tankste! Unterstützer
-    # Deine Unterstützung ermöglicht..
-#    _buildPoint(context, "Erweiterung der Spritsorten"),
-#    _buildPoint(context, "Aufnahme von neuen Ländern"),
-#    _buildPoint(context, "Aufnahme von neuen Tankstellen"),
-#    _buildPoint(context, "zukünftig neue Funktionen"),
-#    _buildPoint(context, "dauerhafte werbefreiheit"),
-#    _buildPoint(context, "dauerhafter Ausschluss von Datenkraken"),
-
-  # Bitte beachte, dass keine Vorteile durch den Kauf des Abos entstehen. Die tankste! App ist unabhängig von der Bezahlung im selben Umfang nutzbar. Die Bezahlung ist freiwillig.
-
+    1: "Erweiterung der Spritsorten"
+    2: "Aufnahme von neuen Ländern"
+    3: "Aufnahme von neuen Tankstellen"
+    4: "zukünftig neue Funktionen"
+    5: "dauerhafte werbefreiheit"
+    6: "dauerhafter Ausschluss von Datenkraken"
+  note: "Bitte beachte, dass keine Vorteile durch den Kauf des Abos entstehen. Die tankste! App ist unabhängig von der Bezahlung im selben Umfang nutzbar. Die Bezahlung ist freiwillig."
   product:
     month:
       by: " / Monat"
     year:
       by: " / Jahr"
-
-  overview:
-    title: "Spenden"
-    balance: "{} € von {} €"
-    sponsors: Sponsoren
-    options:
-      title:
-        new: Optionen
-        extended: Zusätzliche Optionen
-      single:
-        by: "/ Einmalig"
-        hint: "Unterstütze tankste! mit einer einmaligen Zahlung von {}."
-      month:
-        by: "/ Monatlich"
-        hint: "Unterstütze tankste! mit einer monatlichen Zahlung von {}."
-      year:
-        by: "/ Jährlich"
-        hint: "Unterstütze tankste! mit einer jährlichen Zahlung von {}."
-    restore: "Käufe wiederherstellen"
-    info:
-      new:
-        title: "tankste! braucht dich!"
-        description: "Um die laufenden Kosten zu decken, bin ich auf eure finazielle Hilfe angewiesen.\nDu sparst mit tankste! regelmäßig Geld beim Tanken? Dann überlass dem Projekt doch einen kleinen Betrag davon.\nSo bleibt die App auch in Zukunft kostenlos und werbefrei!"
-      sponsorship:
-        title: "Du unterstützt tankste!"
-        description: "Ein großes Dankeschön an dich, dass du mir hilfst das Projekt tankste! am Leben zu halten! Du hast dem Projekt bereits mit {} ausgeholfen, und somit die Weiterentwicklung voran getrieben."
-        active_subscription: "Zur Zeit hast du das Abonnement „{}“ aktiv."
-        comment_hint: "Du wirst weiter unten als Sponsor gelistet. Du kannst deinen Namen angeben, und zusätzlich einen Kommentar hinterlassen. Diese Angaben sind für alle Nutzer sichtbar."
-    comments:
-      anonymous: "Anonym"
-      comment: "Kommentar"
-      value: "{} €"
-      footer: "Danke an jede/n einzelne/n Unterstützer/in! {}"
-      edit: "Kommentar bearbeiten"
+  symbol_option: "Unterstützungs-Symbol auf Karte einblenden"
+  bought: "Das hat geklappt. Vielen Dank! Mit deiner Unterstützung bleibt das Projekt tankste! zukunftsfähig.",
+    error: "Produkte konnten nicht geladen werden."
 
 settings:
   title: Einstellungen

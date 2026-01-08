@@ -19,6 +19,7 @@ class StationMapPage extends StatefulWidget {
 }
 
 class StationMapPageState extends State<StationMapPage> {
+  final GlobalKey membershipItemKey = GlobalKey();
   MapController? _mapController;
 
   @override
@@ -186,7 +187,7 @@ class StationMapPageState extends State<StationMapPage> {
           top: 8,
           left: 8,
           child: SafeArea(
-              child: MembershipMapItem())),
+              child: MembershipMapItem(key: membershipItemKey))),
       Positioned(
           top: 8,
           right: 8,

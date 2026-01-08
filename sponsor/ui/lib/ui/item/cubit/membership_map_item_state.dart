@@ -10,3 +10,5 @@ class InfoMembershipMapItemState extends MembershipMapItemState {
 
   InfoMembershipMapItemState({required this.isMember});
 }
+
+class HiddenMembershipMapItemState extends MembershipMapItemState {}

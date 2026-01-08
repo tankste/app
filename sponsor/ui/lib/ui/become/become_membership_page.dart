@@ -39,7 +39,7 @@ class BecomeMembershipPage extends StatelessWidget {
                       size: 160,
                     ),
                     SizedBox(height: 16),
-                    Text("Werde tankste! Unterstützer",
+                    Text(tr('sponsor.become.title'),
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall
@@ -51,20 +51,16 @@ class BecomeMembershipPage extends StatelessWidget {
                             spacing: 4,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Deine Unterstützung ermöglicht..",
+                              Text(tr('sponsor.teaser'),
                                   style:
                                       Theme.of(context).textTheme.titleMedium),
                               SizedBox(height: 1),
-                              _buildPoint(
-                                  context, "Erweiterung der Spritsorten"),
-                              _buildPoint(
-                                  context, "Aufnahme von neuen Ländern"),
-                              _buildPoint(
-                                  context, "Aufnahme von neuen Tankstellen"),
-                              _buildPoint(context, "zukünftig neue Funktionen"),
-                              _buildPoint(context, "dauerhafte werbefreiheit"),
-                              _buildPoint(context,
-                                  "dauerhafter Ausschluss von Datenkraken"),
+                              _buildPoint(context, tr('sponsor.points.1')),
+                              _buildPoint(context, tr('sponsor.points.2')),
+                              _buildPoint(context, tr('sponsor.points.3')),
+                              _buildPoint(context, tr('sponsor.points.4')),
+                              _buildPoint(context, tr('sponsor.points.5')),
+                              _buildPoint(context, tr('sponsor.points.6')),
                             ])),
                     SizedBox(height: 16),
                     state is ProductsBecomeMembershipState
@@ -98,8 +94,7 @@ class BecomeMembershipPage extends StatelessWidget {
                     state is ErrorBecomeMembershipState
                         ? Padding(
                             padding: EdgeInsets.symmetric(vertical: 32),
-                            child: Text(
-                                "Produkte konnten nicht geladen werden.",
+                            child: Text(tr('sponsor.error'),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 18,
@@ -109,8 +104,7 @@ class BecomeMembershipPage extends StatelessWidget {
                     state is BoughtBecomeMembershipState
                         ? Padding(
                             padding: EdgeInsets.symmetric(vertical: 32),
-                            child: Text(
-                                "Das hat geklappt. Vielen Dank! Mit deiner Unterstützung bleibt das Projekt tankste! zukunftsfähig.",
+                            child: Text(tr('sponsor.bought'),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 18,
@@ -122,17 +116,6 @@ class BecomeMembershipPage extends StatelessWidget {
                             padding: EdgeInsets.symmetric(vertical: 8),
                             child: CircularProgressIndicator())
                         : Container(),
-
-                    // state.items.isNotEmpty && Platform.isIOS
-                    //     ? Center(
-                    //     child: Padding(
-                    //         padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                    //         child: TextButton(
-                    //             onPressed: () {
-                    //               // context.read<OfferCubit>().onRestoreClicked();
-                    //             },
-                    //             child: Text(tr('sponsor.overview.restore')))))
-                    //     : Container(),
                     Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Row(
@@ -160,8 +143,7 @@ class BecomeMembershipPage extends StatelessWidget {
                           ],
                         )),
                     SizedBox(height: 8),
-                    Text(
-                        "Bitte beachte, dass keine Vorteile durch den Kauf des Abos entstehen. Die tankste! App ist unabhängig von der Bezahlung im selben Umfang nutzbar. Die Bezahlung ist freiwillig.",
+                    Text(tr('sponsor.note'),
                         style: Theme.of(context).textTheme.bodySmall)
                   ],
                 ))));

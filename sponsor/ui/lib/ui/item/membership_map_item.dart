@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sponsor_ui/ui/become/become_membership_page.dart';
 import 'package:sponsor_ui/ui/item/cubit/membership_map_item_cubit.dart';
 import 'package:sponsor_ui/ui/item/cubit/membership_map_item_state.dart';
+import 'package:sponsor_ui/ui/member/membership_page.dart';
 
 class MembershipMapItem extends StatelessWidget {
   const MembershipMapItem({super.key});
@@ -27,6 +28,8 @@ class MembershipMapItem extends StatelessWidget {
               AspectRatio(aspectRatio: 1, child: CircularProgressIndicator()));
     } else if (state is ErrorMembershipMapItemState) {
       return _buildInactiveMemberContent(context);
+    } else if (state is HiddenMembershipMapItemState) {
+      return Container();
     } else if (state is InfoMembershipMapItemState) {
       if (state.isMember) {
         return _buildActiveMemberContent(context);
@@ -55,8 +58,8 @@ class MembershipMapItem extends StatelessWidget {
   Widget _buildActiveMemberContent(BuildContext context) {
     return InkWell(
         onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Container()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MembershipPage()));
         },
         child: Padding(
             padding: const EdgeInsets.all(16),

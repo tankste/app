@@ -9,7 +9,7 @@ import 'package:settings/ui/settings/settings_card.dart';
 import 'package:settings/ui/support/support_card.dart';
 import 'package:settings/ui/theme/theme_item.dart';
 import 'package:settings/ui/version/version_item.dart';
-import 'package:sponsor_ui/ui/become/become_membership_page.dart';
+import 'package:sponsor_ui/ui/member/membership_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -45,7 +45,7 @@ class SettingsPage extends StatelessWidget {
         ListTile(
           onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => BecomeMembershipPage()));
+                MaterialPageRoute(builder: (context) => MembershipPage()));
           },
           minLeadingWidth: 8,
           leading: const Icon(Icons.favorite),

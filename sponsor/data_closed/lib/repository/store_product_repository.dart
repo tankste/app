@@ -7,6 +7,15 @@ import 'package:sponsor_core/model/product_model.dart';
 import 'package:sponsor_core/repository/product_repository.dart';
 
 class StoreProductRepository extends ProductRepository {
+  static final StoreProductRepository _singleton =
+      StoreProductRepository._internal();
+
+  factory StoreProductRepository() {
+    return _singleton;
+  }
+
+  StoreProductRepository._internal();
+
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
 
   @override

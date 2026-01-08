@@ -47,39 +47,27 @@ generic:
       label: Íslensk króna
 
 sponsor:
-  overview:
-    title: "Gjafir"
-    balance: "{} € af {} €"
-    sponsors: Styrktaraðilar
-    options:
-      title:
-        new: Valmöguleikar
-        extended: Fleiri valmöguleikar
-      single:
-        by: "/ Einu sinni"
-        hint: "Styðja tankste! með einu gjaldi á {}."
-      month:
-        by : "/ Mánaðarlega"
-        hint: "Styðja tankste! með mánaðarlegu greiðslu á {}."
-      year:
-        by: "/ Árlega"
-        hint: "Styðja tankste! með árlegri greiðslu á {}"
-    restore: "Endurheimta kaup"
-    info:
-      new:
-        title: "tankste! þarfnast þín!"
-        description: "Til að bæta rekstrarútgjöldin, er ég háður fjárhagslegri hjálp þinni.\nSparirðu reglulega peninga á bensín með tankste! Þá gefurðu smá upphæð til verkefnisins.\nÞannig mun forritið vera frjáls og auglýsingafritt í framtíðinni!"
-      sponsorship:
-        title: "Þú styður tankste!"
-        description: "Stór þakkir til þín fyrir að hjálpa mér að halda lífi í tankste! verkefninu! Þú hefur þegar hjálpað verkefninu með {} og þannig dreift því áfram."
-        active_subscription: "Þú ert núna með áskriftina „{}“ virka."
-        comment_hint: "Þú verður skráður hér að neðan sem styrktaraðili. Þú getur sláð inn nafnið þitt og skilaboð. Þessar upplýsingar eru sjáanlegar öllum notendum."
-    comments:
-      anonymous: "Nafnlaus"
-      comment: "Athugasemd"
-      value: "{} €"
-      footer: "Takk fyrir hverja einustu styðju! {}"
-      edit: "Breyta athugasemd"
+  become:
+    title: "Vertu tankste! Stuðningsaðili"
+  membership:
+    title: "Þakka þér fyrir stuðninginn!"
+  teaser: "Stuðningur þinn gerir það mögulegt..."
+  points:
+    1: "Stækkun eldsneytistegunda"
+    2: "Innlimun nýrra landa"
+    3: "Innlimun nýrra bensínstöðva"
+    4: "Framtíðar nýir eiginleikar"
+    5: "Varanleg auglýsingalaust umhverfi"
+    6: "Varanleg undanskilningur gagnaníðinga"
+  note: "Athugið að engir kostir fylgja kaupum á áskriftinni. tankste! forritið er nothæft að sama marki óháð greiðslu. Greiðslan er valkvæð."
+  product:
+    month:
+      by: " / mánuður"
+    year:
+      by: " / ár"
+  symbol_option: "Birta stuðningsmerki á kortinu"
+  bought: "Það tókst. Þakka þér kærlega fyrir! Með stuðningi þínum haldast tankste! verkefnið sjálfbært."
+  error: "Ekki tókst að hlaða vörur."
 
 settings:
   title: Stillingar
