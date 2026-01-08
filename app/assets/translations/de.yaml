@@ -47,6 +47,24 @@ generic:
       label: Isländische Krone
 
 sponsor:
+  points:
+    #Werde tankste! Unterstützer
+    # Deine Unterstützung ermöglicht..
+#    _buildPoint(context, "Erweiterung der Spritsorten"),
+#    _buildPoint(context, "Aufnahme von neuen Ländern"),
+#    _buildPoint(context, "Aufnahme von neuen Tankstellen"),
+#    _buildPoint(context, "zukünftig neue Funktionen"),
+#    _buildPoint(context, "dauerhafte werbefreiheit"),
+#    _buildPoint(context, "dauerhafter Ausschluss von Datenkraken"),
+
+  # Bitte beachte, dass keine Vorteile durch den Kauf des Abos entstehen. Die tankste! App ist unabhängig von der Bezahlung im selben Umfang nutzbar. Die Bezahlung ist freiwillig.
+
+  product:
+    month:
+      by: " / Monat"
+    year:
+      by: " / Jahr"
+
   overview:
     title: "Spenden"
     balance: "{} € von {} €"

@@ -47,6 +47,14 @@ generic:
       label: Icelandic krona
 
 sponsor:
+
+  product:
+    month:
+      by: " / month"
+    year:
+      by: " / year"
+
+
   overview:
     title: "Donates"
     balance: "{} € von {} €"
