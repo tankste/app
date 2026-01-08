@@ -7,4 +7,8 @@ abstract class ProductRepository {
   Future<Result<ProductModel, Exception>> getYear();
 
   Future<Result<ProductModel, Exception>> getMonth();
+
+  Stream<Result<bool, Exception>> purchaseYear();
+
+  Stream<Result<bool, Exception>> purchaseMonth();
 }

@@ -8,5 +8,8 @@ class ProductsBecomeMembershipState extends BecomeMembershipState {
   String monthPrice;
   String yearPrice;
 
-  ProductsBecomeMembershipState({required this.monthPrice, required this.yearPrice});
+  ProductsBecomeMembershipState(
+      {required this.monthPrice, required this.yearPrice});
 }
+
+class BoughtBecomeMembershipState extends BecomeMembershipState {}

@@ -43,4 +43,40 @@ class BecomeMembershipCubit extends Cubit<BecomeMembershipState> {
           (error) => ErrorBecomeMembershipState()));
     });
   }
+
+  void onBuyYearSubscriptionClicked() {
+    emit(LoadingBecomeMembershipState());
+
+    _productRepository.purchaseYear().listen((result) {
+      if (isClosed) {
+        return;
+      }
+
+      result.when((hasBought) {
+        if (hasBought) {
+          emit(BoughtBecomeMembershipState());
+        } else {
+          _fetchYearProduct();
+        }
+      }, (error) => {_fetchYearProduct()});
+    });
+  }
+
+  void onBuyMonthSubscriptionClicked() {
+    emit(LoadingBecomeMembershipState());
+
+    _productRepository.purchaseMonth().listen((result) {
+      if (isClosed) {
+        return;
+      }
+
+      result.when((hasBought) {
+        if (hasBought) {
+          emit(BoughtBecomeMembershipState());
+        } else {
+          _fetchYearProduct();
+        }
+      }, (error) => {_fetchYearProduct()});
+    });
+  }
 }

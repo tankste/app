@@ -72,7 +72,11 @@ class BecomeMembershipPage extends StatelessWidget {
                             children: [
                               Expanded(
                                   child: FilledButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        context
+                                            .read<BecomeMembershipCubit>()
+                                            .onBuyYearSubscriptionClicked();
+                                      },
                                       child: Text(state.yearPrice)))
                             ],
                           )
@@ -82,7 +86,11 @@ class BecomeMembershipPage extends StatelessWidget {
                             children: [
                               Expanded(
                                   child: FilledButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        context
+                                            .read<BecomeMembershipCubit>()
+                                            .onBuyMonthSubscriptionClicked();
+                                      },
                                       child: Text(state.monthPrice)))
                             ],
                           )
@@ -92,10 +100,27 @@ class BecomeMembershipPage extends StatelessWidget {
                             padding: EdgeInsets.symmetric(vertical: 32),
                             child: Text(
                                 "Produkte konnten nicht geladen werden.",
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red)))
+                        : Container(),
+                    state is BoughtBecomeMembershipState
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(vertical: 32),
+                            child: Text(
+                                "Das hat geklappt. Vielen Dank! Mit deiner Unterstützung bleibt das Projekt tankste! zukunftsfähig.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green)))
+                        : Container(),
+                    state is LoadingBecomeMembershipState?
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: CircularProgressIndicator())
                         : Container(),
 
                     // state.items.isNotEmpty && Platform.isIOS
