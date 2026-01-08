@@ -9,6 +9,7 @@ import 'package:settings/ui/settings/settings_card.dart';
 import 'package:settings/ui/support/support_card.dart';
 import 'package:settings/ui/theme/theme_item.dart';
 import 'package:settings/ui/version/version_item.dart';
+import 'package:sponsor_ui/ui/setting/sponsor_setting_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -41,17 +42,7 @@ class SettingsPage extends StatelessWidget {
         CurrencyItem()
       ]),
       SettingsCard(title: tr('settings.open_source.title'), items: [
-        //TODO: new one
-        // ListTile(
-        //   onTap: () {
-        //     Navigator.push(context,
-        //         MaterialPageRoute(builder: (context) => OverviewPage()));
-        //   },
-        //   minLeadingWidth: 8,
-        //   leading: const Icon(Icons.star),
-        //   title: Text(tr('settings.open_source.sponsor.title')),
-        //   subtitle: Text(tr('settings.open_source.sponsor.description')),
-        // ),
+        SponsorSettingItem(),
         ListTile(
           onTap: () {
             _openUrl(

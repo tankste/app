@@ -34,6 +34,11 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
         target: google_maps.LatLng(widget.initialCameraPosition.latLng.latitude,
             widget.initialCameraPosition.latLng.longitude),
         zoom: widget.initialCameraPosition.zoom);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     _loadTheme();
     _convertMarkers();

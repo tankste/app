@@ -31,7 +31,12 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
         target: apple_maps.LatLng(widget.initialCameraPosition.latLng.latitude,
             widget.initialCameraPosition.latLng.longitude),
         zoom: widget.initialCameraPosition.zoom);
+  }
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _convertMarkers();
   }
 

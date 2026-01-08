@@ -47,39 +47,27 @@ generic:
       label: Islandsk krone
 
 sponsor:
-  overview:
-    title: "Donér"
-    balance: "{} € af {} €"
-    sponsors: Sponsorer
-    options:
-      title:
-        new: Muligheder
-        extended: Flere muligheder
-      single:
-        by: "/ Én gang"
-        hint: "Støt tankste! med en enkelt betaling på {}."
-      month:
-        by: "/ Månedligt"
-        hint: "Støt tankste! med en månedlig betaling på {}."
-      year:
-        by: "/ Årligt"
-        hint: "Støt tankste! med en årlig betaling på {}."
-    restore: "Gendan køb"
-    info:
-      new:
-        title: "tankste! har brug for dig!"
-        description: "For at dække de løbende udgifter er jeg afhængig af din økonomiske hjælp.\nSparer du regelmæssigt penge på brændstof med tankste! Så donér et lille beløb til projektet.\nSå forbliver appen gratis og reklamefri i fremtiden!"
-      sponsorship:
-        title: "Du støtter tankste!"
-        description: "En stor tak til dig for at hjælpe mig med at holde tankste! projektet i live! Du har allerede hjulpet projektet med {} og dermed fremmet dets udvikling."
-        active_subscription: "Du har i øjeblikket abonnementet „{}“ aktivt."
-        comment_hint: "Du vil blive vist nedenfor som en sponsor. Du kan indtaste dit navn og efterlade en kommentar. Disse oplysninger er synlige for alle brugere."
-    comments:
-      anonymous: "Anonym"
-      comment: "Kommentar"
-      value: "{} €"
-      footer: "Tak til hver eneste støtter! {}"
-      edit: "Rediger kommentar"
+  become:
+    title: "Bliv tankste! Støtte"
+  membership:
+    title: "Tak for din støtte!"
+  teaser: "Din støtte muliggør..."
+  points:
+    1: "Udvidelse af brændstoftyper"
+    2: "Tilføjelse af nye lande"
+    3: "Tilføjelse af nye tankstationer"
+    4: "Fremtidige nye funktioner"
+    5: "Permanent reklamefri oplevelse"
+    6: "Permanent udelukkelse af datagribbene"
+  note: "Bemærk, at der ikke opnås nogen fordele ved at købe abonnementet. tankste!-appen kan bruges i samme omfang uafhængigt af betaling. Betalingen er frivillig."
+  product:
+    month:
+      by: " / måned"
+    year:
+      by: " / år"
+  symbol_option: "Vis støtte-symbol på kortet"
+  bought: "Det lykkedes. Mange tak! Med din støtte forbliver tankste!-projektet bæredygtigt."
+  error: "Produkter kunne ikke indlæses."
 
 settings:
   title: Indstillinger

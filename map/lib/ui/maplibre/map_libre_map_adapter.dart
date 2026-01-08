@@ -41,6 +41,11 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
             widget.initialCameraPosition.latLng.latitude,
             widget.initialCameraPosition.latLng.longitude),
         zoom: widget.initialCameraPosition.zoom);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     _updateMarkers();
   }

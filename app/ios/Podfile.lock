@@ -16,6 +16,9 @@ PODS:
   - GoogleMaps (10.7.0):
     - GoogleMaps/Maps (= 10.7.0)
   - GoogleMaps/Maps (10.7.0)
+  - in_app_purchase_storekit (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - in_app_review (2.0.0):
     - Flutter
   - map_launcher (0.0.1):
@@ -43,6 +46,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/darwin`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
+  - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/darwin`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - map_launcher (from `.symlinks/plugins/map_launcher/ios`)
   - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
@@ -69,6 +73,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geolocator_apple/darwin"
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
+  in_app_purchase_storekit:
+    :path: ".symlinks/plugins/in_app_purchase_storekit/darwin"
   in_app_review:
     :path: ".symlinks/plugins/in_app_review/ios"
   map_launcher:
@@ -94,6 +100,7 @@ SPEC CHECKSUMS:
   Google-Maps-iOS-Utils: bed22fa703c919259b3901449434d60d994fae20
   google_maps_flutter_ios: 3213e1e5f5588b6134935cb8fc59acb4e6d88377
   GoogleMaps: 5db81729b4f6defd40820d46b49a350273ec1d28
+  in_app_purchase_storekit: 22cca7d08eebca9babdf4d07d0baccb73325d3c8
   in_app_review: 7dd1ea365263f834b8464673f9df72c80c17c937
   map_launcher: 8051ad5783913cafce93f2414c6858f2904fd8df
   MapLibre: 7f24faba45439f80ccb0f83393c29fa32cb81952
