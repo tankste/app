@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🧹 New sponsor way & design
 - 🧹 Dynamically load price fuel type
 - 🐞 Fix translation link
 - 🌟 Show price history chart on station details

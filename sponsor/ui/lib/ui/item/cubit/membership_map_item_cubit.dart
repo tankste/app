@@ -32,6 +32,5 @@ class MembershipMapItemCubit extends Cubit<MembershipMapItemState> {
 
       emit(state);
     });
-    ;
   }
 }

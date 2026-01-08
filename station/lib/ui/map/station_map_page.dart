@@ -84,7 +84,7 @@ class StationMapPageState extends State<StationMapPage> {
       state is TooFarZoomedOutStationMapState
           ? Positioned(
               top: 8,
-              left: 8,
+              left: 80,
               right: 80,
               child: SafeArea(
                   child: Center(
