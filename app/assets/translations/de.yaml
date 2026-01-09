@@ -50,7 +50,7 @@ sponsor:
   become:
     title: "Werde tankste! Unterstützer"
   membership:
-    title: "Danke für deine Unterstützung!",
+    title: "Danke für deine Unterstützung!"
   teaser: "Deine Unterstützung ermöglicht.."
   points:
     1: "Erweiterung der Spritsorten"
@@ -66,8 +66,8 @@ sponsor:
     year:
       by: " / Jahr"
   symbol_option: "Unterstützungs-Symbol auf Karte einblenden"
-  bought: "Das hat geklappt. Vielen Dank! Mit deiner Unterstützung bleibt das Projekt tankste! zukunftsfähig.",
-    error: "Produkte konnten nicht geladen werden."
+  bought: "Das hat geklappt. Vielen Dank! Mit deiner Unterstützung bleibt das Projekt tankste! zukunftsfähig."
+  error: "Produkte konnten nicht geladen werden."
 
 settings:
   title: Einstellungen

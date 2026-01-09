@@ -12,12 +12,11 @@ class SponsorSettingItemCubit extends Cubit<SponsorSettingItemState> {
   }
 
   void _fetchMembership() {
-    emit(LoadingSponsorSettingItemState());
-
     _membershipRepository.get().listen((membershipResult) {
       if (isClosed) {
         return;
       }
+
       emit(membershipResult.when(
           (membership) =>
               InfoSponsorSettingItemState(isMember: membership != null),

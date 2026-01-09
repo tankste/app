@@ -22,10 +22,7 @@ class MembershipMapItem extends StatelessWidget {
 
   Widget _buildContent(BuildContext context, MembershipMapItemState state) {
     if (state is LoadingMembershipMapItemState) {
-      return Padding(
-          padding: EdgeInsets.all(16),
-          child:
-              AspectRatio(aspectRatio: 1, child: CircularProgressIndicator()));
+      return _buildInactiveMemberContent(context);
     } else if (state is ErrorMembershipMapItemState) {
       return _buildInactiveMemberContent(context);
     } else if (state is HiddenMembershipMapItemState) {
