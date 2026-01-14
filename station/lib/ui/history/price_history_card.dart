@@ -92,7 +92,12 @@ class PriceHistoryCard extends StatelessWidget {
                       showTitles: true,
                       getTitlesWidget: (double value, TitleMeta meta) =>
                           _priceLegend(meta, value, state.currency),
-                      interval: 0.05,
+                      interval: switch (state.currency.currency) {
+                        CurrencyType.unknown => 1.0,
+                        CurrencyType.eur => 0.05,
+                        CurrencyType.isk => 0.5,
+                        CurrencyType.dkk => 0.5,
+                      },
                       reservedSize: 48,
                       minIncluded: false,
                       maxIncluded: false,
