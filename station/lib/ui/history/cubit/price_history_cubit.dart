@@ -20,7 +20,7 @@ class PriceHistoryCubit extends Cubit<PriceHistoryState> {
 
   final int stationId;
   FuelType _selectedFuelType = FuelType.unknown;
-  List<FuelType> _availableFuelTypes = [];
+  List<HistoryFuelType> _availableFuelTypes = [];
   int _selectedDays = 1;
   CurrencyModel? _currency;
   List<PricePoint> _pricePoints = [];
@@ -28,9 +28,9 @@ class PriceHistoryCubit extends Cubit<PriceHistoryState> {
   PriceHistoryCubit(this.stationId, String? activateGasPriceFilter)
       : super(LoadingPriceHistoryState()) {
     if (activateGasPriceFilter == "e5") {
-      _selectedFuelType = FuelType.e5;
+      _selectedFuelType = FuelType.petrolSuperE5;
     } else if (activateGasPriceFilter == "e10") {
-      _selectedFuelType = FuelType.e10;
+      _selectedFuelType = FuelType.petrolSuperE10;
     } else if (activateGasPriceFilter == "diesel") {
       _selectedFuelType = FuelType.diesel;
     }
@@ -65,8 +65,8 @@ class PriceHistoryCubit extends Cubit<PriceHistoryState> {
 
       result.when((prices) {
         _availableFuelTypes = prices
-            .map((p) => p.fuelType)
-            .sortedBy<num>((p) => p.index)
+            .map((p) => HistoryFuelType(fuelType: p.fuelType, label: p.label))
+            .sortedBy<num>((p) => p.fuelType.index)
             .toList(growable: false);
         _fetchPriceHistory();
       },
@@ -79,8 +79,8 @@ class PriceHistoryCubit extends Cubit<PriceHistoryState> {
     emit(LoadingPriceHistoryState());
 
     // TODO: ugly code x.x ; but first, refactor fuel type filter on map
-    if (!_availableFuelTypes.contains(_selectedFuelType)) {
-      _selectedFuelType = _availableFuelTypes.first;
+    if (!_availableFuelTypes.map((p) => p.fuelType).contains(_selectedFuelType)) {
+      _selectedFuelType = _availableFuelTypes.first.fuelType;
     }
 
     _priceSnapshotRepository.list(stationId, _selectedFuelType).then((result) {
