@@ -2,7 +2,7 @@ name: tankste
 description: Finde die günstigste Tankstelle in deiner Nähe!
 publish_to: 'none'
 
-version: 2.1.0+32
+version: 2.2.0+40
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

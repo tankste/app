@@ -1,7 +1,7 @@
 tankste! - App
 ==============
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Translations](https://translation.liveyourproject.com/widget/tankste/app/svg-badge.svg)](https://translation.liveyourproject.com/projects/tankste/app/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Translations](https://img.shields.io/badge/Translations-blue.svg)](https://github.com/tankste/app/tree/main/app/assets/translations)
 
 Your open source fuel price app. The mission is to give you one app that you can use in all countries.
 
