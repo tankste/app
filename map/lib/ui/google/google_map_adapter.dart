@@ -129,7 +129,9 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
             markerId: google_maps.MarkerId(m.id),
             icon: m.icon != null
                 ? google_maps.BitmapDescriptor.bytes(
-                    m.icon!.buffer.asUint8List())
+                    m.icon!.buffer.asUint8List(),
+                    imagePixelRatio: MediaQuery.of(context).devicePixelRatio,
+                    bitmapScaling: google_maps.MapBitmapScaling.auto)
                 : google_maps.BitmapDescriptor.defaultMarkerWithHue(
                     google_maps.BitmapDescriptor.hueAzure),
             position: google_maps.LatLng(m.latLng.latitude, m.latLng.longitude),

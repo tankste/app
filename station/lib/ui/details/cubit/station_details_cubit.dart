@@ -80,8 +80,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
                       "",
                   prices: prices
                       .sortedBy<num>((p) => p.fuelType.index)
-                      .map((p) => _genPriceItem(
-                          station, homeCurrency, p.fuelType, prices))
+                      .map((p) => _genPriceItem(station, homeCurrency, p))
                       .nonNulls
                       .toList(growable: false),
                   lastPriceUpdate: _genPriceUpdate(prices),
@@ -146,15 +145,13 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   }
 
   //TODO: should show not available prices, or hide completely?
-  Price? _genPriceItem(StationModel station, CurrencyModel homeCurrency,
-      FuelType fuelType, List<PriceModel> prices) {
-    String fuelLabel = tr('station.gas.${fuelType.name}');
+  Price? _genPriceItem(StationModel station, CurrencyModel homeCurrency, PriceModel price) {
     bool isSelected = false;
-    switch (fuelType) {
-      case FuelType.e5:
+    switch (price.fuelType) {
+      case FuelType.petrolSuperE5:
         isSelected = activeGasPriceFilter == "e5";
         break;
-      case FuelType.e10:
+      case FuelType.petrolSuperE10:
         isSelected = activeGasPriceFilter == "e10";
         break;
       case FuelType.diesel:
@@ -162,12 +159,6 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
         break;
       default:
         break;
-    }
-
-    PriceModel? price = prices.firstWhereOrNull((p) => p.fuelType == fuelType);
-    //TODO: change this, while closed station then will have NO PRICES
-    if (price == null) {
-      return null;
     }
 
     String? originalPriceText;
@@ -183,7 +174,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     }
 
     return Price(
-        fuel: fuelLabel,
+        fuel: price.label,
         isHighlighted: isSelected,
         originalPrice: originalPriceText,
         homePrice: homePriceText,

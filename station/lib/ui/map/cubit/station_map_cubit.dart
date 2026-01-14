@@ -485,10 +485,10 @@ class StationMapCubit extends Cubit<StationMapState>
     MarkerPrice? markerPrice;
     if (_filter?.gas == "e5") {
       markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e5);
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
     } else if (_filter?.gas == "e10") {
       markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e10);
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
     } else if (_filter?.gas == "diesel") {
       markerPrice =
           marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);
@@ -520,10 +520,10 @@ class StationMapCubit extends Cubit<StationMapState>
     MarkerPrice? markerPrice;
     if (_filter?.gas == "e5") {
       markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e5);
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
     } else if (_filter?.gas == "e10") {
       markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.e10);
+          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
     } else if (_filter?.gas == "diesel") {
       markerPrice =
           marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);

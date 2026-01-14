@@ -9,6 +9,8 @@ CHANGELOG
 
 ## Upcoming version ##
 
+## 2.2.0 (2026-01-14) ##
+
 - 🧹 New sponsor way & design
 - 🧹 Dynamically load price fuel type
 - 🐞 Fix translation link

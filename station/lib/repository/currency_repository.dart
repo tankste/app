@@ -36,7 +36,7 @@ class LocalCurrencyRepository extends CurrencyRepository {
           label: tr('generic.currency.eur.label'),
           exchangeRates: {
             CurrencyType.eur: 1.0,
-            CurrencyType.dkk: 7.47,
+            CurrencyType.dkk: 7.4724,
             CurrencyType.isk: 147.2,
           }),
       CurrencyModel(
@@ -44,9 +44,9 @@ class LocalCurrencyRepository extends CurrencyRepository {
           symbol: "dkk",
           label: tr('generic.currency.dkk.label'),
           exchangeRates: {
-            CurrencyType.eur: 0.13,
+            CurrencyType.eur: 0.1338,
             CurrencyType.dkk: 1.0,
-            CurrencyType.isk: 19.7,
+            CurrencyType.isk: 19.7266,
           }),
       CurrencyModel(
           currency: CurrencyType.isk,

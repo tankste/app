@@ -14,6 +14,9 @@ class PriceFormat {
   static String format(double price, CurrencyModel currency, bool withCurrencySymbol) {
     if (currency.currency == CurrencyType.eur) {
       return _formatThreeDecimal(price, withCurrencySymbol ? currency.symbol : null);
+    } else if (currency.currency == CurrencyType.dkk) {
+      return _formatTwoDecimal(
+          price, withCurrencySymbol ? currency.symbol : null);
     }
 
       return _formatOneDecimal(price, withCurrencySymbol ? currency.symbol : null);
@@ -51,9 +54,24 @@ class PriceFormat {
   static String _formatOneDecimal(double price, String? currencySymbol) {
     String priceText;
     if (price == 0) {
-      priceText = "---,-\u{207B}";
+      priceText = "---,-";
     } else {
       priceText = price.toStringAsFixed(1).replaceAll('.', ',');
+    }
+
+    if (currencySymbol != null) {
+      return "$priceText $currencySymbol";
+    } else {
+      return priceText;
+    }
+  }
+
+  static String _formatTwoDecimal(double price, String? currencySymbol) {
+    String priceText;
+    if (price == 0) {
+      priceText = "--,--";
+    } else {
+      priceText = price.toStringAsFixed(2).replaceAll('.', ',');
     }
 
     if (currencySymbol != null) {

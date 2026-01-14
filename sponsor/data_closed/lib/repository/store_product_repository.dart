@@ -29,18 +29,25 @@ class StoreProductRepository extends ProductRepository {
   }
 
   Future<Result<ProductModel, Exception>> _fetchProduct(String id) {
-    return _inAppPurchase
-        .queryProductDetails({id})
-        .then((response) => response.productDetails.firstOrNull)
-        .then((details) => details != null
-            ? Result<ProductModel, Exception>.success(ProductModel(
-                id: details.id,
-                title: details.title,
-                priceLabel: details.price))
-            : Result<ProductModel, Exception>.error(
-                Exception("Product $id not found.")))
-        .catchError((error) =>
-            Result<ProductModel, Exception>.error(Exception(error.toString)));
+    return _inAppPurchase.isAvailable().then((isAvailable) {
+      if (isAvailable) {
+        return _inAppPurchase
+            .queryProductDetails({id})
+            .then((response) => response.productDetails.firstOrNull)
+            .then((details) => details != null
+                ? Result<ProductModel, Exception>.success(ProductModel(
+                    id: details.id,
+                    title: details.title,
+                    priceLabel: details.price))
+                : Result<ProductModel, Exception>.error(
+                    Exception("Product $id not found.")))
+            .catchError((error) => Result<ProductModel, Exception>.error(
+                Exception(error.toString)));
+      } else {
+        return Result<ProductModel, Exception>.error(
+            Exception("Purchase unavailable"));
+      }
+    });
   }
 
   @override

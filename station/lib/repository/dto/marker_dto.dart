@@ -62,11 +62,11 @@ class MarkerDto {
         ),
         prices: [
           MarkerPrice(
-              fuelType: FuelType.e5,
+              fuelType: FuelType.petrolSuperE5,
               price: e5Price ?? 0.0,
               state: _parsePriceState(e5PriceState)),
           MarkerPrice(
-            fuelType: FuelType.e10,
+            fuelType: FuelType.petrolSuperE10,
             price: e10Price ?? 0.0,
             state: _parsePriceState(e10PriceState),
           ),

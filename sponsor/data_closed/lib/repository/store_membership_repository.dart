@@ -14,9 +14,7 @@ class StoreMembershipRepository extends MembershipRepository {
     return _singleton;
   }
 
-  StoreMembershipRepository._internal() {
-    _inAppPurchase.restorePurchases();
-  }
+  StoreMembershipRepository._internal();
 
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
 
@@ -24,6 +22,7 @@ class StoreMembershipRepository extends MembershipRepository {
   Stream<Result<MembershipModel?, Exception>> get() {
     return _inAppPurchase.isAvailable().asStream().flatMap((isAvailable) {
       if (isAvailable) {
+        _inAppPurchase.restorePurchases();
         return _inAppPurchase.purchaseStream.map((purchases) {
           bool isMember = purchases.any((purchase) =>
               purchase.status == PurchaseStatus.purchased ||
@@ -31,7 +30,10 @@ class StoreMembershipRepository extends MembershipRepository {
           return Result.success(isMember ? MembershipModel() : null);
         });
       } else {
-        return Stream.value(Result.error(Exception("Purchase unavailable")));
+        return Future.delayed(Duration(seconds: 1))
+            .then((_) => Result<MembershipModel?, Exception>.error(
+                Exception("Purchase unavailable")))
+            .asStream();
       }
     });
   }

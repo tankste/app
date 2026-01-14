@@ -92,7 +92,12 @@ class PriceHistoryCard extends StatelessWidget {
                       showTitles: true,
                       getTitlesWidget: (double value, TitleMeta meta) =>
                           _priceLegend(meta, value, state.currency),
-                      interval: 0.05,
+                      interval: switch (state.currency.currency) {
+                        CurrencyType.unknown => 1.0,
+                        CurrencyType.eur => 0.05,
+                        CurrencyType.isk => 0.5,
+                        CurrencyType.dkk => 0.5,
+                      },
                       reservedSize: 48,
                       minIncluded: false,
                       maxIncluded: false,
@@ -139,13 +144,13 @@ class PriceHistoryCard extends StatelessWidget {
                             onSelected: (selected) {
                               context
                                   .read<PriceHistoryCubit>()
-                                  .onFuelTypeSelected(fuelType);
+                                  .onFuelTypeSelected(fuelType.fuelType);
                             },
-                            selected: state.selectedFuelType == fuelType,
+                            selected: state.selectedFuelType == fuelType.fuelType,
                             selectedColor: Theme.of(context).primaryColor,
-                            label: Text(tr('station.gas.${fuelType.name}'),
+                            label: Text(fuelType.label,
                                 style: TextStyle(
-                                    color: state.selectedFuelType == fuelType
+                                    color: state.selectedFuelType == fuelType.fuelType
                                         ? Theme.of(context)
                                             .colorScheme
                                             .onPrimary

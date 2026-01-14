@@ -6,6 +6,7 @@ import 'package:station/model/config_model.dart';
 import 'package:station/model/fuel_type.dart';
 import 'package:station/model/price_snapshot_model.dart';
 import 'package:station/repository/config_repository.dart';
+import 'package:station/repository/dto/price_dto.dart';
 
 import 'dto/price_snapshot_dto.dart';
 
@@ -42,7 +43,7 @@ class TanksteWebPriceSnapshotRepository extends PriceSnapshotRepository {
       }
       ConfigModel config = configResult.tryGetSuccess()!;
 
-      String fuelTypeKey = PriceSnapshotDto.fuelTypeToJsonKey(fuelType);
+      String fuelTypeKey = PriceDto.fuelTypeToJson(fuelType);
       Uri url = Uri.parse('${config.apiBaseUrl}/stations/$stationId/price-snapshots?type=$fuelTypeKey');
       http.Response response = await http
           .get(url);

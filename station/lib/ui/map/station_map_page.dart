@@ -81,6 +81,11 @@ class StationMapPageState extends State<StationMapPage> {
       isLoading
           ? const SafeArea(child: LinearProgressIndicator())
           : Container(),
+      Positioned(
+          top: 8,
+          left: 8,
+          child: SafeArea(
+              child: MembershipMapItem(key: membershipItemKey))),
       state is TooFarZoomedOutStationMapState
           ? Positioned(
               top: 8,
@@ -183,11 +188,6 @@ class StationMapPageState extends State<StationMapPage> {
                 ),
               ))))
           : Container(),
-      Positioned(
-          top: 8,
-          left: 8,
-          child: SafeArea(
-              child: MembershipMapItem(key: membershipItemKey))),
       Positioned(
           top: 8,
           right: 8,

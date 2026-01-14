@@ -10,7 +10,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/fuel_type.dart';
 import 'package:station/model/open_time.dart';
-import 'package:station/model/price_model.dart';
 import 'package:station/repository/open_time_repository.dart';
 import 'package:station/repository/price_repository.dart';
 import 'package:station/repository/station_repository.dart';
@@ -113,22 +112,22 @@ class ReportFormCubit extends Cubit<ReportFormState> {
                 station.coordinate.longitude.toString();
             _locationLongitude = station.coordinate.longitude.toString();
             _originalPriceE5 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.e5)
+                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5)
                     ?.price
                     .toString() ??
                 "-";
             _priceE5 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.e5)
+                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5)
                     ?.price
                     .toString() ??
                 "-";
             _originalPriceE10 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.e10)
+                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10)
                     ?.price
                     .toString() ??
                 "-";
             _priceE10 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.e10)
+                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10)
                     ?.price
                     .toString() ??
                 "-";

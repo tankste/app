@@ -16,7 +16,7 @@ class EmptyPriceHistoryState extends PriceHistoryState {}
 
 class DataPriceHistoryState extends PriceHistoryState {
   FuelType selectedFuelType;
-  List<FuelType> availableFuelTypes;
+  List<HistoryFuelType> availableFuelTypes;
   List<PricePoint> priceData;
   int selectedDays;
   CurrencyModel currency;

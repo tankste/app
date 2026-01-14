@@ -5,6 +5,7 @@ class PriceModel {
   final int originId;
   final FuelType fuelType;
   final double price;
+  final String label;
   final DateTime? lastChangedDate;
 
   PriceModel(
@@ -12,10 +13,11 @@ class PriceModel {
       required this.originId,
       required this.fuelType,
       required this.price,
+      required this.label,
       required this.lastChangedDate});
 
   @override
   String toString() {
-    return 'PriceModel{id: $id, originId: $originId, fuelType: $fuelType, price: $price, lastChangedDate: $lastChangedDate}';
+    return 'PriceModel{id: $id, originId: $originId, fuelType: $fuelType, price: $price, label: $label, lastChangedDate: $lastChangedDate}';
   }
 }

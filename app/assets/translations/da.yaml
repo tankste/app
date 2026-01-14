@@ -38,7 +38,7 @@ generic:
   send: Send
   system_default: Systemstandard
   currency:
-    default: eur
+    default: dkk
     eur:
       label: Euro
     dkk:
