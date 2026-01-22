@@ -1,4 +1,4 @@
-import 'package:settings/model/map_provider_model.dart';
+import 'package:map/model/map_provider_model.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class MapProviderItemState {}

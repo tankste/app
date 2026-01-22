@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:settings/model/map_provider_model.dart';
+import 'package:map/model/map_provider_model.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_cubit.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_state.dart';
 import 'package:settings/ui/navigation/cubit/map_destination_item_cubit.dart';

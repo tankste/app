@@ -1,15 +1,28 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sponsor_core/model/product_model.dart';
+import 'package:sponsor_core/model/provider_model.dart';
 import 'package:sponsor_core/repository/product_repository.dart';
-import 'package:sponsor_data_closed/repository/store_product_repository.dart';
+import 'package:sponsor_core/repository/provider_repository.dart';
+import 'package:sponsor_data/di/sponsor_data_module_factory.dart';
 import 'package:sponsor_ui/ui/become/cubit/become_membership_state.dart';
 
 class BecomeMembershipCubit extends Cubit<BecomeMembershipState> {
-  final ProductRepository _productRepository = StoreProductRepository();
+  final ProductRepository _productRepository =
+      SponsorDataModuleFactory.createProductRepository();
+  final ProviderRepository _providerRepository =
+      SponsorDataModuleFactory.createProviderRepository();
 
   BecomeMembershipCubit() : super(LoadingBecomeMembershipState()) {
-    _fetchYearProduct();
+    _fetch();
+  }
+
+  void _fetch() {
+    if (_productRepository.hasProducts()) {
+      _fetchYearProduct();
+    } else {
+      _fetchProviders();
+    }
   }
 
   void _fetchYearProduct() {
@@ -42,6 +55,15 @@ class BecomeMembershipCubit extends Cubit<BecomeMembershipState> {
               ),
           (error) => ErrorBecomeMembershipState()));
     });
+  }
+
+  void _fetchProviders() {
+    List<ProviderModel> providers = _providerRepository.list();
+    emit(ProvidersBecomeMembershipState(
+        providers: providers
+            .map((provider) => BecomeMembershipProvider(
+                label: provider.name, logoName: provider.logoName, url: provider.url))
+            .toList(growable: false)));
   }
 
   void onBuyYearSubscriptionClicked() {

@@ -9,6 +9,9 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🌟 Create FOSS package of sponsor
+- 🌟 Create FOSS package of map
+
 ## 2.2.0 (2026-01-14) ##
 
 - 🧹 New sponsor way & design

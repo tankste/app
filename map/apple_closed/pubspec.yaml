@@ -1,0 +1,28 @@
+name: map_apple
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.7.12 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: '../../core'
+
+  map_core:
+    path: '../core'
+
+  # Apple Maps - https://pub.dev/packages/apple_maps_flutter
+  apple_maps_flutter: ^1.4.0
+
+  # Multiple Result - https://pub.dev/packages/multiple_result
+  multiple_result: ^5.2.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+

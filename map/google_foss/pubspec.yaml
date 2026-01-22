@@ -1,0 +1,22 @@
+name: map_google
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.7.12 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: '../../core'
+
+  map_core:
+    path: '../core'
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+

@@ -4,7 +4,7 @@ import 'package:core/log/log.dart';
 import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:map/ui/google/google_map_renderer.dart';
+import 'package:map/ui/generic_map_initializer.dart';
 import 'package:station/ui/map/station_map_page.dart';
 import 'package:tankste/app/cubit/app_cubit.dart';
 import 'package:tankste/app/cubit/app_state.dart';
@@ -18,7 +18,7 @@ void main() async {
 
   await Log.init();
 
-  await initializeMapRenderer();
+  await GenericMapInitializer.initialize();
 
   runApp(EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('de'), Locale('is'), Locale('da')],

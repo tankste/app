@@ -2,12 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/streams.dart';
 import 'package:sponsor_core/repository/membership_repository.dart';
 import 'package:sponsor_core/repository/symbol_repository.dart';
-import 'package:sponsor_data_closed/repository/store_membership_repository.dart';
+import 'package:sponsor_data/di/sponsor_data_module_factory.dart';
 import 'package:sponsor_ui/ui/item/cubit/membership_map_item_state.dart';
 
 class MembershipMapItemCubit extends Cubit<MembershipMapItemState> {
   final MembershipRepository _membershipRepository =
-      StoreMembershipRepository();
+      SponsorDataModuleFactory.createMembershipRepository();
   final SymbolRepository _symbolRepository = LocalSymbolRepository();
 
   MembershipMapItemCubit() : super(LoadingMembershipMapItemState()) {

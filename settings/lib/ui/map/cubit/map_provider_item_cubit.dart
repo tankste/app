@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:settings/di/settings_module_factory.dart';
-import 'package:settings/model/map_provider_model.dart';
-import 'package:settings/repository/map_provider_repository.dart';
+import 'package:map/di/map_module_factory.dart';
+import 'package:map/model/map_provider_model.dart';
+import 'package:map/repository/map_provider_repository.dart';
 import 'package:settings/ui/map/cubit/map_provider_item_state.dart';
 import 'package:rxdart/streams.dart';
 import 'package:tuple/tuple.dart';
 
 class MapProviderItemCubit extends Cubit<MapProviderItemState> {
   final MapProviderRepository _mapProviderRepository =
-      SettingsModuleFactory.createMapProviderRepository();
+      MapModuleFactory.createMapProviderRepository();
 
   MapProviderItemCubit() : super(LoadingMapProviderItemState()) {
     _fetchMapProvider();
