@@ -1,0 +1,1 @@
+export 'package:map_core/map_models.dart';

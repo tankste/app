@@ -16,7 +16,7 @@ dependencies:
     path: '../settings'
 
   map:
-    path: '../map'
+    path: '../map/map'
 
   # Location - https://pub.dev/packages/geolocator
   geolocator: ^14.0.1

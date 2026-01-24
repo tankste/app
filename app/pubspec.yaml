@@ -16,7 +16,7 @@ dependencies:
     path: '../core'
 
   map:
-    path: '../map'
+    path: '../map/map'
 
   station:
     path: '../station'

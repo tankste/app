@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:map/ui/generic/generic_map.dart';
+import 'package:map/map_models.dart';
 import 'package:station/model/marker_model.dart';
 import 'package:station/ui/map/filter_dialog.dart';
 

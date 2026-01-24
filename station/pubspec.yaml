@@ -13,7 +13,7 @@ dependencies:
     path: '../core'
 
   map:
-    path: '../map'
+    path: '../map/map'
 
   navigation:
     path: '../navigation'

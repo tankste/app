@@ -91,6 +91,7 @@ class BecomeMembershipPage extends StatelessWidget {
                             ],
                           )
                         : Container(),
+                    ..._buildProviderItems(state),
                     state is ErrorBecomeMembershipState
                         ? Padding(
                             padding: EdgeInsets.symmetric(vertical: 32),
@@ -143,8 +144,10 @@ class BecomeMembershipPage extends StatelessWidget {
                           ],
                         )),
                     SizedBox(height: 8),
-                    Text(tr('sponsor.note'),
-                        style: Theme.of(context).textTheme.bodySmall)
+                    state is! ProvidersBecomeMembershipState
+                        ? Text(tr('sponsor.note'),
+                            style: Theme.of(context).textTheme.bodySmall)
+                        : Container()
                   ],
                 ))));
   }
@@ -159,6 +162,36 @@ class BecomeMembershipPage extends StatelessWidget {
       Expanded(
           child: Text(text, style: Theme.of(context).textTheme.titleMedium))
     ]);
+  }
+
+  List<Widget> _buildProviderItems(BecomeMembershipState state) {
+    if (state is ProvidersBecomeMembershipState) {
+      return state.providers
+          .map((provider) => Row(
+                children: [
+                  Expanded(
+                      child: FilledButton(
+                          onPressed: () {
+                            _openUrl(provider.url.toString());
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 6,
+                            children: [
+                              Image.asset(
+                                "assets/images/logos/${provider.logoName}.png",
+                                package: "sponsor_ui",
+                                height: 18,
+                              ),
+                              Text(provider.label)
+                            ],
+                          )))
+                ],
+              ))
+          .toList(growable: false);
+    }
+
+    return [];
   }
 
   void _openUrl(String url) async {

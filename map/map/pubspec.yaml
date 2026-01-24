@@ -1,0 +1,49 @@
+name: map
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.7.12 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: '../../core'
+
+  map_core:
+    path: '../core'
+
+  map_maplibre:
+    path: '../maplibre'
+
+  map_google:
+    path: '../google_closed'
+
+  map_apple:
+    path: '../apple_closed'
+
+  # BLoC - https://pub.dev/packages/flutter_bloc
+  flutter_bloc: ^9.1.1
+
+  # Multiple Result - https://pub.dev/packages/multiple_result
+  multiple_result: ^5.2.0
+
+  # Easy Localization - https://pub.dev/packages/easy_localization
+  easy_localization: ^3.0.8
+
+  # Rx Dart - https://pub.dev/packages/rxdart
+  rxdart: ^0.28.0
+
+  # Collection - https://pub.dev/packages/collection
+  collection: ^1.19.1
+
+  # Shared Preferences - https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.5.4
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+

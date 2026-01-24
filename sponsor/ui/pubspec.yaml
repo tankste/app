@@ -15,7 +15,7 @@ dependencies:
   sponsor_core:
     path: '../core'
 
-  sponsor_data_closed:
+  sponsor_data:
     path: '../data_closed'
 
   # BLoC - https://pub.dev/packages/flutter_bloc
@@ -37,3 +37,5 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
+  assets:
+    - assets/images/logos/
