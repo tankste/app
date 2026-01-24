@@ -83,56 +83,59 @@ class PriceHistoryCard extends StatelessWidget {
       return Column(children: [
         AspectRatio(
             aspectRatio: 2,
-            child: LineChart(LineChartData(
-                minY: state.priceMinChart,
-                maxY: state.priceMaxChart,
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (double value, TitleMeta meta) =>
-                          _priceLegend(meta, value, state.currency),
-                      interval: switch (state.currency.currency) {
-                        CurrencyType.unknown => 1.0,
-                        CurrencyType.eur => 0.05,
-                        CurrencyType.isk => 0.5,
-                        CurrencyType.dkk => 0.5,
-                      },
-                      reservedSize: 48,
-                      minIncluded: false,
-                      maxIncluded: false,
+            child: LineChart(
+              LineChartData(
+                  minY: state.priceMinChart,
+                  maxY: state.priceMaxChart,
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (double value, TitleMeta meta) =>
+                            _priceLegend(meta, value, state.currency),
+                        interval: switch (state.currency.currency) {
+                          CurrencyType.unknown => 1.0,
+                          CurrencyType.eur => 0.05,
+                          CurrencyType.isk => 0.5,
+                          CurrencyType.dkk => 0.5,
+                        },
+                        reservedSize: 48,
+                        minIncluded: false,
+                        maxIncluded: false,
+                      ),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (double value, TitleMeta meta) =>
+                            _dateLegend(meta, value, state.selectedDays),
+                        interval: null,
+                        minIncluded: false,
+                        maxIncluded: false,
+                      ),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (double value, TitleMeta meta) =>
-                          _dateLegend(meta, value, state.selectedDays),
-                      interval: null,
-                      minIncluded: false,
-                      maxIncluded: false,
+                  lineTouchData: const LineTouchData(enabled: false),
+                  lineBarsData: [
+                    LineChartBarData(
+                      isStepLineChart: true,
+                      barWidth: 3,
+                      color: Theme.of(context).primaryColor,
+                      dotData: const FlDotData(show: false),
+                      spots: state.priceData
+                          .map((d) => FlSpot(
+                              d.date.millisecondsSinceEpoch.toDouble(),
+                              d.price))
+                          .toList(growable: false),
                     ),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                ),
-                lineTouchData: const LineTouchData(enabled: false),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: state.priceData
-                        .map((d) => FlSpot(
-                            d.date.millisecondsSinceEpoch.toDouble(), d.price))
-                        .toList(growable: false),
-                    isCurved: true,
-                    barWidth: 3,
-                    color: Theme.of(context).primaryColor,
-                    dotData: const FlDotData(show: false),
-                  ),
-                ]))),
+                  ]),
+            )),
         Padding(
             padding: EdgeInsets.only(top: 8),
             child: SingleChildScrollView(
@@ -146,11 +149,13 @@ class PriceHistoryCard extends StatelessWidget {
                                   .read<PriceHistoryCubit>()
                                   .onFuelTypeSelected(fuelType.fuelType);
                             },
-                            selected: state.selectedFuelType == fuelType.fuelType,
+                            selected:
+                                state.selectedFuelType == fuelType.fuelType,
                             selectedColor: Theme.of(context).primaryColor,
                             label: Text(fuelType.label,
                                 style: TextStyle(
-                                    color: state.selectedFuelType == fuelType.fuelType
+                                    color: state.selectedFuelType ==
+                                            fuelType.fuelType
                                         ? Theme.of(context)
                                             .colorScheme
                                             .onPrimary

@@ -79,7 +79,9 @@ class PriceHistoryCubit extends Cubit<PriceHistoryState> {
     emit(LoadingPriceHistoryState());
 
     // TODO: ugly code x.x ; but first, refactor fuel type filter on map
-    if (!_availableFuelTypes.map((p) => p.fuelType).contains(_selectedFuelType)) {
+    if (!_availableFuelTypes
+        .map((p) => p.fuelType)
+        .contains(_selectedFuelType)) {
       _selectedFuelType = _availableFuelTypes.first.fuelType;
     }
 
@@ -105,18 +107,50 @@ class PriceHistoryCubit extends Cubit<PriceHistoryState> {
 
     List<double> prices =
         _pricePoints.map((s) => s.price).toList(growable: false);
-    DateTime startFilter =
-        DateTime.now().subtract(Duration(days: _selectedDays));
     return DataPriceHistoryState(
         selectedFuelType: _selectedFuelType,
         availableFuelTypes: _availableFuelTypes,
-        priceData: _pricePoints
-            .where((p) => p.date.isAfter(startFilter))
-            .toList(growable: false),
+        priceData: _getPriceData(),
         priceMinChart: (prices.min - 0.025).toDouble(),
         priceMaxChart: (prices.max + 0.025).toDouble(),
         selectedDays: _selectedDays,
         currency: currency);
+  }
+
+  List<PricePoint> _getPriceData() {
+    DateTime startFilter =
+        DateTime.now().subtract(Duration(days: _selectedDays));
+
+    List<PricePoint> pricePoints = _pricePoints;
+    if (_selectedDays >= 30) {
+      // Show min-price for ranges of 12 hours
+      pricePoints = _pricePoints
+          .groupListsBy((point) => point.date
+          .copyWith(hour: (point.date.hour ~/ 12) * 12, minute: 0, second: 0, millisecond: 0, microsecond: 0))
+          .values
+          .map((points) => points.reduce((a, b) => a.price < b.price ? a : b))
+          .toList(growable: false);
+    } else if (_selectedDays >= 14) {
+      // Show min-price for ranges of 6 hours
+      pricePoints = _pricePoints
+          .groupListsBy((point) => point.date
+          .copyWith(hour: (point.date.hour ~/ 6) * 6, minute: 0, second: 0, millisecond: 0, microsecond: 0))
+          .values
+          .map((points) => points.reduce((a, b) => a.price < b.price ? a : b))
+          .toList(growable: false);
+    } else if (_selectedDays >= 7) {
+      // Show min-price for ranges of 3 hours
+      pricePoints = _pricePoints
+          .groupListsBy((point) => point.date
+              .copyWith(hour: (point.date.hour ~/ 3) * 3, minute: 0, second: 0, millisecond: 0, microsecond: 0))
+          .values
+          .map((points) => points.reduce((a, b) => a.price < b.price ? a : b))
+          .toList(growable: false);
+    }
+
+    return pricePoints
+        .where((p) => p.date.isAfter(startFilter))
+        .toList(growable: false);
   }
 
   void onDaysSelected(int selectedDays) {
