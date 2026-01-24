@@ -9,6 +9,8 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🧹 Price history chart: Don't show all data points on longer time ranges
+- 🧹 Price history chart: Show step line instead of curve line
 - 🌟 Create FOSS package of sponsor
 - 🌟 Create FOSS package of map
 
