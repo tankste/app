@@ -46,12 +46,7 @@ class ReportFormCubit extends Cubit<ReportFormState> {
   String _locationLatitude = "";
   String _originalLocationLongitude = "";
   String _locationLongitude = "";
-  String _originalPriceE5 = "";
-  String _priceE5 = "";
-  String _originalPriceE10 = "";
-  String _priceE10 = "";
-  String _originalPriceDiesel = "";
-  String _priceDiesel = "";
+  List<Price> _prices = [];
   String _originalOpenTimesState = "";
   String _openTimesState = "";
   String _openTimesStateLabel = "";
@@ -111,36 +106,13 @@ class ReportFormCubit extends Cubit<ReportFormState> {
             _originalLocationLongitude =
                 station.coordinate.longitude.toString();
             _locationLongitude = station.coordinate.longitude.toString();
-            _originalPriceE5 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5)
-                    ?.price
-                    .toString() ??
-                "-";
-            _priceE5 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5)
-                    ?.price
-                    .toString() ??
-                "-";
-            _originalPriceE10 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10)
-                    ?.price
-                    .toString() ??
-                "-";
-            _priceE10 = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10)
-                    ?.price
-                    .toString() ??
-                "-";
-            _originalPriceDiesel = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.diesel)
-                    ?.price
-                    .toString() ??
-                "-";
-            _priceDiesel = prices
-                    .firstWhereOrNull((p) => p.fuelType == FuelType.diesel)
-                    ?.price
-                    .toString() ??
-                "-";
+            _prices = prices
+                .map((price) => Price(
+                    fuelType: price.fuelType,
+                    label: price.label,
+                    originalPrice: price?.toString() ?? "-",
+                    price: price.price?.toString() ?? "-"))
+                .toList(growable: false);
             _originalOpenTimesState = station.isOpen.toString();
             _openTimesState = station.isOpen.toString();
             _openTimesStateLabel = station.isOpen
@@ -164,9 +136,12 @@ class ReportFormCubit extends Cubit<ReportFormState> {
                 addressCountry: _addressCountry,
                 locationLatitude: _locationLatitude,
                 locationLongitude: _locationLongitude,
-                priceE5: _priceE5,
-                priceE10: _priceE10,
-                priceDiesel: _priceDiesel,
+                prices: _prices
+                    .map((price) => ReportFormPrice(
+                        fuelType: price.fuelType,
+                        label: price.label,
+                        value: price.price))
+                    .toList(growable: false),
                 openTimesState: _openTimesState,
                 openTimesStateLabel: _openTimesStateLabel,
                 openTimes: _openTimes,
@@ -209,7 +184,7 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     items.add(_genOpenTimeRow(OpenTimeDay.publicHoliday,
         openTimes.where((ot) => ot.day == OpenTimeDay.publicHoliday).toList()));
 
-    return items.whereNotNull().toList().join("\n\n");
+    return items.nonNulls.toList().join("\n\n");
   }
 
   String? _genOpenTimeRow(OpenTimeDay day, List<OpenTimeModel> openTimes) {
@@ -289,9 +264,10 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       addressCountry: _addressCountry,
       locationLatitude: _locationLatitude,
       locationLongitude: _locationLongitude,
-      priceE5: _priceE5,
-      priceE10: _priceE10,
-      priceDiesel: _priceDiesel,
+      prices: _prices
+          .map((price) => ReportFormPrice(
+              fuelType: price.fuelType, label: price.label, value: price.price))
+          .toList(growable: false),
       openTimesState: _openTimesState,
       openTimesStateLabel: _openTimesStateLabel,
       openTimes: _openTimes,
@@ -327,16 +303,9 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     _locationLongitude = value;
   }
 
-  void onPriceE5Changed(String value) {
-    _priceE5 = value;
-  }
-
-  void onPriceE10Changed(String value) {
-    _priceE10 = value;
-  }
-
-  void onPriceDieselChanged(String value) {
-    _priceDiesel = value;
+  void onPriceChanged(FuelType fuelType, String value) {
+    int index = _prices.indexWhere((price) => price.fuelType == fuelType);
+    _prices[index] = _prices[index].copyWith(price: value);
   }
 
   void onOpenTimesStateChanged(String value) {
@@ -359,9 +328,10 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       addressCountry: _addressCountry,
       locationLatitude: _locationLatitude,
       locationLongitude: _locationLongitude,
-      priceE5: _priceE5,
-      priceE10: _priceE10,
-      priceDiesel: _priceDiesel,
+      prices: _prices
+          .map((price) => ReportFormPrice(
+              fuelType: price.fuelType, label: price.label, value: price.price))
+          .toList(growable: false),
       openTimesState: _openTimesState,
       openTimesStateLabel: _openTimesStateLabel,
       openTimes: _openTimes,
@@ -394,9 +364,10 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       addressCountry: _addressCountry,
       locationLatitude: _locationLatitude,
       locationLongitude: _locationLongitude,
-      priceE5: _priceE5,
-      priceE10: _priceE10,
-      priceDiesel: _priceDiesel,
+      prices: _prices
+          .map((price) => ReportFormPrice(
+              fuelType: price.fuelType, label: price.label, value: price.price))
+          .toList(growable: false),
       openTimesState: _openTimesState,
       openTimesStateLabel: _openTimesStateLabel,
       openTimes: _openTimes,
@@ -423,19 +394,15 @@ class ReportFormCubit extends Cubit<ReportFormState> {
         _originalLocationLatitude, _locationLatitude));
     newReports.add(_createReport(ReportField.locationLongitude,
         _originalLocationLongitude, _locationLongitude));
-    newReports
-        .add(_createReport(ReportField.priceE5, _originalPriceE5, _priceE5));
-    newReports
-        .add(_createReport(ReportField.priceE10, _originalPriceE10, _priceE10));
-    newReports.add(_createReport(
-        ReportField.priceDiesel, _originalPriceDiesel, _priceDiesel));
+    newReports.addAll(_prices.map((price) => _createReport(
+        _toReportField(price.fuelType), price.originalPrice, price.price)));
     newReports.add(_createReport(
         ReportField.openTimesState, _originalOpenTimesState, _openTimesState));
     newReports.add(
         _createReport(ReportField.openTimes, _originalOpenTimes, _openTimes));
     newReports.add(_createReport(ReportField.note, "", _note));
 
-    if (newReports.whereNotNull().isEmpty) {
+    if (newReports.nonNulls.isEmpty) {
       emit(SavedFormReportFormState(
         brand: _brand,
         name: _name,
@@ -448,9 +415,12 @@ class ReportFormCubit extends Cubit<ReportFormState> {
         addressCountry: _addressCountry,
         locationLatitude: _locationLatitude,
         locationLongitude: _locationLongitude,
-        priceE5: _priceE5,
-        priceE10: _priceE10,
-        priceDiesel: _priceDiesel,
+        prices: _prices
+            .map((price) => ReportFormPrice(
+                fuelType: price.fuelType,
+                label: price.label,
+                value: price.price))
+            .toList(growable: false),
         openTimesState: _openTimesState,
         openTimesStateLabel: _openTimesStateLabel,
         openTimes: _openTimes,
@@ -460,7 +430,7 @@ class ReportFormCubit extends Cubit<ReportFormState> {
     }
 
     Future.wait(newReports
-        .whereNotNull()
+        .nonNulls
         .map((r) => _reportRepository.create(r).first)).then((results) {
       if (isClosed) {
         return;
@@ -482,9 +452,12 @@ class ReportFormCubit extends Cubit<ReportFormState> {
           addressCountry: _addressCountry,
           locationLatitude: _locationLatitude,
           locationLongitude: _locationLongitude,
-          priceE5: _priceE5,
-          priceE10: _priceE10,
-          priceDiesel: _priceDiesel,
+          prices: _prices
+              .map((price) => ReportFormPrice(
+                  fuelType: price.fuelType,
+                  label: price.label,
+                  value: price.price))
+              .toList(growable: false),
           openTimesState: _openTimesState,
           openTimesStateLabel: _openTimesStateLabel,
           openTimes: _openTimes,
@@ -505,15 +478,55 @@ class ReportFormCubit extends Cubit<ReportFormState> {
         addressCountry: _addressCountry,
         locationLatitude: _locationLatitude,
         locationLongitude: _locationLongitude,
-        priceE5: _priceE5,
-        priceE10: _priceE10,
-        priceDiesel: _priceDiesel,
+        prices: _prices
+            .map((price) => ReportFormPrice(
+                fuelType: price.fuelType,
+                label: price.label,
+                value: price.price))
+            .toList(growable: false),
         openTimesState: _openTimesState,
         openTimesStateLabel: _openTimesStateLabel,
         openTimes: _openTimes,
         note: _note,
       ));
     });
+  }
+
+  ReportField _toReportField(FuelType fuelType) {
+    switch (fuelType) {
+      case FuelType.petrol:
+        return ReportField.pricePetrol;
+      case FuelType.petrolSuperE5:
+        return ReportField.pricePetrolSuperE5;
+      case FuelType.petrolSuperE10:
+        return ReportField.pricePetrolSuperE10;
+      case FuelType.petrolSuperPlus:
+        return ReportField.pricePetrolSuperPlus;
+      case FuelType.petrolSuperE5Additive:
+        return ReportField.pricePetrolSuperE5Additive;
+      case FuelType.petrolSuperE10Additive:
+        return ReportField.pricePetrolSuperE10Additive;
+      case FuelType.petrolSuperPlusAdditive:
+        return ReportField.pricePetrolSuperPlusAdditive;
+      case FuelType.diesel:
+        return ReportField.priceDiesel;
+      case FuelType.dieselHvo100:
+        return ReportField.priceDieselHvo100;
+      case FuelType.dieselAdditive:
+        return ReportField.priceDieselAdditive;
+      case FuelType.dieselHvo100Additive:
+        return ReportField.priceDieselHvo100Additive;
+      case FuelType.dieselTruck:
+        return ReportField.priceDieselTruck;
+      case FuelType.dieselHvo100Truck:
+        return ReportField.priceDieselHvo100Truck;
+      case FuelType.lpg:
+        return ReportField.priceLpg;
+      case FuelType.adblue:
+        return ReportField.priceAdblue;
+      case FuelType.unknown:
+        return ReportField.unknown;
+    }
   }
 
   ReportModel? _createReport(
@@ -530,5 +543,37 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       correctValue: correctValue.trim().isNotEmpty ? correctValue : "-",
       status: ReportStatus.open,
     );
+  }
+}
+
+class Price {
+  FuelType fuelType;
+  String label;
+  String originalPrice;
+  String price;
+
+  Price(
+      {required this.fuelType,
+      required this.label,
+      required this.originalPrice,
+      required this.price});
+
+  Price copyWith({
+    FuelType? fuelType,
+    String? label,
+    String? originalPrice,
+    String? price,
+  }) {
+    return Price(
+      fuelType: fuelType ?? this.fuelType,
+      label: label ?? this.label,
+      originalPrice: originalPrice ?? this.originalPrice,
+      price: price ?? this.price,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Price(fuelType: $fuelType, label: $label, originalPrice: $originalPrice, price: $price)';
   }
 }

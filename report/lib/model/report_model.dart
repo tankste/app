@@ -33,12 +33,24 @@ enum ReportField {
   addressCountry,
   locationLatitude,
   locationLongitude,
-  priceE5,
-  priceE10,
-  priceDiesel,
   openTimesState,
   openTimes,
-  note
+  pricePetrol,
+  pricePetrolSuperE5,
+  pricePetrolSuperE10,
+  pricePetrolSuperPlus,
+  pricePetrolSuperE5Additive,
+  pricePetrolSuperE10Additive,
+  pricePetrolSuperPlusAdditive,
+  priceDiesel,
+  priceDieselHvo100,
+  priceDieselAdditive,
+  priceDieselHvo100Additive,
+  priceDieselTruck,
+  priceDieselHvo100Truck,
+  priceLpg,
+  priceAdblue,
+  note,
 }
 
 enum ReportStatus { unknown, open, corrected, invalid, ignored }

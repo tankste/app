@@ -96,12 +96,36 @@ class ReportDto {
         return ReportField.openTimesState;
       case "open_times":
         return ReportField.openTimes;
-      case "price_e5":
-        return ReportField.priceE5;
-      case "price_e10":
-        return ReportField.priceE10;
+      case "price_petrol":
+        return ReportField.pricePetrol;
+      case "price_petrol_super_e5":
+        return ReportField.pricePetrolSuperE5;
+      case "price_petrol_super_e10":
+        return ReportField.pricePetrolSuperE10;
+      case "price_petrol_super_plus":
+        return ReportField.pricePetrolSuperPlus;
+      case "price_petrol_super_e5_additive":
+        return ReportField.pricePetrolSuperE5Additive;
+      case "price_petrol_super_e10_additive":
+        return ReportField.pricePetrolSuperE10Additive;
+      case "price_petrol_super_plus_additive":
+        return ReportField.pricePetrolSuperPlusAdditive;
       case "price_diesel":
         return ReportField.priceDiesel;
+      case "price_diesel_hvo100":
+        return ReportField.priceDieselHvo100;
+      case "price_diesel_additive":
+        return ReportField.priceDieselAdditive;
+      case "price_diesel_hvo100_additive":
+        return ReportField.priceDieselHvo100Additive;
+      case "price_diesel_Truck":
+        return ReportField.priceDieselTruck;
+      case "price_diesel_hvo100_truck":
+        return ReportField.priceDieselHvo100Truck;
+      case "price_lpg":
+        return ReportField.priceLpg;
+      case "price_adblue":
+        return ReportField.priceAdblue;
       default:
         return ReportField.unknown;
     }
@@ -133,15 +157,39 @@ class ReportDto {
         return "open_times_state";
       case ReportField.openTimes:
         return "open_times";
-      case ReportField.priceE5:
-        return "price_e5";
-      case ReportField.priceE10:
-        return "price_e10";
-      case ReportField.priceDiesel:
-        return "price_diesel";
       case ReportField.note:
         return "note";
-      default:
+      case ReportField.pricePetrol:
+        return "price_petrol";
+      case ReportField.pricePetrolSuperE5:
+        return "price_petrol_super_e5";
+      case ReportField.pricePetrolSuperE10:
+        return "price_petrol_super_e10";
+      case ReportField.pricePetrolSuperPlus:
+        return "price_petrol_super_plus";
+      case ReportField.pricePetrolSuperE5Additive:
+        return "price_petrol_super_e5_additive";
+      case ReportField.pricePetrolSuperE10Additive:
+        return "price_petrol_super_e10_additive";
+      case ReportField.pricePetrolSuperPlusAdditive:
+        return "price_petrol_super_plus_additive";
+      case ReportField.priceDiesel:
+        return "price_diesel";
+      case ReportField.priceDieselHvo100:
+        return "price_diesel_hvo100";
+      case ReportField.priceDieselAdditive:
+        return "price_diesel_additive";
+      case ReportField.priceDieselHvo100Additive:
+        return "price_diesel_hvo100_additive";
+      case ReportField.priceDieselTruck:
+        return "price_diesel_Truck";
+      case ReportField.priceDieselHvo100Truck:
+        return "price_diesel_hvo100_truck";
+      case ReportField.priceLpg:
+        return "price_lpg";
+      case ReportField.priceAdblue:
+        return "price_adblue";
+      case ReportField.unknown:
         return "unknown";
     }
   }
