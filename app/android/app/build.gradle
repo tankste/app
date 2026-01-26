@@ -28,7 +28,7 @@ kotlin {
 }
 
 android {
-    namespace 'app.tankste'
+    namespace 'app.tankste.fdroid'
 
     compileSdkVersion 36
     ndkVersion '28.1.13356709'

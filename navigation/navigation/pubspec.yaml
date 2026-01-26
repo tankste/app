@@ -19,7 +19,7 @@ dependencies:
     path: '../core'
 
   navigation_impl:
-    path: '../impl_google'
+    path: '../impl_foss'
 
   map:
     path: '../../map/map'
