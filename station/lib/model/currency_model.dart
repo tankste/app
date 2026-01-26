@@ -19,8 +19,8 @@ class CurrencyModel {
     );
   }
 
-  double? convertTo(double amount, CurrencyType targetCurrency) {
-    if (exchangeRates.containsKey(targetCurrency)) {
+  double? convertTo(double? amount, CurrencyType targetCurrency) {
+    if (amount != null && exchangeRates.containsKey(targetCurrency)) {
       return amount * exchangeRates[targetCurrency]!;
     }
 

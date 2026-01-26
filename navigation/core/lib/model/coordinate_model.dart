@@ -3,4 +3,9 @@ class CoordinateModel {
   final double longitude;
 
   CoordinateModel({required this.latitude, required this.longitude});
+
+  @override
+  String toString() {
+    return 'CoordinateModel{latitude: $latitude, longitude: $longitude}';
+  }
 }

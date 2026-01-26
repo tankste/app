@@ -33,6 +33,12 @@ generic:
   units:
     kilometers:
       short: "{} km"
+    hour:
+      long: "{} Stunde"
+    hours:
+      long: "{} Stunden"
+    minute:
+      long: "{} Minute"
     minutes:
       long: "{} Minuten"
   send: Senden

@@ -13,7 +13,7 @@ import 'package:map/map_models.dart';
 import 'package:map/model/camera_position_model.dart';
 import 'package:map/repository/camera_position_repository.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:navigation/coordinate_model.dart';
+import 'package:navigation/navigation.dart';
 import 'package:settings/di/settings_module_factory.dart';
 import 'package:settings/model/permission_model.dart';
 import 'package:settings/repository/permission_repository.dart';
@@ -425,7 +425,10 @@ class StationMapCubit extends Cubit<StationMapState>
               LocationSettings(accuracy: LocationAccuracy.medium));
     } else {
       // Run get position in background, to be sure, next time we always getting the correct position on last-known request
-      Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
+      Geolocator.getCurrentPosition(
+          locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.medium,
+      ));
     }
 
     return Result.success(position);
@@ -483,11 +486,11 @@ class StationMapCubit extends Cubit<StationMapState>
   Future<ByteData> _genDotMarkerBitmap(MarkerModel marker) async {
     MarkerPrice? markerPrice;
     if (_filter?.gas == "e5") {
-      markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
+      markerPrice = marker.prices
+          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
     } else if (_filter?.gas == "e10") {
-      markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
+      markerPrice = marker.prices
+          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
     } else if (_filter?.gas == "diesel") {
       markerPrice =
           marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);
@@ -518,11 +521,11 @@ class StationMapCubit extends Cubit<StationMapState>
   Future<ByteData> _genLabelMarkerBitmap(MarkerModel marker) async {
     MarkerPrice? markerPrice;
     if (_filter?.gas == "e5") {
-      markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
+      markerPrice = marker.prices
+          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
     } else if (_filter?.gas == "e10") {
-      markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
+      markerPrice = marker.prices
+          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
     } else if (_filter?.gas == "diesel") {
       markerPrice =
           marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);

@@ -33,8 +33,14 @@ generic:
   units:
     kilometers:
       short: "{} km"
+    hour:
+      long: "{} hour"
+    hours:
+      long: "{} hours"
+    minute:
+      long: "{} minute"
     minutes:
-      long: "{} Minutes"
+      long: "{} minutes"
   send: Send
   system_default: System default
   currency:

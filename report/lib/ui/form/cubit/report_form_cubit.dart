@@ -107,10 +107,11 @@ class ReportFormCubit extends Cubit<ReportFormState> {
                 station.coordinate.longitude.toString();
             _locationLongitude = station.coordinate.longitude.toString();
             _prices = prices
+                .sortedBy<num>((p) => p.fuelType.index)
                 .map((price) => Price(
                     fuelType: price.fuelType,
                     label: price.label,
-                    originalPrice: price?.toString() ?? "-",
+                    originalPrice: price.price?.toString() ?? "-",
                     price: price.price?.toString() ?? "-"))
                 .toList(growable: false);
             _originalOpenTimesState = station.isOpen.toString();

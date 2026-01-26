@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:navigation/coordinate_model.dart';
+import 'package:navigation/navigation.dart';
 import 'package:station/model/config_model.dart';
 import 'package:station/model/currency_model.dart';
 import 'package:station/model/marker_model.dart';

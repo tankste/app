@@ -21,6 +21,9 @@ pub_get map/google_closed
 pub_get map/google_foss
 pub_get map/map
 pub_get sponsor/ui
-pub_get navigation
+pub_get navigation/core
+pub_get navigation/impl_google
+pub_get navigation/impl_foss
+pub_get navigation/navigation
 pub_get station
 pub_get app

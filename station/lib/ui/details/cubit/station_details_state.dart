@@ -1,4 +1,4 @@
-import 'package:navigation/coordinate_model.dart';
+import 'package:navigation/navigation.dart';
 
 abstract class StationDetailsState {
   String title;
