@@ -4,7 +4,7 @@ class PriceModel {
   final int id;
   final int originId;
   final FuelType fuelType;
-  final double price;
+  final double? price;
   final String label;
   final DateTime? lastChangedDate;
 

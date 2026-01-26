@@ -1,30 +1,23 @@
-
 import 'package:station/model/currency_model.dart';
 
 class PriceFormat {
-
-  // static String formatPrice(PriceModel price, bool withCurrencySymbol) {
-  //   return formatValue(price.price, price.currency, withCurrencySymbol);
-  // }
-
-  // static String formatMarkerPrice(MarkerPrice price, bool withCurrencySymbol) {
-  //   return formatValue(price.price, price.currency, withCurrencySymbol);
-  // }
-
-  static String format(double price, CurrencyModel currency, bool withCurrencySymbol) {
+  static String format(
+      double? price, CurrencyModel currency, bool withCurrencySymbol) {
     if (currency.currency == CurrencyType.eur) {
-      return _formatThreeDecimal(price, withCurrencySymbol ? currency.symbol : null);
+      return _formatThreeDecimal(
+          price, withCurrencySymbol ? currency.symbol : null);
     } else if (currency.currency == CurrencyType.dkk) {
       return _formatTwoDecimal(
           price, withCurrencySymbol ? currency.symbol : null);
     }
 
-      return _formatOneDecimal(price, withCurrencySymbol ? currency.symbol : null);
+    return _formatOneDecimal(
+        price, withCurrencySymbol ? currency.symbol : null);
   }
 
-  static String _formatThreeDecimal(double price, String? currencySymbol) {
+  static String _formatThreeDecimal(double? price, String? currencySymbol) {
     String priceText;
-    if (price == 0) {
+    if (price == null || price == 0) {
       priceText = "-,--\u{207B}";
     } else {
       priceText = price.toStringAsFixed(3).replaceAll('.', ',');
@@ -51,9 +44,9 @@ class PriceFormat {
     }
   }
 
-  static String _formatOneDecimal(double price, String? currencySymbol) {
+  static String _formatOneDecimal(double? price, String? currencySymbol) {
     String priceText;
-    if (price == 0) {
+    if (price == null || price == 0) {
       priceText = "---,-";
     } else {
       priceText = price.toStringAsFixed(1).replaceAll('.', ',');
@@ -66,9 +59,9 @@ class PriceFormat {
     }
   }
 
-  static String _formatTwoDecimal(double price, String? currencySymbol) {
+  static String _formatTwoDecimal(double? price, String? currencySymbol) {
     String priceText;
-    if (price == 0) {
+    if (price == null || price == 0) {
       priceText = "--,--";
     } else {
       priceText = price.toStringAsFixed(2).replaceAll('.', ',');

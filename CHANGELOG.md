@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🧹 Show `NULL` prices instead of hiding them
 - 🌟 Create FOSS package of navigation
 - 🐞 Fix reporting of new fuel types
 - 🧹 Price history chart: Don't show all data points on longer time ranges

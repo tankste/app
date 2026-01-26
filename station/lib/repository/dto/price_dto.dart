@@ -55,7 +55,7 @@ class PriceDto {
       id: id ?? -1,
       originId: originId ?? -1,
       fuelType: parseFuelType(type),
-      price: price ?? -1,
+      price: price,
       label: label ?? "",
       lastChangedDate:
           lastChangedDate != null ? DateTime.parse(lastChangedDate!) : null,

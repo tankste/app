@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/streams.dart';
 import 'package:settings/di/settings_module_factory.dart';
 import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
@@ -13,10 +15,8 @@ import 'package:station/repository/currency_repository.dart';
 import 'package:station/repository/open_time_repository.dart';
 import 'package:station/repository/origin_repository.dart';
 import 'package:station/repository/price_repository.dart';
-import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/repository/station_repository.dart';
-import 'package:rxdart/streams.dart';
-import 'package:collection/collection.dart';
+import 'package:station/ui/details/cubit/station_details_state.dart';
 import 'package:station/ui/price_format.dart';
 
 class StationDetailsCubit extends Cubit<StationDetailsState> {
@@ -145,7 +145,8 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   }
 
   //TODO: should show not available prices, or hide completely?
-  Price? _genPriceItem(StationModel station, CurrencyModel homeCurrency, PriceModel price) {
+  Price? _genPriceItem(
+      StationModel station, CurrencyModel homeCurrency, PriceModel price) {
     bool isSelected = false;
     switch (price.fuelType) {
       case FuelType.petrolSuperE5:
@@ -201,7 +202,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     items.add(_genOpenTimeItem(OpenTimeDay.publicHoliday,
         openTimes.where((ot) => ot.day == OpenTimeDay.publicHoliday).toList()));
 
-    return items.whereNotNull().toList();
+    return items.nonNulls.toList();
   }
 
   OpenTime? _genOpenTimeItem(OpenTimeDay day, List<OpenTimeModel> openTimes) {
@@ -273,7 +274,7 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
     }
 
     List<DateTime> priceChangeDates =
-        prices.map((price) => price.lastChangedDate).whereNotNull().toList();
+        prices.map((price) => price.lastChangedDate).nonNulls.toList();
 
     priceChangeDates.sort((dateA, dateB) =>
         dateA.millisecondsSinceEpoch.compareTo(dateB.microsecondsSinceEpoch));
