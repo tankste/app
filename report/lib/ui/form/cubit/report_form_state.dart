@@ -1,3 +1,5 @@
+import 'package:station/model/fuel_type.dart';
+
 abstract class ReportFormState {}
 
 class LoadingReportFormState extends ReportFormState {}
@@ -14,9 +16,7 @@ class FormReportFormState extends ReportFormState {
   String addressCountry;
   String locationLatitude;
   String locationLongitude;
-  String priceE5;
-  String priceE10;
-  String priceDiesel;
+  List<ReportFormPrice> prices;
   String openTimesState;
   String openTimesStateLabel;
   String openTimes;
@@ -34,9 +34,7 @@ class FormReportFormState extends ReportFormState {
     required this.addressCountry,
     required this.locationLatitude,
     required this.locationLongitude,
-    required this.priceE5,
-    required this.priceE10,
-    required this.priceDiesel,
+    required this.prices,
     required this.openTimesState,
     required this.openTimesStateLabel,
     required this.openTimes,
@@ -63,9 +61,7 @@ class SavingFormReportFormState extends FormReportFormState {
     required super.addressCountry,
     required super.locationLatitude,
     required super.locationLongitude,
-    required super.priceE5,
-    required super.priceE10,
-    required super.priceDiesel,
+    required super.prices,
     required super.openTimesState,
     required super.openTimesStateLabel,
     required super.openTimes,
@@ -89,9 +85,7 @@ class SaveErrorFormReportFormState extends FormReportFormState {
     required super.addressCountry,
     required super.locationLatitude,
     required super.locationLongitude,
-    required super.priceE5,
-    required super.priceE10,
-    required super.priceDiesel,
+    required super.prices,
     required super.openTimesState,
     required super.openTimesStateLabel,
     required super.openTimes,
@@ -112,12 +106,18 @@ class SavedFormReportFormState extends FormReportFormState {
     required super.addressCountry,
     required super.locationLatitude,
     required super.locationLongitude,
-    required super.priceE5,
-    required super.priceE10,
-    required super.priceDiesel,
+    required super.prices,
     required super.openTimesState,
     required super.openTimesStateLabel,
     required super.openTimes,
     required super.note
   });
+}
+
+class ReportFormPrice {
+  FuelType fuelType;
+  String label;
+  String value;
+
+  ReportFormPrice({required this.fuelType, required this.label, required this.value});
 }

@@ -5,6 +5,7 @@ import 'package:report/ui/form/availability_selection_dialog.dart';
 import 'package:report/ui/form/cubit/report_form_cubit.dart';
 import 'package:report/ui/form/cubit/report_form_state.dart';
 import 'package:report/ui/form/open_time_state_selection_dialog.dart';
+import 'package:station/model/fuel_type.dart';
 
 class ReportFormPage extends StatelessWidget {
   final int stationId;
@@ -21,15 +22,12 @@ class ReportFormPage extends StatelessWidget {
   final TextEditingController _latitudeTextController = TextEditingController();
   final TextEditingController _longitudeTextController =
       TextEditingController();
-  final TextEditingController _priceE5TextController = TextEditingController();
-  final TextEditingController _priceE10TextController = TextEditingController();
-  final TextEditingController _priceDieselTextController =
-      TextEditingController();
   final TextEditingController _openTimeStateTextController =
       TextEditingController();
   final TextEditingController _openTimesTextController =
       TextEditingController();
   final TextEditingController _noteTextController = TextEditingController();
+  final Map<FuelType, TextEditingController> _priceControllers = {};
   bool _hasInit = false;
 
   ReportFormPage({
@@ -79,10 +77,12 @@ class ReportFormPage extends StatelessWidget {
               _countryTextController.text = state.addressCountry;
               _latitudeTextController.text = state.locationLatitude;
               _longitudeTextController.text = state.locationLongitude;
-              _priceE5TextController.text = state.priceE5;
-              _priceE10TextController.text = state.priceE10;
-              _priceDieselTextController.text = state.priceDiesel;
               _openTimesTextController.text = state.openTimes;
+              _priceControllers.clear();
+              _priceControllers.addAll({
+                for (var price in state.prices)
+                  price.fuelType: TextEditingController(text: price.value)
+              });
               _hasInit = true;
             }
 
@@ -103,7 +103,8 @@ class ReportFormPage extends StatelessWidget {
       return Center(
           child: Column(children: [
         const Spacer(),
-        Text(tr('generic.error.title'), style: Theme.of(context).textTheme.headlineSmall),
+        Text(tr('generic.error.title'),
+            style: Theme.of(context).textTheme.headlineSmall),
         Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(
@@ -144,7 +145,8 @@ class ReportFormPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(tr('report.general.title'), style: Theme.of(context).textTheme.titleLarge),
+            Text(tr('report.general.title'),
+                style: Theme.of(context).textTheme.titleLarge),
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
@@ -176,7 +178,7 @@ class ReportFormPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 16),
               child: TextFormField(
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     labelText: tr('report.availability.title'),
                     errorText: null,
                     border: const OutlineInputBorder(),
@@ -210,7 +212,7 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 4,
                       child: TextFormField(
-                        decoration:  InputDecoration(
+                        decoration: InputDecoration(
                           labelText: tr('report.address.street'),
                           border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
@@ -227,7 +229,7 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 2,
                       child: TextFormField(
-                        decoration:  InputDecoration(
+                        decoration: InputDecoration(
                           labelText: tr('report.address.house_number'),
                           border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
@@ -247,7 +249,7 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 1,
                       child: TextFormField(
-                        decoration:  InputDecoration(
+                        decoration: InputDecoration(
                           labelText: tr('report.address.post_code'),
                           border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
@@ -264,7 +266,7 @@ class ReportFormPage extends StatelessWidget {
                   Flexible(
                       flex: 2,
                       child: TextFormField(
-                        decoration:  InputDecoration(
+                        decoration: InputDecoration(
                           labelText: tr('report.address.city'),
                           border: const OutlineInputBorder(),
                           alignLabelWithHint: true,
@@ -281,7 +283,7 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     labelText: tr('report.address.country'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
@@ -301,7 +303,7 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     labelText: tr('report.location.latitude'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
@@ -334,48 +336,7 @@ class ReportFormPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 24),
                 child: Text(tr('station.prices.title'),
                     style: Theme.of(context).textTheme.titleLarge)),
-            Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: TextFormField(
-                  decoration:  InputDecoration(
-                    labelText: tr('station.gas.e5'),
-                    border: const OutlineInputBorder(),
-                    alignLabelWithHint: true,
-                    errorText: null,
-                  ),
-                  controller: _priceE5TextController,
-                  onChanged: (String text) {
-                    context.read<ReportFormCubit>().onPriceE5Changed(text);
-                  },
-                )),
-            Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: tr('station.gas.e10'),
-                    border: const OutlineInputBorder(),
-                    alignLabelWithHint: true,
-                    errorText: null,
-                  ),
-                  controller: _priceE10TextController,
-                  onChanged: (String text) {
-                    context.read<ReportFormCubit>().onPriceE10Changed(text);
-                  },
-                )),
-            Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: tr('station.gas.diesel'),
-                    border: const OutlineInputBorder(),
-                    alignLabelWithHint: true,
-                    errorText: null,
-                  ),
-                  controller: _priceDieselTextController,
-                  onChanged: (String text) {
-                    context.read<ReportFormCubit>().onPriceDieselChanged(text);
-                  },
-                )),
+            ..._buildPriceInputs(context, state),
             Padding(
                 padding: const EdgeInsets.only(top: 24),
                 child: Text(tr('station.open_times.title'),
@@ -383,7 +344,7 @@ class ReportFormPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 16),
               child: TextFormField(
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                     labelText: tr('report.open_times.title'),
                     errorText: null,
                     border: const OutlineInputBorder(),
@@ -429,7 +390,7 @@ class ReportFormPage extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: TextFormField(
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     labelText: tr('report.misc.comment.label'),
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
@@ -472,5 +433,27 @@ class ReportFormPage extends StatelessWidget {
     }
 
     return Container();
+  }
+
+  List<Widget> _buildPriceInputs(
+      BuildContext context, FormReportFormState state) {
+    return state.prices
+        .map((price) => Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: price.label,
+                border: const OutlineInputBorder(),
+                alignLabelWithHint: true,
+                errorText: null,
+              ),
+              controller: _priceControllers[price.fuelType],
+              onChanged: (String text) {
+                context
+                    .read<ReportFormCubit>()
+                    .onPriceChanged(price.fuelType, text);
+              },
+            )))
+        .toList(growable: false);
   }
 }
