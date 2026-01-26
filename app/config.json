@@ -2,23 +2,14 @@
   "tankste": {
     "useMapLibreMap": true,
     "station": {
-      "apiBaseUrl": "http://stations.local"
-    },
-    "sponsor": {
-      "apiBaseUrl": "http://sponsors.local"
+      "apiBaseUrl": "https://api.station.tankste.app"
     },
     "report": {
-      "apiBaseUrl": "http://reports.local"
+      "apiBaseUrl": "https://api.report.tankste.app"
     }
   },
-  "google": {
-    "mapsKey": ""
-  },
   "mapLibre": {
-    "styleUrlLight": "",
-    "styleUrlDark": ""
-  },
-  "tankerKoenig": {
-    "apiKey": ""
+    "styleUrlLight": "https://api.maptiler.com/maps/streets-v2/style.json?key=yLoO1rPurZl9M9pIdzA1",
+    "styleUrlDark": "https://api.maptiler.com/maps/jp-mierune-dark/style.json?key=yLoO1rPurZl9M9pIdzA1"
   }
 }
