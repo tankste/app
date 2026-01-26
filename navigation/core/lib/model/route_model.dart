@@ -1,4 +1,4 @@
-import 'package:navigation/coordinate_model.dart';
+import 'package:navigation_core/model/coordinate_model.dart';
 
 class RouteModel {
   final int distanceMeters;

@@ -9,6 +9,8 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🌟 Create FOSS package of navigation
+- 🐞 Fix reporting of new fuel types
 - 🧹 Price history chart: Don't show all data points on longer time ranges
 - 🧹 Price history chart: Show step line instead of curve line
 - 🌟 Create FOSS package of sponsor

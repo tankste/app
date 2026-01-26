@@ -33,8 +33,14 @@ generic:
   units:
     kilometers:
       short: "{} km"
+    hour:
+      long: "{} klukkustund"
+    hours:
+      long: "{} klukkustundir"
+    minute:
+      long: "{} mínúta"
     minutes:
-      long: "{} Minutter"
+      long: "{} mínútur"
   send: Send
   system_default: Systemstandard
   currency:

@@ -12,14 +12,14 @@ class MapLibreMapAdapter extends MapAdapter {
 
   const MapLibreMapAdapter(
       {required this.styleUrlLight,
-        required this.styleUrlDark,
-        required super.initialCameraPosition,
-        required super.onMapCreated,
-        super.onCameraIdle,
-        super.onCameraMove,
-        super.markers,
-        super.polylines,
-        super.key});
+      required this.styleUrlDark,
+      required super.initialCameraPosition,
+      required super.onMapCreated,
+      super.onCameraIdle,
+      super.onCameraMove,
+      super.markers,
+      super.polylines,
+      super.key});
 
   @override
   State<StatefulWidget> createState() => MapLibreMapAdapterState();
@@ -91,7 +91,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
           ? widget.styleUrlDark
           : widget.styleUrlLight,
       attributionButtonPosition:
-      map_libre_maps.AttributionButtonPosition.bottomLeft,
+          map_libre_maps.AttributionButtonPosition.bottomLeft,
       attributionButtonMargins: const Point(8, 8),
       trackCameraPosition: true,
       compassEnabled: false,
@@ -152,7 +152,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     await mapController.removeSymbols(_symbols);
     _symbols.clear();
 
-    for (var marker in widget.markers) {
+    for (var marker in widget.markers.where((m) => m.icon != null)) {
       await mapController
           .addImage("${marker.id}-image", marker.icon!.buffer.asUint8List())
           .then((_) {
@@ -161,6 +161,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
             geometry: map_libre_maps.LatLng(
                 marker.latLng.latitude, marker.latLng.longitude),
             iconImage: "${marker.id}-image",
+            iconAnchor: "bottom",
           ),
           {"marker": marker.withoutIcon()},
         );
@@ -185,13 +186,13 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     for (var polyline in widget.polylines) {
       await mapController
           .addLine(map_libre_maps.LineOptions(
-        lineColor: polyline.color.toHexStringRGB(),
-        lineWidth: polyline.width.toDouble(),
-        geometry: polyline.points
-            .map((latLng) =>
-            map_libre_maps.LatLng(latLng.latitude, latLng.longitude))
-            .toList(),
-      ))
+            lineColor: polyline.color.toHexStringRGB(),
+            lineWidth: polyline.width.toDouble(),
+            geometry: polyline.points
+                .map((latLng) =>
+                    map_libre_maps.LatLng(latLng.latitude, latLng.longitude))
+                .toList(),
+          ))
           .then((line) => _lines.add(line));
     }
   }
@@ -206,7 +207,7 @@ class MapLibreMapController extends MapController {
   void moveCameraToPosition(CameraPosition position) {
     // Don't update to same position, to prevent endless looping
     if (position.latLng.latitude ==
-        childController.cameraPosition?.target.latitude &&
+            childController.cameraPosition?.target.latitude &&
         position.latLng.longitude ==
             childController.cameraPosition?.target.longitude &&
         position.zoom == childController.cameraPosition?.zoom) {

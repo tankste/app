@@ -1,16 +1,14 @@
 import 'dart:io';
-
-import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map/map_models.dart';
 import 'package:map/ui/generic_map.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:navigation/coordinate_model.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_cubit.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_state.dart';
-import 'package:navigation/util.dart';
+import 'package:navigation_core/model/coordinate_model.dart';
 import 'package:settings/repository/map_destination_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,8 +38,8 @@ class RoutePreview extends StatelessWidget {
                             Container(
                                 color: Theme.of(context).colorScheme.surface,
                                 child: PreviewMap(
-                                  target: target,
-                                  routePoints: state.route?.routeCoordinates,
+                                  target: state.target,
+                                  routePoints: _routePoints(state),
                                 )),
                             // Workaround: clicking FAB over map is triggered twice on iOS
                             GestureDetector(
@@ -77,19 +75,30 @@ class RoutePreview extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(flex: 2, child: Text(address)),
                                     Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(state.formatDistance()),
-                                            Text(state.formatTravelTime())
-                                          ],
-                                        ))
+                                        flex: 1, child: _buildTravelInfo(state))
                                   ]),
                             ]))),
                   ]));
             }));
+  }
+
+  List<CoordinateModel>? _routePoints(RoutePreviewState state) {
+    if (state is RouteRoutePreviewState) {
+      return state.coordinates;
+    }
+
+    return null;
+  }
+
+  Widget _buildTravelInfo(RoutePreviewState state) {
+    if (state is RouteRoutePreviewState) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [Text(state.distance), Text(state.time)],
+      );
+    }
+
+    return Container();
   }
 
   void _openMap() async {
@@ -141,6 +150,25 @@ class PreviewMap extends StatefulWidget {
 
 class PreviewMapState extends State<PreviewMap> {
   MapController? _mapController;
+  ByteData? _stationIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadIcon();
+  }
+
+  void _loadIcon() async {
+    String resolutionName =
+        await AssetImage("assets/images/station/station.png")
+            .obtainKey(ImageConfiguration.empty)
+            .then((value) => value.name);
+
+    ByteData stationIcon = await rootBundle.load(resolutionName);
+    setState(() {
+      _stationIcon = stationIcon;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +225,12 @@ class PreviewMapState extends State<PreviewMap> {
   }
 
   Set<Marker> _genMarkers() {
-    return {Marker(id: "target", latLng: toLatLng(widget.target), icon: null)};
+    return {
+      Marker(id: "target", latLng: toLatLng(widget.target), icon: _stationIcon)
+    };
+  }
+
+  LatLng toLatLng(CoordinateModel coordinate) {
+    return LatLng(coordinate.latitude, coordinate.longitude);
   }
 }

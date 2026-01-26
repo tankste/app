@@ -496,7 +496,7 @@ packages:
   map_google:
     dependency: transitive
     description:
-      path: "../google_foss"
+      path: "../google_closed"
       relative: true
     source: path
     version: "0.0.0"
@@ -582,7 +582,21 @@ packages:
   navigation:
     dependency: transitive
     description:
-      path: "../../navigation"
+      path: "../../navigation/navigation"
+      relative: true
+    source: path
+    version: "0.0.0"
+  navigation_core:
+    dependency: transitive
+    description:
+      path: "../../navigation/core"
+      relative: true
+    source: path
+    version: "0.0.0"
+  navigation_impl:
+    dependency: transitive
+    description:
+      path: "../../navigation/impl_google"
       relative: true
     source: path
     version: "0.0.0"

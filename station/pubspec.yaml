@@ -16,7 +16,7 @@ dependencies:
     path: '../map/map'
 
   navigation:
-    path: '../navigation'
+    path: '../navigation/navigation'
 
   settings:
     path: '../settings'

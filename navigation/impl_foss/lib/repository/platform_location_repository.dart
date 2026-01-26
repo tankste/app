@@ -1,11 +1,8 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:navigation/coordinate_model.dart';
+import 'package:navigation_core/model/coordinate_model.dart';
+import 'package:navigation_core/repository/location_repository.dart';
 
-abstract class LocationRepository {
-  Future<CoordinateModel?> getCurrentLocation();
-}
-
-class GpsLocationRepository extends LocationRepository {
+class PlatformLocationRepository extends LocationRepository {
   @override
   Future<CoordinateModel?> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();

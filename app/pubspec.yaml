@@ -21,9 +21,6 @@ dependencies:
   station:
     path: '../station'
 
-  navigation:
-    path: '../navigation'
-
   settings:
     path: '../settings'
 
@@ -45,6 +42,7 @@ flutter:
 
   assets:
     - assets/images/markers/
+    - assets/images/station/
     - assets/google_maps/styles/
     - assets/translations/
     - config.json

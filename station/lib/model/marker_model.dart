@@ -1,4 +1,4 @@
-import 'package:navigation/coordinate_model.dart';
+import 'package:navigation/navigation.dart';
 import 'package:station/model/currency_model.dart';
 import 'package:station/model/fuel_type.dart';
 

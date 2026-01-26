@@ -33,8 +33,14 @@ generic:
   units:
     kilometers:
       short: "{} km"
+    hour:
+      long: "{} time"
+    hours:
+      long: "{} timer"
+    minute:
+      long: "{} minut"
     minutes:
-      long: "{} Mínútur"
+      long: "{} minutter"
   send: Senda
   system_default: Kerfisbundið sjálfgefið
   currency:
