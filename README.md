@@ -5,9 +5,10 @@ tankste! - App
 
 Your open source fuel price app. The mission is to give you one app that you can use in all countries.
 
-[<img src="https://tankste.app/assets/playstore.png" height="60" alt="Play Store">](https://play.google.com/store/apps/details?id=app.tankste) 
-[<img src="https://tankste.app/assets/appstore.png" height="60" alt="App Store">](https://apps.apple.com/de/app/tankste-deine-tankpreis-app/id1633457177)
+> [!NOTE]  
+> This repository holds the FDroid compatible FOSS variant. It's a fork of the [tankste! main repository](https://github.com/tankste/app)
 
+TODO: update README and add FDroid badge here when release succeeded!
 <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-1.jpeg" height="360" alt="iOS Screenshot 1"> <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-2.jpeg" height="360" alt="iOS Screenshot 2"> <img src="https://tankste.app/assets/images/screenshots/de/ios/screenshot-3.jpeg" height="360" alt="iOS Screenshot 3"> 
 
 ## Availability ##
