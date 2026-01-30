@@ -28,13 +28,13 @@ kotlin {
 }
 
 android {
-    namespace 'app.tankste.fdroid'
+    namespace 'app.tankste'
 
     compileSdkVersion 36
     ndkVersion '28.1.13356709'
 
     defaultConfig {
-        applicationId "app.tankste"
+        applicationId "app.tankste.fdroid"
 
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
