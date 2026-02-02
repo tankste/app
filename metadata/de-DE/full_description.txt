@@ -1,0 +1,42 @@
+Mit der tankste! App findest du den günstigsten Tankpreis in deiner Nähe. Mit dem bewährten Ampelsystem siehst du auf einen Blick, wo du beim Tanken Geld sparen kannst, und welche Tankstelle du lieber meiden solltest.
+
+<b>🚦 Ampel System 🚦</b>
+
+Mit dem bereits bekannten Ampelsystem seht ihr auf einen Blick an welchen Tankstellen das Benzin günstig ist.
+Wir vergleichen alle Tankstellen in deiner Umgebung und zeigen dir so das bestmögliche Angebot, welches du nutzen kannst.
+
+🟢 grün = günstig
+🟠 orange = etwas teurer
+🔴 rot = teuer
+
+<b>🔍 Filter 🔍</b>
+
+Mit den einfachen Filtermöglichkeiten, kannst du die Spritsorte deiner Wahl auswählen. Du kannst zwischen Benzin E5, Benzin E10 und Diesel auswählen.
+
+<b>👋 Tschüss Bertha 👋</b>
+
+Meine Lieblings-App Bertha wird leider nicht mehr angeboten, und die Apps der Konkurenz überzeugen mich nicht. Also kam ich zu dem Entschluss, das minimalistische Design von unserem Vorbild der ehmaligen Bertha App zu übernehmen und mit tankste! ein ähnliches Nutzererlebnis anzubieten.
+
+<b>🔐 Ohne Tracking 🔐</b>
+
+Es ist keine Registrierung notwendig um tankste! zu nutzen. Die Verwendung des Standortes ist ebenfalls optional. Es geht hier um die Kraftstoffpreise nicht mehr und nicht weniger.
+
+<b>🤑 Kostenlos & Werbefrei 🤑</b>
+
+Damit das Tanken noch mehr Spaß macht, gibt es diese App umsonst. Es gibt keine versteckten kosten und Werbung schalte ich auch nicht! Das Projekt finanziert sich komplett durch freiwillige Spenden. So wie ihr das zum Beispiel von Wikipedia kennt.
+
+<b>👾 Open Source 👾</b>
+
+Da ich nicht möchten, dass die Idee hinter Bertha erneut verloren geht, ist das Projekt komplett Quelloffen. Ihr findet den Code auf Github, und könnt so an dem Projekt mitarbeiten. Euch fehlt eine Funktion? Kein Problem! Einfach einen Pull Request oder ein Issue erstellen.
+
+<b>🌍 Länderübergreifend 🌍</b>
+
+Wir möchten, dass du auch im Urlaub und an den Grenzen die App für deine Tankfüllungen nutzen kannst. Zur Zeit bietet tankste! dir die Preise in Deutschland 🇩🇪, Dänemark 🇩🇰 & Island 🇮🇸 an.
+
+<b>🧑‍💻 Mehr Funktionen 🧑‍💻</b>
+
+Die App ist noch jung, und die bürokratischen Schritte um weitere Daten von den Tankstellen und Ländern zu erhalten sind groß. Die Roadmap hat noch einiges zu bieten, und ich freue mich darauf das Projekt mit euch wachsen zu lassen. Also falls dir noch etwas fehlt, melde dich bei mir und habe etwas Geduld.
+
+<b>ℹ️ Datenquellen ℹ️</b>
+
+Die Quellen der Daten findest du auf unsere Website unter https://tankste.app/datenquellen/.

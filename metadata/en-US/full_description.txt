@@ -1,0 +1,38 @@
+With the tankste! app, you can find the cheapest fuel prices in your area. With the proven traffic light system, you can see at a glance where you can save money on fuel and which gas station you should avoid.
+
+<b>🚦 Traffic Light System 🚦</b>
+
+With the well-known traffic light system, you can see at a glance which gas stations offer cheap gasoline.
+We compare all gas stations in your area and show you the best possible offer that you can use.
+
+🟢 green = cheap
+🟠 orange = slightly more expensive
+🔴 red = expensive
+
+<b>🔍 Filters 🔍</b>
+
+With the simple filtering options, you can select the type of fuel you prefer. You can choose between gasoline E5, gasoline E10, and diesel.
+
+<b>🔐 No Tracking 🔐</b>
+
+No registration is necessary to use tankste! The use of location is also optional. This is about fuel prices, nothing more and nothing less.
+
+<b>🤑 Free & Ad-Free 🤑</b>
+
+To make refueling even more enjoyable, this app is free. There are no hidden costs, and I don't display ads! The project is funded entirely by voluntary donations. Just like you know it from Wikipedia, for example.
+
+<b>👾 Open Source 👾</b>
+
+Since I don't want the idea behind Bertha to be lost again, the project is completely open source. You can find the code on Github and contribute to the project. Missing a feature? No problem! Just create a pull request or an issue.
+
+<b>🌍 Cross-Border 🌍</b>
+
+We want you to be able to use the app for your refueling even on vacation and at borders. Currently, tankste! offers you prices in Germany 🇩🇪, Denmark 🇩🇰 & Iceland 🇮🇸.
+
+<b>🧑‍💻 More Features 🧑‍💻</b>
+
+The app is still young, and the bureaucratic steps to obtain more data from gas stations and countries are large. The roadmap still has a lot to offer, and I look forward to growing the project with you. So if something is still missing, please contact me and have some patience.
+
+<b>ℹ️ Data Sources ℹ️</b>
+
+You can find the sources of the data on our website at https://tankste.app/datenquellen/.
