@@ -463,6 +463,27 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+  location:
+    dependency: transitive
+    description:
+      path: "../../location/location"
+      relative: true
+    source: path
+    version: "0.0.0"
+  location_core:
+    dependency: transitive
+    description:
+      path: "../../location/core"
+      relative: true
+    source: path
+    version: "0.0.0"
+  location_impl:
+    dependency: transitive
+    description:
+      path: "../../location/impl_closed"
+      relative: true
+    source: path
+    version: "0.0.0"
   logger:
     dependency: transitive
     description:

@@ -12,6 +12,9 @@ dependencies:
   core:
     path: '../core'
 
+  location:
+    path: '../location/location'
+
   map:
     path: '../map/map'
 
