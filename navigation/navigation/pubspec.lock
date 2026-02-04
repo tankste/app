@@ -708,6 +708,27 @@ packages:
       relative: true
     source: path
     version: "0.0.0"
+  review:
+    dependency: transitive
+    description:
+      path: "../../review/review"
+      relative: true
+    source: path
+    version: "0.0.0"
+  review_core:
+    dependency: transitive
+    description:
+      path: "../../review/core"
+      relative: true
+    source: path
+    version: "0.0.0"
+  review_impl:
+    dependency: transitive
+    description:
+      path: "../../review/impl_closed"
+      relative: true
+    source: path
+    version: "0.0.0"
   rxdart:
     dependency: transitive
     description:
