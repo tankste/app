@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:location/location.dart';
 import 'package:navigation/ui/preview/cubit/route_preview_state.dart';
 import 'package:navigation_core/model/coordinate_model.dart';
-import 'package:navigation_core/repository/location_repository.dart';
 import 'package:navigation_core/repository/route_repository.dart';
 import 'package:navigation_impl/di/navigation_impl_module_factory.dart';
 
@@ -10,7 +10,7 @@ class RoutePreviewCubit extends Cubit<RoutePreviewState> {
   final RouteRepository _routeRepository =
       NavigationImplModuleFactory.createRouteRepository();
   final LocationRepository _locationRepository =
-      NavigationImplModuleFactory.createLocationRepository();
+      LocationModuleFactory.createLocationRepository();
   final CoordinateModel target;
 
   RoutePreviewCubit(this.target)
@@ -31,7 +31,7 @@ class RoutePreviewCubit extends Cubit<RoutePreviewState> {
         return;
       }
 
-      _fetchRoute(location);
+      _fetchRoute(location.coordinate);
     });
   }
 

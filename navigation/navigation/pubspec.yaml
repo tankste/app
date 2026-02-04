@@ -21,6 +21,9 @@ dependencies:
   navigation_impl:
     path: '../impl_foss'
 
+  location:
+    path: '../../location/location'
+
   map:
     path: '../../map/map'
 

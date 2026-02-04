@@ -12,6 +12,9 @@ dependencies:
   core:
     path: '../core'
 
+  location:
+    path: '../location/location'
+
   map:
     path: '../map/map'
 
@@ -27,6 +30,9 @@ dependencies:
   sponsor_ui:
     path: '../sponsor/ui'
 
+  review:
+    path: '../review/review'
+
   # BLoC - https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^9.1.1
 
@@ -36,17 +42,8 @@ dependencies:
   # HTTP - https://pub.dev/packages/http
   http: ^1.6.0
 
-  # Google Maps - https://pub.dev/packages/google_maps_flutter
-  google_maps_flutter: ^2.14.0
-
   # Shared Preferences - https://pub.dev/packages/shared_preferences
   shared_preferences: ^2.5.4
-
-  # Location - https://pub.dev/packages/geolocator
-  geolocator: ^14.0.1
-
-  # In-App review - https://pub.dev/packages/in_app_review
-  in_app_review: ^2.0.11
 
   # Multiple Result - https://pub.dev/packages/multiple_result
   multiple_result: ^5.2.0

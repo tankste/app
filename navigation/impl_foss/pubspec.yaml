@@ -18,9 +18,6 @@ dependencies:
   # Multiple Result - https://pub.dev/packages/multiple_result
   multiple_result: ^5.2.0
 
-  # Location - https://pub.dev/packages/geolocator
-  geolocator: ^14.0.1
-
   # HTTP - https://pub.dev/packages/http
   http: ^1.6.0
 

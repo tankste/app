@@ -12,6 +12,10 @@ pub_get sponsor/data_foss
 pub_get sponsor/ui
 pub_get settings
 pub_get report
+pub_get location/core
+pub_get location/impl_closed
+pub_get location/impl_foss
+pub_get location/location
 pub_get map/core
 pub_get map/maplibre
 pub_get map/apple_foss
