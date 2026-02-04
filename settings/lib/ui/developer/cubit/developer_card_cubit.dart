@@ -1,19 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:location/location.dart';
 import 'package:map/di/map_module_factory.dart';
 import 'package:map/repository/camera_position_repository.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:settings/di/settings_module_factory.dart';
 import 'package:settings/model/developer_settings_model.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
-import 'package:settings/repository/permission_repository.dart';
 import 'package:settings/ui/developer/cubit/developer_card_state.dart';
 
 class DeveloperCardCubit extends Cubit<DeveloperCardState> {
   final DeveloperSettingsRepository _developerSettingsRepository =
       LocalDeveloperSettingsRepository();
 
-  final PermissionRepository _permissionRepository =
-      SettingsModuleFactory.createPermissionRepository();
+  final LocationPermissionRepository _locationPermissionRepository =
+      LocationModuleFactory.createLocationPermissionRepository();
 
   final CameraPositionRepository _cameraPositionRepository =
       MapModuleFactory.createCameraPositionRepository();
@@ -52,7 +51,7 @@ class DeveloperCardCubit extends Cubit<DeveloperCardState> {
 
   void onResetCacheClicked() {
     CombineLatestStream.combine2(
-        _permissionRepository.deleteLocationPermission(),
+        _locationPermissionRepository.deleteLocationPermission().asStream(),
         _cameraPositionRepository.deleteLast(),
         (deletePermissionResult, deletePositionResult) {
       return deletePermissionResult.when((_) {

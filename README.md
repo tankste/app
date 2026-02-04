@@ -15,8 +15,8 @@ Your open source fuel price app. The mission is to give you one app that you can
 | Flag      | Country | since   |
 |-----------|---------|---------|
 | :de:      | Germany |         |
-| :denmark: | Denmark | 01/2026 |
 | :iceland: | Iceland | 05/2024 |
+| :denmark: | Denmark | 01/2026 |
 
 ## Data sources ##
 
@@ -39,16 +39,18 @@ auto-generated created by build scripts.
 
 ### Modules ###
 
-| Name         | Description                     |
-| ------------ | ------------------------------- |
-| `app`        | App entry point                 |
-| `station`    | Station and gas price things    |
-| `navigation` | Routing utils and widgets       |
-| `sponsor`    | Sponsor & payment stuff         |
-| `report`     | Report wrong station data forms |
-| `map`        | Map utils                       |
-| `settings`   | User settings page              |
-| `core`       | Generic core and util functions |
+| Name         | Description                                      |
+|--------------|--------------------------------------------------|
+| `app`        | App entry point                                  |
+| `station`    | Station and gas price things                     |
+| `navigation` | Routing utils and widgets                        |
+| `map`        | Home of our three maps (MapLibre, Apple, Google) |
+| `location`   | Fetch own (GPS) location logic                   |
+| `sponsor`    | Sponsor & payment stuff                          |
+| `report`     | Report wrong station data forms                  |
+| `map`        | Map utils                                        |
+| `settings`   | User settings page                               |
+| `core`       | Generic core and util functions                  |
 
 ### Code quality ###
 

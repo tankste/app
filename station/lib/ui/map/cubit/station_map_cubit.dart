@@ -6,17 +6,13 @@ import 'package:core/log/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:location/location.dart';
 import 'package:map/di/map_module_factory.dart';
 import 'package:map/map_models.dart';
 import 'package:map/model/camera_position_model.dart';
 import 'package:map/repository/camera_position_repository.dart';
-import 'package:multiple_result/multiple_result.dart';
 import 'package:navigation/navigation.dart';
-import 'package:settings/di/settings_module_factory.dart';
-import 'package:settings/model/permission_model.dart';
-import 'package:settings/repository/permission_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/currency_model.dart';
@@ -45,10 +41,10 @@ class StationMapCubit extends Cubit<StationMapState>
       StationModuleFactory.createCurrencyRepository();
   final MarkerRepository _markerRepository =
       StationModuleFactory.createMarkerRepository();
-  final PermissionRepository _permissionRepository =
-      SettingsModuleFactory.createPermissionRepository();
   final CameraPositionRepository _cameraPositionRepository =
       MapModuleFactory.createCameraPositionRepository();
+  final LocationRepository _locationRepository =
+      LocationModuleFactory.createLocationRepository();
 
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
@@ -108,11 +104,14 @@ class StationMapCubit extends Cubit<StationMapState>
     bool showLabelMarkers = position.zoom >= 12;
 
     if (!force && _lastRequestPosition != null) {
-      double movementDistance = Geolocator.distanceBetween(
-          _lastRequestPosition!.latLng.latitude,
-          _lastRequestPosition!.latLng.longitude,
-          position.latLng.latitude,
-          position.latLng.longitude);
+      double movementDistance = _locationRepository.distanceBetween(
+        CoordinateModel(
+            latitude: _lastRequestPosition!.latLng.latitude,
+            longitude: _lastRequestPosition!.latLng.longitude),
+        CoordinateModel(
+            latitude: position.latLng.latitude,
+            longitude: position.latLng.longitude),
+      );
 
       if (movementDistance < 300) {
         Log.d("Movement below 300 meters. Skip station fetching.");
@@ -233,36 +232,32 @@ class StationMapCubit extends Cubit<StationMapState>
           Log.d(
               "Last position not available. Try to move initial to own position.");
 
-          _getOwnPosition(false).then((result) {
-            result.when((position) {
-              if (position != null) {
-                CameraPosition newPosition = CameraPosition(
-                    latLng: LatLng(position.latitude, position.longitude),
-                    zoom: 12.5);
+          _getOwnPosition(false).then((position) {
+            if (position != null) {
+              CameraPosition newPosition = CameraPosition(
+                  latLng: LatLng(position.coordinate.latitude,
+                      position.coordinate.longitude),
+                  zoom: 12.5);
 
-                if (newPosition != _position) {
-                  _position = newPosition;
+              if (newPosition != _position) {
+                _position = newPosition;
 
-                  Log.i("Move map initial to own position at $newPosition.");
+                Log.i("Move map initial to own position at $newPosition.");
 
-                  emit(MoveToInitLoadingStationMapState(
-                      cameraPosition: newPosition));
+                emit(MoveToInitLoadingStationMapState(
+                    cameraPosition: newPosition));
 
-                  emit(LoadingInitMarkersStationMapState());
-                  _fetchStations(_position, true);
-                } else {
-                  Log.d(
-                      "Already at own position at $_position. Skip map move.");
-                  emit(state);
-                }
+                emit(LoadingInitMarkersStationMapState());
+                _fetchStations(_position, true);
               } else {
-                Log.d(
-                    "Position not available. Fallback to initial too far zoomed out state.");
-                emit(TooFarZoomedOutStationMapState());
+                Log.d("Already at own position at $_position. Skip map move.");
+                emit(state);
               }
-            }, (error) {
-              emit(ErrorStationMapState(errorDetails: error.toString()));
-            });
+            } else {
+              Log.d(
+                  "Position not available. Fallback to initial too far zoomed out state.");
+              emit(TooFarZoomedOutStationMapState());
+            }
           });
         }
       }, (error) => emit(ErrorStationMapState(errorDetails: error.toString())));
@@ -275,32 +270,29 @@ class StationMapCubit extends Cubit<StationMapState>
 
     Log.d("Fetch own position.");
 
-    _getOwnPosition(true).then((result) {
-      result.when((position) {
-        if (position != null) {
-          CameraPosition newPosition = CameraPosition(
-              latLng: LatLng(position.latitude, position.longitude),
-              zoom: 12.5);
+    _getOwnPosition(true).then((position) {
+      if (position != null) {
+        CameraPosition newPosition = CameraPosition(
+            latLng: LatLng(
+                position.coordinate.latitude, position.coordinate.longitude),
+            zoom: 12.5);
 
-          if (newPosition != _position) {
-            _position = newPosition;
+        if (newPosition != _position) {
+          _position = newPosition;
 
-            Log.i("Move map to own position at $newPosition.");
-            emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition));
+          Log.i("Move map to own position at $newPosition.");
+          emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition));
 
-            emit(LoadingMarkersStationMapState(underlyingState: state));
-            _fetchStations(_position, true);
-          } else {
-            Log.d("Already at own position at $_position. Skip map move.");
-            emit(state);
-          }
+          emit(LoadingMarkersStationMapState(underlyingState: state));
+          _fetchStations(_position, true);
         } else {
-          Log.d("Position not available. Skip map move.");
+          Log.d("Already at own position at $_position. Skip map move.");
           emit(state);
         }
-      }, (error) {
-        emit(ErrorStationMapState(errorDetails: error.toString()));
-      });
+      } else {
+        Log.d("Position not available. Skip map move.");
+        emit(state);
+      }
     });
   }
 
@@ -377,61 +369,25 @@ class StationMapCubit extends Cubit<StationMapState>
     }
   }
 
-  Future<Result<Position?, Exception>> _getOwnPosition(
-      bool forcePermissionRequest) async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Result.success(
-          null); //TODO: show hint, when the location was user requested
+  Future<LocationModel?> _getOwnPosition(bool forcePermissionRequest) async {
+    bool hasPermissions =
+        (await _locationRepository.requestPermission(forcePermissionRequest))
+                .tryGetSuccess() ??
+            false;
+    if (!hasPermissions) {
+      return null;
     }
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      Result<PermissionModel, Exception> locationPermissionResult =
-          await _permissionRepository.getLocationPermission().first;
-      if (locationPermissionResult.isError()) {
-        Exception error = locationPermissionResult.tryGetError()!;
-        Log.exception(error);
-        return Result.error(error);
-      }
-
-      PermissionModel locationPermission =
-          locationPermissionResult.tryGetSuccess()!;
-
-      // Ask for permission only once, or if the user request by locate me button
-      if (!forcePermissionRequest && locationPermission.hasRequested) {
-        return Result.success(null);
-      }
-
-      permission = await Geolocator.requestPermission();
-      _permissionRepository.updateLocationPermission(
-          locationPermission.copyWith(hasRequested: true));
-
-      if (permission == LocationPermission.denied) {
-        return Result.success(null);
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Result.success(null);
-    }
-
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    Position? position = await Geolocator.getLastKnownPosition();
-    if (position == null) {
-      position = await Geolocator.getCurrentPosition(
-          locationSettings:
-              LocationSettings(accuracy: LocationAccuracy.medium));
+    LocationModel? location = await _locationRepository.getLastKnownLocation();
+    if (location == null) {
+      // No last known location, wait until we fetch the current one.
+      location = await _locationRepository.getCurrentLocation();
     } else {
       // Run get position in background, to be sure, next time we always getting the correct position on last-known request
-      Geolocator.getCurrentPosition(
-          locationSettings: LocationSettings(
-        accuracy: LocationAccuracy.medium,
-      ));
+      _locationRepository.getCurrentLocation();
     }
 
-    return Result.success(position);
+    return location;
   }
 
   Future<void> _requestReviewIfNeeded() async {

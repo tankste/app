@@ -21,6 +21,9 @@ dependencies:
   navigation_impl:
     path: '../impl_google'
 
+  location:
+    path: '../../location/location'
+
   map:
     path: '../../map/map'
 

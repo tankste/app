@@ -12,36 +12,6 @@ dependencies:
   # Multiple Result - https://pub.dev/packages/multiple_result
   multiple_result: ^5.2.0
 
-#  core:
-#    path: '../../core'
-#
-#  settings:
-#    path: '../../settings'
-#
-#  map:
-#    path: '../../map/map'
-#
-#  # Location - https://pub.dev/packages/geolocator
-#  geolocator: ^14.0.1
-#
-#  # HTTP - https://pub.dev/packages/http
-#  http: ^1.6.0
-#
-#  # BLoC - https://pub.dev/packages/flutter_bloc
-#  flutter_bloc: ^9.1.1
-#
-#  # Map launcher - https://pub.dev/packages/map_launcher
-#  map_launcher: ^4.4.2
-#
-#  # URL Launcher - https://pub.dev/packages/url_launcher
-#  url_launcher: ^6.3.2
-#
-#  # Collection - https://pub.dev/packages/collection
-#  collection: ^1.19.1
-#
-#  # Easy Localization - https://pub.dev/packages/easy_localization
-#  easy_localization: ^3.0.8
-
 dev_dependencies:
   flutter_lints: ^6.0.0
 
