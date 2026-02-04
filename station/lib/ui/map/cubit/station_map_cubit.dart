@@ -6,13 +6,13 @@ import 'package:core/log/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:location/location.dart';
 import 'package:map/di/map_module_factory.dart';
 import 'package:map/map_models.dart';
 import 'package:map/model/camera_position_model.dart';
 import 'package:map/repository/camera_position_repository.dart';
 import 'package:navigation/navigation.dart';
+import 'package:review/review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/di/station_module_factory.dart';
 import 'package:station/model/currency_model.dart';
@@ -45,6 +45,7 @@ class StationMapCubit extends Cubit<StationMapState>
       MapModuleFactory.createCameraPositionRepository();
   final LocationRepository _locationRepository =
       LocationModuleFactory.createLocationRepository();
+  final ReviewHelper _reviewHelper = ReviewModuleFactory.createReviewHelper();
 
   final Duration _reviewAfterFirstAppStartDuration = const Duration(days: 7);
   final Duration _refreshAfterBackgroundDuration = const Duration(minutes: 3);
@@ -403,10 +404,7 @@ class StationMapCubit extends Cubit<StationMapState>
       DateTime thresholdDate =
           firstAppStart.add(_reviewAfterFirstAppStartDuration);
       if (DateTime.now().isAfter(thresholdDate)) {
-        InAppReview inAppReview = InAppReview.instance;
-        if (await inAppReview.isAvailable()) {
-          await inAppReview.requestReview();
-        }
+        _reviewHelper.requestReview();
       }
     }
   }

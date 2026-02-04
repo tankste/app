@@ -328,7 +328,7 @@ packages:
     source: hosted
     version: "0.15.6"
   http:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http
       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
@@ -729,6 +729,27 @@ packages:
     dependency: transitive
     description:
       path: "../../report"
+      relative: true
+    source: path
+    version: "0.0.0"
+  review:
+    dependency: transitive
+    description:
+      path: "../../review/review"
+      relative: true
+    source: path
+    version: "0.0.0"
+  review_core:
+    dependency: transitive
+    description:
+      path: "../../review/core"
+      relative: true
+    source: path
+    version: "0.0.0"
+  review_impl:
+    dependency: transitive
+    description:
+      path: "../../review/impl_closed"
       relative: true
     source: path
     version: "0.0.0"

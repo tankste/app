@@ -9,8 +9,10 @@ CHANGELOG
 
 ## Upcoming version ##
 
-## 2.2.1 (2026-01-30) ##
+## 2.2.1 (2026-02-05) ##
 
+- 🌟 Create review package with closed & floss variants
+- 🌟 Create location package with closed & floss variants
 - 🧹 Show `NULL` prices instead of hiding them
 - 🌟 Create FOSS package of navigation
 - 🐞 Fix reporting of new fuel types
