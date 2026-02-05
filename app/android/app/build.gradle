@@ -72,5 +72,8 @@ dependencies {
 //    implementation "io.insert-koin:koin-core:$koin_version"
 //    implementation "io.insert-koin:koin-android:$koin_version"
 //    implementation "io.insert-koin:koin-android-compat:$koin_version"
+}
 
+configurations.implementation {
+    exclude group: 'com.google.android.gms'
 }
