@@ -7,6 +7,10 @@ function pub_get () {
 }
 
 pub_get core
+pub_get review/core
+pub_get review/impl_closed
+pub_get review/impl_foss
+pub_get review/review
 pub_get sponsor/core
 pub_get sponsor/data_closed
 pub_get sponsor/data_foss
