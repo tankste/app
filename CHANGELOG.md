@@ -9,7 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
-## 2.2.1 (2026-02-05) ##
+## 2.2.1 (2026-03-02) ##
 
 - 🌟 Create review package with closed & floss variants
 - 🌟 Create location package with closed & floss variants
