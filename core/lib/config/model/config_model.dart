@@ -21,11 +21,11 @@ class ConfigModel {
 
   factory ConfigModel.fromJson(Map<String, dynamic> parsedJson) {
     return ConfigModel(
-        parsedJson['tankste'],
-        parsedJson['tankste']['useMapLibreMap'] ?? true,
-        parsedJson['google']['mapsKey'] ?? "",
-        parsedJson['tankerKoenig']['apiKey'] ?? "",
-        parsedJson['mapLibre']['styleUrlLight'] ?? "",
-        parsedJson['mapLibre']['styleUrlDark'] ?? "");
+        parsedJson['tankste'] ?? <String, dynamic>{},
+        parsedJson['tankste']?['useMapLibreMap'] ?? true,
+        parsedJson['google']?['mapsKey'] ?? "",
+        parsedJson['tankerKoenig']?['apiKey'] ?? "",
+        parsedJson['mapLibre']?['styleUrlLight'] ?? "",
+        parsedJson['mapLibre']?['styleUrlDark'] ?? "");
   }
 }
