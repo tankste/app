@@ -9,6 +9,8 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🧹 Add `nextGenerationMarkers` feature flag
+
 ## 2.2.1 (2026-03-02) ##
 
 - 🌟 Create review package with closed & floss variants
