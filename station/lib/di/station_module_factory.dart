@@ -1,3 +1,4 @@
+import 'package:settings/di/settings_module_factory.dart';
 import 'package:station/repository/config_repository.dart';
 import 'package:station/repository/currency_repository.dart';
 import 'package:station/repository/marker_repository.dart';
@@ -11,12 +12,17 @@ import 'package:core/di/core_module_factory.dart';
 class StationModuleFactory {
   static MarkerRepository createMarkerRepository() {
     return TanksteWebMarkerRepository(
-        createCurrencyRepository(), createConfigRepository());
+      createCurrencyRepository(),
+      createConfigRepository(),
+      SettingsModuleFactory.createDeveloperSettingsRepository(),
+    );
   }
 
   static StationRepository createStationRepository() {
     return TanksteWebStationRepository(
-        createCurrencyRepository(), createConfigRepository());
+      createCurrencyRepository(),
+      createConfigRepository(),
+    );
   }
 
   static PriceRepository createPriceRepository() {

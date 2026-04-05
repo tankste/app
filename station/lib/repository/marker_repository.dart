@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:navigation/navigation.dart';
+import 'package:settings/model/developer_settings_model.dart';
+import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:station/model/config_model.dart';
 import 'package:station/model/currency_model.dart';
 import 'package:station/model/marker_model.dart';
@@ -22,11 +24,13 @@ class TanksteWebMarkerRepository extends MarkerRepository {
 
   late CurrencyRepository _currencyRepository;
   late ConfigRepository _configRepository;
+  late DeveloperSettingsRepository _developerSettingsRepository;
 
   factory TanksteWebMarkerRepository(CurrencyRepository currencyRepository,
-      ConfigRepository configRepository) {
+      ConfigRepository configRepository, DeveloperSettingsRepository developerSettingsRepository) {
     _instance._currencyRepository = currencyRepository;
     _instance._configRepository = configRepository;
+    _instance._developerSettingsRepository = developerSettingsRepository;
     return _instance;
   }
 
@@ -59,7 +63,13 @@ class TanksteWebMarkerRepository extends MarkerRepository {
           .map((c) => "boundary[]=${c.latitude},${c.longitude}")
           .join("&");
 
-      Uri url = Uri.parse('${config.apiBaseUrl}/markers?$boundQuery');
+      String nextGenerationQuery = "";
+      DeveloperSettingsModel developerSettings = await _developerSettingsRepository.get().first;
+      if (developerSettings.isFeatureEnabled(Feature.nextGenerationMarkers)) {
+        nextGenerationQuery = "&nextGeneration=true";
+      }
+
+      Uri url = Uri.parse('${config.apiBaseUrl}/markers?$boundQuery$nextGenerationQuery');
       http.Response response = await http
           .get(url); //TODO: add `, headers: await _apiRepository.getHeaders()`
       if (response.statusCode >= 200 && response.statusCode <= 299) {

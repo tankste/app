@@ -30,4 +30,4 @@ class DeveloperSettingsModel {
   }
 }
 
-enum Feature { stationMetaInfo }
+enum Feature { nextGenerationMarkers, stationMetaInfo }
