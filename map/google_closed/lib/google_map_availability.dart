@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:map_core/map_availability.dart';
 import 'package:core/config/config_repository.dart';
 
@@ -13,6 +15,10 @@ class GoogleMapAvailability extends MapAvailability {
 
   @override
   Future<bool> isDefault() {
+    if (!Platform.isAndroid) {
+      return Future.value(false);
+    }
+
     return _configRepository
         .get()
         .then((config) => !config.useMapLibreMap)
