@@ -5,6 +5,6 @@ class RouteModel {
   final int travelTimeSeconds;
   final List<CoordinateModel> routeCoordinates;
 
-  RouteModel(
-      this.distanceMeters, this.travelTimeSeconds, this.routeCoordinates);
+  RouteModel({
+      required this.distanceMeters, required this.travelTimeSeconds, required this.routeCoordinates});
 }

@@ -577,7 +577,7 @@ packages:
   navigation_impl:
     dependency: "direct main"
     description:
-      path: "../impl_google"
+      path: "../impl_foss"
       relative: true
     source: path
     version: "0.0.0"

@@ -3,5 +3,8 @@ import 'package:navigation_core/model/coordinate_model.dart';
 import 'package:navigation_core/model/route_model.dart';
 
 abstract class RouteRepository {
-  Future<Result<RouteModel, Exception>> getRoutePreview(CoordinateModel from, CoordinateModel to);
+  Future<Result<RouteModel, Exception>> getRoutePreview(
+    CoordinateModel from,
+    CoordinateModel to,
+  );
 }

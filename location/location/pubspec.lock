@@ -577,7 +577,7 @@ packages:
   navigation_impl:
     dependency: transitive
     description:
-      path: "../../navigation/impl_google"
+      path: "../../navigation/impl_foss"
       relative: true
     source: path
     version: "0.0.0"

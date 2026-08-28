@@ -2,13 +2,16 @@
   "tankste": {
     "useMapLibreMap": true,
     "station": {
-      "apiBaseUrl": "http://stations.local"
+      "apiBaseUrl": "https://api.station.tankste.app"
     },
     "sponsor": {
-      "apiBaseUrl": "http://sponsors.local"
+      "apiBaseUrl": "https://api.sponsor.tankste.app"
     },
     "report": {
-      "apiBaseUrl": "http://reports.local"
+      "apiBaseUrl": "https://api.report.tankste.app"
+    },
+    "navigation": {
+      "routeApiUrl": "https://route.tankste.app"
     }
   },
   "google": {

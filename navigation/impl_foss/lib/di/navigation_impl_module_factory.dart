@@ -1,8 +1,9 @@
+import 'package:core/di/core_module_factory.dart';
 import 'package:navigation_core/repository/route_repository.dart';
-import 'package:navigation_impl/repository/foss_route_repository.dart';
+import 'package:navigation_impl/repository/valhalla_route_repository.dart';
 
 class NavigationImplModuleFactory {
   static RouteRepository createRouteRepository() {
-    return FossRouteRepository();
+    return ValhallaRouteRepository(CoreModuleFactory.createConfigRepository());
   }
 }
