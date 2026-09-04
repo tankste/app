@@ -55,10 +55,6 @@ class ValhallaRouteRepository extends RouteRepository {
       Log.exception(e);
       return Result.error(e);
     }
-
-    return Future.value(
-      Result.error(Exception("Route is currently not supported.")),
-    );
   }
 
   /// Decode the google encoded string using Encoded Polyline Algorithm Format
@@ -97,6 +93,6 @@ class ValhallaRouteRepository extends RouteRepository {
   }
 
   Future<String> _getRouteApiUrl() async {
-    return configRepository.get().then((config) => config.routeApiUrl);
+    return configRepository.getStringValue("navigation_base_url").first;
   }
 }
