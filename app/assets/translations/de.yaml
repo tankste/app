@@ -86,13 +86,16 @@ settings:
       dark: Dunkel
     map_provider:
       title: Kartenanbieter
-      map_libre: MapLibre
+      tankste: tankste!
       google_maps: Google Maps
       apple_maps: Apple Maps
     navigation_map:
       title: Navigation starten mit…
     currency:
       title: Heimatwährung
+    configuration:
+      title: "Erweiterte Einstellungen"
+      invalid_url: "Bitte eine gültige URL eingeben."
   open_source:
     title: Unterstütze uns
     sponsor:

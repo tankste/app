@@ -1,27 +1,49 @@
-{
-  "tankste": {
-    "useMapLibreMap": true,
-    "station": {
-      "apiBaseUrl": "https://api.station.tankste.app"
-    },
-    "sponsor": {
-      "apiBaseUrl": "https://api.sponsor.tankste.app"
-    },
-    "report": {
-      "apiBaseUrl": "https://api.report.tankste.app"
-    },
-    "navigation": {
-      "routeApiUrl": "https://route.tankste.app"
-    }
+[
+  {
+    "key": "map_style_light_url",
+    "label": "Map style URL for light theme",
+    "default": "https://tiles.tankste.app/style/classic_light",
+    "isConfigurable": true,
+    "type": "url"
   },
-  "google": {
-    "mapsKey": ""
+  {
+    "key": "map_style_dark_url",
+    "label": "Map style URL for dark theme",
+    "default": "https://tiles.tankste.app/style/classic_dark",
+    "isConfigurable": true,
+    "type": "url"
   },
-  "mapLibre": {
-    "styleUrlLight": "",
-    "styleUrlDark": ""
+  {
+    "key": "station_base_url",
+    "label": "Station API base URL",
+    "default": "https://api.station.tankste.app",
+    "isConfigurable": true,
+    "type": "url"
   },
-  "tankerKoenig": {
-    "apiKey": ""
+  {
+    "key": "report_base_url",
+    "label": "Report API base URL",
+    "default": "https://api.report.tankste.app",
+    "isConfigurable": true,
+    "type": "url"
+  },
+  {
+    "key": "navigation_base_url",
+    "label": "Valhalla navigation API URL",
+    "default": "https://route.tankste.app",
+    "isConfigurable": true,
+    "type": "url"
+  },
+  {
+    "key": "maplibre_as_default",
+    "label": "Use MapLibre as default map",
+    "default": false,
+    "isConfigurable": false
+  },
+  {
+    "key": "configuration_public",
+    "label": "Show configuration settings item by default",
+    "default": false,
+    "isConfigurable": false
   }
-}
+]

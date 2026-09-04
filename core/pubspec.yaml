@@ -33,6 +33,9 @@ dependencies:
   # Path Provider - https://pub.dev/packages/path_provider
   path_provider: ^2.1.6
 
+  # Rx Dart - https://pub.dev/packages/rxdart
+  rxdart: ^0.28.0
+
 dev_dependencies:
   flutter_lints: ^6.0.0
 

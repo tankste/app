@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:settings/ui/configuration/ui/configuration_item.dart';
 import 'package:settings/ui/currency/currency_item.dart';
 import 'package:settings/ui/developer/developer_card.dart';
 import 'package:settings/ui/map/map_provider_item.dart';
@@ -39,7 +40,8 @@ class SettingsPage extends StatelessWidget {
         ThemeItem(),
         MapProviderItem(),
         MapDestinationItem(),
-        CurrencyItem()
+        CurrencyItem(),
+        ConfigurationItem(),
       ]),
       SettingsCard(title: tr('settings.open_source.title'), items: [
         SponsorSettingItem(),

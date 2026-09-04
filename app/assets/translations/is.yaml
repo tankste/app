@@ -86,13 +86,16 @@ settings:
       dark: Myrkur
     map_provider:
       title: Kortaveitandi
-      map_libre: MapLibre
+      tankste: tankste!
       google_maps: Google Maps
       apple_maps: Apple Maps
     navigation_map:
       title: Byrja vegvísun með…
     currency:
       title: Heimavalúta
+    configuration:
+      title: "Ítarlegar stillingar"
+      invalid_url: "Vinsamlegast sláðu inn gilda vefslóð."
   open_source:
     title: Styðja okkur
     sponsor:

@@ -1,7 +1,6 @@
 import 'package:core/log/log.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:station/model/config_model.dart';
-import 'package:core/config/model/config_model.dart' as core;
 import 'package:core/config/config_repository.dart' as core;
 
 abstract class ConfigRepository {
@@ -29,12 +28,11 @@ class LocalConfigRepository extends ConfigRepository {
 
   Future<Result<ConfigModel, Exception>> _getAsync() async {
     try {
-      core.ConfigModel coreConfig = await _coreConfigRepository.get();
-      Map<String, dynamic> jsonStationConfig =
-          coreConfig.jsonConfigFor("station");
+      String apiBaseUrl =
+          await _coreConfigRepository.getStringValue("station_base_url").first;
 
       return Result.success(ConfigModel(
-        apiBaseUrl: jsonStationConfig["apiBaseUrl"] ?? "",
+        apiBaseUrl: apiBaseUrl,
       ));
     } on Exception catch (e) {
       Log.exception(e);

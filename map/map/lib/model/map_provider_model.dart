@@ -9,5 +9,5 @@ enum MapProvider {
   system,
   googleMaps,
   appleMaps,
-  mapLibre,
+  tankste,
 }

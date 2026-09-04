@@ -1,3 +1,5 @@
+import 'package:core/config/config_repository.dart';
+import 'package:core/di/core_module_factory.dart';
 import 'package:settings/repository/developer_settings_repository.dart';
 import 'package:settings/repository/log_repository.dart';
 
@@ -8,5 +10,9 @@ class SettingsModuleFactory {
 
   static LogRepository createLogRepository() {
     return LocalLogRepository();
+  }
+
+  static ConfigRepository createConfigRepository() {
+    return CoreModuleFactory.createConfigRepository();
   }
 }

@@ -19,15 +19,16 @@ class MapCubit extends Cubit<MapState> {
   void _fetchProvider() {
     emit(LoadingMapState());
 
-    CombineLatestStream.combine2(
-        _getCurrentMapProvider(), _configRepository.get().asStream(),
-        (mapProviderResult, config) {
+    CombineLatestStream.combine3(
+        _getCurrentMapProvider(),
+        _configRepository.getStringValue("map_style_light_url"),
+        _configRepository.getStringValue("map_style_dark_url"),
+        (mapProviderResult, styleUrlLight, styleUrlDark) {
       return mapProviderResult.when((provider) {
         switch (provider) {
-          case MapProvider.mapLibre:
+          case MapProvider.tankste:
             return MapLibreMapState(
-                styleUrlLight: config.mapLibreStyleUrlLight,
-                styleUrlDark: config.mapLibreStyleUrlDark);
+                styleUrlLight: styleUrlLight, styleUrlDark: styleUrlDark);
           case MapProvider.googleMaps:
             return GoogleMapMapState();
           case MapProvider.appleMaps:
@@ -52,8 +53,8 @@ class MapCubit extends Cubit<MapState> {
         switch (mapProvider.provider) {
           case MapProvider.googleMaps:
             return Result.success(MapProvider.googleMaps);
-          case MapProvider.mapLibre:
-            return Result.success(MapProvider.mapLibre);
+          case MapProvider.tankste:
+            return Result.success(MapProvider.tankste);
           case MapProvider.appleMaps:
             return Result.success(MapProvider.appleMaps);
           default:

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:map_core/map_availability.dart';
 import 'package:core/config/config_repository.dart';
+import 'package:map_core/map_availability.dart';
 
 class GoogleMapAvailability extends MapAvailability {
   final ConfigRepository _configRepository;
@@ -20,8 +20,9 @@ class GoogleMapAvailability extends MapAvailability {
     }
 
     return _configRepository
-        .get()
-        .then((config) => !config.useMapLibreMap)
+        .getBoolValue("maplibre_as_default")
+        .first
+        .then((useMapLibreMap) => !useMapLibreMap)
         .catchError((error) => false);
   }
 }

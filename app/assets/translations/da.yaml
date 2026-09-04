@@ -86,13 +86,16 @@ settings:
       dark: Mørk
     map_provider:
       title: Korttjeneste
-      map_libre: MapLibre
+      tankste: tankste!
       google_maps: Google Maps
       apple_maps: Apple Maps
     navigation_map:
       title: Start navigation med…
     currency:
       title: Hjemvaluta
+    configuration:
+      title: "Avancerede indstillinger"
+      invalid_url: "Indtast venligst en gyldig URL."
   open_source:
     title: Støt os
     sponsor:

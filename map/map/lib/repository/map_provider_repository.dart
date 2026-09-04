@@ -38,8 +38,8 @@ class LocalMapProviderRepository extends MapProviderRepository {
 
   final MapProviderModel _systemProvider =
       MapProviderModel(tr('generic.system_default'), MapProvider.system);
-  final MapProviderModel _maplibreProvider = MapProviderModel(
-      tr('settings.app.map_provider.map_libre'), MapProvider.mapLibre);
+  final MapProviderModel _tanksteProvider = MapProviderModel(
+      tr('settings.app.map_provider.tankste'), MapProvider.tankste);
   final MapProviderModel _googleProvider = MapProviderModel(
       tr('settings.app.map_provider.google_maps'), MapProvider.googleMaps);
   final MapProviderModel _appleProvider = MapProviderModel(
@@ -64,7 +64,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
       List<MapProviderModel> availableProviders = [];
 
       availableProviders.add(_systemProvider);
-      availableProviders.add(_maplibreProvider);
+      availableProviders.add(_tanksteProvider);
 
       if (_googleMapAvailability.isAvailable()) {
         availableProviders.add(_googleProvider);
@@ -163,8 +163,8 @@ class LocalMapProviderRepository extends MapProviderRepository {
         return "appleMaps";
       case MapProvider.googleMaps:
         return "googleMaps";
-      case MapProvider.mapLibre:
-        return "mapLibre";
+      case MapProvider.tankste:
+        return "tankste";
       default:
         return "system";
     }
@@ -176,8 +176,9 @@ class LocalMapProviderRepository extends MapProviderRepository {
         return MapProvider.appleMaps;
       case "googleMaps":
         return MapProvider.googleMaps;
-      case "mapLibre":
-        return MapProvider.mapLibre;
+      case "mapLibre": // Legacy: Previous used key
+      case "tankste":
+        return MapProvider.tankste;
       default:
         return MapProvider.system;
     }
@@ -190,7 +191,7 @@ class LocalMapProviderRepository extends MapProviderRepository {
     } else if (await _appleMapAvailability.isDefault()) {
       return _appleProvider;
     } else {
-      return _maplibreProvider;
+      return _tanksteProvider;
     }
   }
 }
