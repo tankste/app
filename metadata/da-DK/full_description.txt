@@ -1,0 +1,38 @@
+Med tankste!-appen finder du den billigste benzinpris i dit område. Med det velkendte trafiksignalsystem kan du med et blik se, hvor du kan spare penge på benzin, og hvilke tankstationer du bør undgå.
+
+<b>🚦 Trafiksignalsystem 🚦</b>
+
+Med det velkendte trafiksignalsystem kan du med et blik se, hvilke tankstationer der har billig benzin.
+Vi sammenligner alle tankstationer i dit område og viser dig det bedst mulige tilbud, som du kan benytte dig af.
+
+🟢 grøn = billig
+🟠 orange = lidt dyrere
+🔴 rød = dyr
+
+<b>🔍 Filter 🔍</b>
+
+Med de enkle filtermuligheder kan du vælge den brændstoftype, du ønsker. Du kan vælge mellem benzin E5, benzin E10 og diesel.
+
+<b>🔐 Uden sporing 🔐</b>
+
+Der kræves ingen registrering for at bruge tankste! Brug af placering er også valgfrit. Det handler her om brændstofpriserne, ikke mere og ikke mindre.
+
+<b>🤑 Gratis & uden reklamer 🤑</b>
+
+For at gøre tankning endnu sjovere er denne app gratis. Der er ingen skjulte omkostninger, og jeg viser heller ikke reklamer! Projektet finansieres udelukkende gennem frivillige donationer. Ligesom I for eksempel 
+
+<b>👾 Open Source 👾</b>
+
+Da jeg ikke ønsker, at ideen bag Bertha går tabt igen, er projektet fuldstændig open source. Du kan finde koden på Github og dermed bidrage til projektet. Mangler du en funktion? Intet problem! Du skal bare oprette en pull request eller en issue.
+
+<b>🌍 Tværnationalt 🌍</b>
+
+Vi ønsker, at du også kan bruge appen til dine tankninger, når du er på ferie og ved grænserne. I øjeblikket tilbyder tankste! priser i Tyskland 🇩🇪, Danmark 🇩🇰 og Island 🇮🇸.
+
+<b>🧑‍💻 Flere funktioner 🧑‍💻</b>
+
+Appen er stadig ny, og de bureaukratiske skridt for at få yderligere data fra tankstationer og lande er store. Roadmappen har stadig meget at byde på, og jeg glæder mig til at lade projektet vokse sammen med jer. Så hvis der er noget, du savner, så kontakt mig og hav lidt tålmodighed.
+
+<b>ℹ️ Datakilder ℹ️</b>
+
+Du kan finde datakilderne på vores hjemmeside under https://tankste.app/datenquellen/.

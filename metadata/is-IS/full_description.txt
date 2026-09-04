@@ -1,0 +1,38 @@
+Með tankste! forritinu finnur þú ódýrasta bensínverðið í nágrenninu þínu. Með þekkta lýsingakerfið sérðu strax hvar þú getur sparað peninga við að bíða og hvaða bensínstöð þú ættir frekar að forðast.
+
+<b>🚦 Lýsingakerfi 🚦</b>
+
+Með þekkta lýsingakerfið sérðu strax á hvaða bensínstöðum bensínið er ódýrt.
+Við bera saman allar bensínstöðvar í nágrenninu þínu og sýnum þér besta boðið sem þú getur notað.
+
+🟢 grænt = ódýrt
+🟠 appelsínugult = eitthvað dýrara
+🔴 rautt = dýrt
+
+<b>🔍 Sía 🔍</b>
+
+Með einföldum síunarmöguleikum getur þú valið bensíngerðina sem þú vilt. Þú getur valið milli bensíns E5, bensíns E10 og dísils.
+
+<b>🔐 Án fylgis 🔐</b>
+
+Engin skráning er nauðsynleg til að nota tankste! Notkun staðsetningar er einnig valkvæm. Þetta snýst um bensínverð, hvorki meira né minna.
+
+<b>🤑 Ókeypis og án auglýsinga 🤑</b>
+
+Til að gera bílastöðinni enn skemmtilegri er þetta appið ókeypis. Engin fálkaðir kostnaður og ég birti ekki auglýsingar! Verkefnið er fjármagnað alveg af frjálsum gjöfum. Eins og þú þekkir það til dæmis frá Wikipedia.
+
+<b>👾 Opinn kóði 👾</b>
+
+Þar sem ég vil ekki að hugmyndin aftan Bertha sé glatað aftur er verkefnið alveg opinn. Þú finnur kóðann á Github og getur þá þátt tekið í verkefninu. Vantar þig eitthvað? Engin vandamál! Bara búa til þjónustubeiðni eða málefni.
+
+<b>🌍 Landamæra þekking 🌍</b>
+
+Við viljum að þú getir notað appið þitt fyrir bílastöðvarnar þínar jafnvel í fríi og við landamærin. Í dag býður tankste! þér verð í Þýskalandi 🇩🇪, Danmörk og Íslandi 🇮🇸.
+
+<b>🧑‍💻 Fleiri eiginleikar 🧑‍💻</b>
+
+Appið er enn ungt, og stjórnvöld að fá fleiri upplýsingar frá bensínstöðvum og löndum eru mikil. Roadmapin er enn að bjóða upp á mikið og ég hlakka til að láta verkefnið vaxa með ykkur. Svo ef þér vantar enn eitthvað, hafðu samband við mig og vertu þolinmóður.
+
+<b>ℹ️ Upplýsingaheimildir ℹ️</b>
+
+Gögnin finnur þú á vefsetrinu okkar á https://tankste.app/datenquellen/.

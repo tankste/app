@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
         ListTile(
           onTap: () {
             _openUrl(
-                "https://github.com/tankste/app/tree/main/app/assets/translations");
+                "https://github.com/tankste/tankste-app-fdroid/tree/main/app/assets/translations");
           },
           minLeadingWidth: 8,
           leading: const Icon(Icons.translate),
@@ -57,7 +57,7 @@ class SettingsPage extends StatelessWidget {
         ),
         ListTile(
             onTap: () {
-              _openUrl("https://github.com/tankste/app");
+              _openUrl("https://github.com/tankste/tankste-app-fdroid");
             },
             minLeadingWidth: 8,
             leading: const FaIcon(FontAwesomeIcons.github),

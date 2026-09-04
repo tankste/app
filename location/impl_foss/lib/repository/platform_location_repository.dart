@@ -1,5 +1,5 @@
 import 'package:core/log/log.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator_floss/geolocator.dart';
 import 'package:location_core/model/location_model.dart';
 import 'package:location_core/model/permission_model.dart';
 import 'package:location_core/repository/location_permission_repository.dart';
@@ -39,7 +39,7 @@ class PlatformLocationRepository extends LocationRepository {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-        locationSettings: AndroidSettings(forceLocationManager: true));
+        locationSettings: AndroidSettings());
     return LocationModel(
         coordinate: CoordinateModel(
             latitude: position.latitude, longitude: position.longitude));

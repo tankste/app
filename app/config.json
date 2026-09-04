@@ -37,13 +37,13 @@
   {
     "key": "maplibre_as_default",
     "label": "Use MapLibre as default map",
-    "default": false,
+    "default": true,
     "isConfigurable": false
   },
   {
     "key": "configuration_public",
     "label": "Show configuration settings item by default",
-    "default": false,
+    "default": true,
     "isConfigurable": false
   }
 ]

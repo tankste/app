@@ -16,7 +16,7 @@ dependencies:
     path: '../core'
 
   sponsor_data:
-    path: '../data_closed'
+    path: '../data_foss'
 
   # BLoC - https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^9.1.1
