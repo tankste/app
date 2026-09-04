@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:map_core/map_models.dart';
 import 'package:map_core/ui/map_adapter.dart';
 import 'package:maplibre_gl/maplibre_gl.dart' as map_libre_maps;
+import 'package:collection/collection.dart';
 
 class MapLibreMapAdapter extends MapAdapter {
   final String styleUrlLight;
@@ -127,7 +128,8 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     widget.onMapCreated(MapLibreMapController(mapController));
 
     mapController.onSymbolTapped.add((symbol) {
-      Marker? marker = symbol.data?["marker"] as Marker?;
+      Marker? marker = widget.markers
+          .firstWhereOrNull((m) => m.id == symbol.data?["markerId"]);
       marker?.onTap?.call();
     });
 
@@ -163,7 +165,7 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
             iconImage: "${marker.id}-image",
             iconAnchor: "bottom",
           ),
-          {"marker": marker.withoutIcon()},
+          {"markerId": marker.id},
         );
       }).then((symbol) => _symbols.add(symbol));
     }
