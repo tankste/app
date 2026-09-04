@@ -5,7 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/di/settings_module_factory.dart';
-import 'package:settings/ui/configuration/ui/configuration_form_state.dart';
+import 'package:settings/ui/configuration/ui/form/configuration_form_state.dart';
 
 //TODO(fabi755): allow also other types (bool) to be configurable
 class ConfigurationFormCubit extends Cubit<ConfigurationFormState> {
