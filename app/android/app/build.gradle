@@ -33,16 +33,8 @@ android {
     compileSdkVersion 36
     ndkVersion '28.1.13356709'
 
-    packagingOptions {
-        doNotStrip '**/*.so'
-    }
-
-    aaptOptions {
-        cruncherEnabled = false
-    }
-
     defaultConfig {
-        applicationId "app.tankste.fdroid"
+        applicationId "app.tankste"
 
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
@@ -53,7 +45,7 @@ android {
 
     buildTypes {
         release {
-            shrinkResources false
+            shrinkResources true
             minifyEnabled true
 
             ndk {
@@ -80,4 +72,5 @@ dependencies {
 //    implementation "io.insert-koin:koin-core:$koin_version"
 //    implementation "io.insert-koin:koin-android:$koin_version"
 //    implementation "io.insert-koin:koin-android-compat:$koin_version"
+
 }
