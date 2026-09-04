@@ -9,6 +9,7 @@ CHANGELOG
 
 ## Upcoming version ##
 
+- 🌟 Allow to configure default service URLs
 - 🧹 Replace Google's route calculation with Valhalla
 - 🐞 Use Google Maps only on Android platforms as default map ([#91](https://github.com/tankste/app/issues/91)) 
 - 🧹 Add `nextGenerationMarkers` feature flag ([#92](https://github.com/tankste/app/issues/92)) 
