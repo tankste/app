@@ -22,6 +22,7 @@ class GoogleMapAdapter extends MapAdapter {
 class GoogleMapAdapterState extends State<GoogleMapAdapter> {
   Set<google_maps.Marker> _markers = <google_maps.Marker>{};
   google_maps.GoogleMapController? _mapController;
+  GoogleMapController? _controller;
   google_maps.CameraPosition? _lastPosition;
   String? mapStyle;
   bool? _isDark;
@@ -61,7 +62,8 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
           CameraPosition cameraPosition = CameraPosition(
               latLng: LatLng(
                   lastPosition.target.latitude, lastPosition.target.longitude),
-              zoom: lastPosition.zoom);
+              zoom: lastPosition.zoom,
+              bearing: lastPosition.bearing);
 
           widget.onCameraMove?.call(cameraPosition);
         }
@@ -70,6 +72,7 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
       },
       onCameraMove: (position) {
         _lastPosition = position;
+        _controller?.updateLastPosition(position);
       },
       markers: _markers,
       polylines: widget.polylines
@@ -104,7 +107,10 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
 
   void _mapCreated(google_maps.GoogleMapController mapController) {
     _mapController = mapController;
-    widget.onMapCreated(GoogleMapController(mapController));
+    GoogleMapController controller = GoogleMapController(mapController);
+    controller.updateLastPosition(_lastPosition);
+    _controller = controller;
+    widget.onMapCreated(controller);
   }
 
   void _loadTheme() {
@@ -147,8 +153,13 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
 
 class GoogleMapController extends MapController {
   google_maps.GoogleMapController childController;
+  google_maps.CameraPosition? _lastPosition;
 
   GoogleMapController(this.childController);
+
+  void updateLastPosition(google_maps.CameraPosition? position) {
+    _lastPosition = position;
+  }
 
   @override
   void moveCameraToPosition(CameraPosition position) {
@@ -166,5 +177,19 @@ class GoogleMapController extends MapController {
             southwest: google_maps.LatLng(
                 bounds.southWest.latitude, bounds.southWest.longitude)),
         padding));
+  }
+
+  @override
+  void moveCameraToBearing(double bearing) {
+    google_maps.CameraPosition? lastPosition = _lastPosition;
+    if (lastPosition == null) {
+      return;
+    }
+
+    childController.animateCamera(google_maps.CameraUpdate.newCameraPosition(
+        google_maps.CameraPosition(
+            target: lastPosition.target,
+            zoom: lastPosition.zoom,
+            bearing: bearing)));
   }
 }

@@ -81,7 +81,8 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
           CameraPosition cameraPosition = CameraPosition(
               latLng: LatLng(mapLibreCameraPosition.target.latitude,
                   mapLibreCameraPosition.target.longitude),
-              zoom: mapLibreCameraPosition.zoom);
+              zoom: mapLibreCameraPosition.zoom,
+            bearing: mapLibreCameraPosition.bearing);
 
           widget.onCameraMove?.call(cameraPosition);
 
@@ -234,5 +235,10 @@ class MapLibreMapController extends MapController {
         bottom: padding,
         left: padding,
         right: padding));
+  }
+
+  @override
+  void moveCameraToBearing(double bearing) {
+    childController.animateCamera(map_libre_maps.CameraUpdate.bearingTo(bearing));
   }
 }

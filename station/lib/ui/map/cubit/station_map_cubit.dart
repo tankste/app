@@ -25,7 +25,7 @@ import 'package:station/ui/map/filter_dialog.dart';
 import 'package:station/ui/price_format.dart';
 
 final CameraPosition initialCameraPosition =
-    CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0);
+    CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0, bearing: 0);
 
 //TODO: continue refactoring
 //TODO: re-build this cubit:
@@ -197,7 +197,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
   void onZoomInfoClicked() {
     CameraPosition zoomedCameraPosition =
-        CameraPosition(latLng: _position.latLng, zoom: 12.5);
+        CameraPosition(latLng: _position.latLng, zoom: 12.5, bearing: _position.bearing);
     Log.i("Move by zoom in info at $zoomedCameraPosition.");
 
     emit(MoveToZoomedInLoadingStationMapState(
@@ -217,7 +217,7 @@ class StationMapCubit extends Cubit<StationMapState>
         if (cameraPosition != null) {
           _position = CameraPosition(
               latLng: LatLng(cameraPosition.latitude, cameraPosition.longitude),
-              zoom: cameraPosition.zoom);
+              zoom: cameraPosition.zoom, bearing: cameraPosition.bearing);
 
           Log.i("Move map initial to last position at $cameraPosition.");
 
@@ -225,7 +225,7 @@ class StationMapCubit extends Cubit<StationMapState>
               cameraPosition: CameraPosition(
                   latLng:
                       LatLng(cameraPosition.latitude, cameraPosition.longitude),
-                  zoom: cameraPosition.zoom)));
+                  zoom: cameraPosition.zoom, bearing: cameraPosition.bearing)));
 
           emit(LoadingInitMarkersStationMapState());
           _fetchStations(_position, true);
@@ -238,7 +238,7 @@ class StationMapCubit extends Cubit<StationMapState>
               CameraPosition newPosition = CameraPosition(
                   latLng: LatLng(position.coordinate.latitude,
                       position.coordinate.longitude),
-                  zoom: 12.5);
+                  zoom: 12.5, bearing: _position.bearing);
 
               if (newPosition != _position) {
                 _position = newPosition;
@@ -276,7 +276,7 @@ class StationMapCubit extends Cubit<StationMapState>
         CameraPosition newPosition = CameraPosition(
             latLng: LatLng(
                 position.coordinate.latitude, position.coordinate.longitude),
-            zoom: 12.5);
+            zoom: 12.5, bearing: _position.bearing);
 
         if (newPosition != _position) {
           _position = newPosition;
@@ -340,7 +340,9 @@ class StationMapCubit extends Cubit<StationMapState>
     _cameraPositionRepository.updateLast(CameraPositionModel(
         latitude: cameraPosition.latLng.latitude,
         longitude: cameraPosition.latLng.longitude,
-        zoom: cameraPosition.zoom));
+        zoom: cameraPosition.zoom,
+      bearing: cameraPosition.bearing,
+    ));
   }
 
   void onFilterClicked() {

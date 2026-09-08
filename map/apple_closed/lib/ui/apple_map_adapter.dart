@@ -56,7 +56,7 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
             CameraPosition cameraPosition = CameraPosition(
                 latLng: LatLng(lastPosition.target.latitude,
                     lastPosition.target.longitude),
-                zoom: lastPosition.zoom);
+                zoom: lastPosition.zoom, bearing: lastPosition.heading);
 
             widget.onCameraMove?.call(cameraPosition);
           }
@@ -66,6 +66,7 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
       },
       onCameraMove: (position) {
         _lastPosition = position;
+        _mapController?.updateLastPosition(position);
       },
       annotations: _annotations,
       polylines: widget.polylines
@@ -96,8 +97,10 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
   }
 
   void _mapCreated(apple_maps.AppleMapController mapController) {
-    _mapController = AppleMapController(mapController);
-    widget.onMapCreated(_mapController!);
+    AppleMapController controller = AppleMapController(mapController);
+    controller.updateLastPosition(_lastPosition);
+    _mapController = controller;
+    widget.onMapCreated(controller);
   }
 
   Future _convertMarkers() async {
@@ -121,8 +124,13 @@ class AppleMapAdapterState extends State<AppleMapAdapter> {
 
 class AppleMapController extends MapController {
   apple_maps.AppleMapController childController;
+  apple_maps.CameraPosition? _lastPosition;
 
   AppleMapController(this.childController);
+
+  void updateLastPosition(apple_maps.CameraPosition? position) {
+    _lastPosition = position;
+  }
 
   @override
   void moveCameraToPosition(CameraPosition position) {
@@ -140,5 +148,20 @@ class AppleMapController extends MapController {
             southwest: apple_maps.LatLng(
                 bounds.southWest.latitude, bounds.southWest.longitude)),
         padding));
+  }
+
+  @override
+  void moveCameraToBearing(double bearing) {
+    apple_maps.CameraPosition? lastPosition = _lastPosition;
+    if (lastPosition == null) {
+      return;
+    }
+
+    childController.animateCamera(apple_maps.CameraUpdate.newCameraPosition(
+        apple_maps.CameraPosition(
+            target: lastPosition.target,
+            zoom: lastPosition.zoom,
+            pitch: lastPosition.pitch,
+            heading: bearing)));
   }
 }

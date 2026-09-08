@@ -6,8 +6,9 @@ import 'package:flutter/foundation.dart';
 class CameraPosition {
   LatLng latLng;
   double zoom;
+  double bearing;
 
-  CameraPosition({required this.latLng, required this.zoom});
+  CameraPosition({required this.latLng, required this.zoom, required this.bearing});
 
   @override
   bool operator ==(Object other) =>
@@ -19,6 +20,14 @@ class CameraPosition {
 
   @override
   int get hashCode => latLng.hashCode ^ zoom.hashCode;
+
+  CameraPosition copyWith({LatLng? latLng, double? zoom, double? bearing}) {
+    return CameraPosition(
+      latLng: latLng ?? this.latLng,
+      zoom: zoom ?? this.zoom,
+      bearing: bearing ?? this.bearing,
+    );
+  }
 
   @override
   String toString() {
@@ -63,6 +72,8 @@ class LatLngBounds {
 
 abstract class MapController {
   void moveCameraToPosition(CameraPosition position);
+
+  void moveCameraToBearing(double bearing);
 
   void moveCameraToBounds(LatLngBounds bounds, double padding);
 }
