@@ -31,7 +31,7 @@ class CameraPosition {
 
   @override
   String toString() {
-    return 'CameraPosition{latLng: $latLng, zoom: $zoom}';
+    return 'CameraPosition{latLng: $latLng, zoom: $zoom, bearing: $bearing}';
   }
 }
 

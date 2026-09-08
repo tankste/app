@@ -63,6 +63,9 @@ dependencies:
   # Flutter Chart - https://pub.dev/packages/fl_chart
   fl_chart: ^1.2.0
 
+  # SVG - https://pub.dev/packages/flutter_svg
+  flutter_svg: ^2.3.0
+
 dev_dependencies:
   flutter_lints: ^6.0.0
 

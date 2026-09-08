@@ -57,7 +57,7 @@ class StationMapCubit extends Cubit<StationMapState>
   Future? _stationRequest;
   int _requestNumber = 0;
 
-  StationMapCubit() : super(EmptyStationMapState()) {
+  StationMapCubit() : super(EmptyStationMapState(isNorthButtonVisible: false)) {
     WidgetsBinding.instance.addObserver(this);
 
     _requestReviewIfNeeded();
@@ -73,14 +73,14 @@ class StationMapCubit extends Cubit<StationMapState>
         _homeCurrency = currency;
         _fetchInitGasFilter().then((_) => _moveToInitPosition());
       }, (error) {
-        emit(ErrorStationMapState(errorDetails: error.toString()));
+        emit(ErrorStationMapState(errorDetails: error.toString(), isNorthButtonVisible: !_isNorthAligned()));
       });
     });
   }
 
   //TODO: outsource to repository
   Future<void> _fetchInitGasFilter() async {
-    emit(InitFilterLoadingStationMapState());
+    emit(InitFilterLoadingStationMapState(isNorthButtonVisible: !_isNorthAligned()));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gas = prefs.getString("filter_gas") ?? "e5";
     _filter = Filter(gas);
@@ -99,7 +99,7 @@ class StationMapCubit extends Cubit<StationMapState>
     // Zoomed out too far, skip station loading
     if (position.zoom < _minZoom) {
       Log.d("Too far zoomed out. Skip station fetching.");
-      emit(TooFarZoomedOutStationMapState());
+      emit(TooFarZoomedOutStationMapState(isNorthButtonVisible: !_isNorthAligned()));
       return;
     }
     bool showLabelMarkers = position.zoom >= 12;
@@ -120,7 +120,7 @@ class StationMapCubit extends Cubit<StationMapState>
           emit(MarkersStationMapState(
               stationMarkers: state.stationMarkers,
               isShowingLabelMarkers: state.isShowingLabelMarkers,
-              filter: state.filter));
+              filter: state.filter, isNorthButtonVisible: !_isNorthAligned()));
         }
         return;
       }
@@ -175,11 +175,11 @@ class StationMapCubit extends Cubit<StationMapState>
               emit(MarkersStationMapState(
                   stationMarkers: markers,
                   isShowingLabelMarkers: showLabelMarkers,
-                  filter: _filter!));
+                  filter: _filter!, isNorthButtonVisible: !_isNorthAligned()));
             });
           },
-              (error) =>
-                  emit(ErrorStationMapState(errorDetails: error.toString())));
+                  (error) =>
+                  emit(ErrorStationMapState(errorDetails: error.toString(),isNorthButtonVisible: !_isNorthAligned())));
         });
   }
 
@@ -201,11 +201,11 @@ class StationMapCubit extends Cubit<StationMapState>
     Log.i("Move by zoom in info at $zoomedCameraPosition.");
 
     emit(MoveToZoomedInLoadingStationMapState(
-        cameraPosition: zoomedCameraPosition));
+        cameraPosition: zoomedCameraPosition,isNorthButtonVisible: !_isNorthAligned()));
   }
 
   void _moveToInitPosition() {
-    emit(InitPositionLoadingStationMapState());
+    emit(InitPositionLoadingStationMapState(isNorthButtonVisible: !_isNorthAligned()));
     Log.d("Fetch initial position.");
 
     _cameraPositionRepository.getLast().first.then((result) {
@@ -225,9 +225,9 @@ class StationMapCubit extends Cubit<StationMapState>
               cameraPosition: CameraPosition(
                   latLng:
                       LatLng(cameraPosition.latitude, cameraPosition.longitude),
-                  zoom: cameraPosition.zoom, bearing: cameraPosition.bearing)));
+                  zoom: cameraPosition.zoom, bearing: cameraPosition.bearing), isNorthButtonVisible: !_isNorthAligned()));
 
-          emit(LoadingInitMarkersStationMapState());
+          emit(LoadingInitMarkersStationMapState(isNorthButtonVisible: !_isNorthAligned()));
           _fetchStations(_position, true);
         } else {
           Log.d(
@@ -246,9 +246,9 @@ class StationMapCubit extends Cubit<StationMapState>
                 Log.i("Move map initial to own position at $newPosition.");
 
                 emit(MoveToInitLoadingStationMapState(
-                    cameraPosition: newPosition));
+                    cameraPosition: newPosition,isNorthButtonVisible: !_isNorthAligned()));
 
-                emit(LoadingInitMarkersStationMapState());
+                emit(LoadingInitMarkersStationMapState(isNorthButtonVisible: !_isNorthAligned()));
                 _fetchStations(_position, true);
               } else {
                 Log.d("Already at own position at $_position. Skip map move.");
@@ -257,17 +257,17 @@ class StationMapCubit extends Cubit<StationMapState>
             } else {
               Log.d(
                   "Position not available. Fallback to initial too far zoomed out state.");
-              emit(TooFarZoomedOutStationMapState());
+              emit(TooFarZoomedOutStationMapState(isNorthButtonVisible: !_isNorthAligned()));
             }
           });
         }
-      }, (error) => emit(ErrorStationMapState(errorDetails: error.toString())));
+      }, (error) => emit(ErrorStationMapState(errorDetails: error.toString(),isNorthButtonVisible: !_isNorthAligned())));
     });
   }
 
   void _moveToOwnLocation() {
     StationMapState state = _getUnderlyingState(this.state);
-    emit(FindOwnPositionLoadingStationMapState(underlyingState: state));
+    emit(FindOwnPositionLoadingStationMapState(underlyingState: state,isNorthButtonVisible: !_isNorthAligned()));
 
     Log.d("Fetch own position.");
 
@@ -282,9 +282,9 @@ class StationMapCubit extends Cubit<StationMapState>
           _position = newPosition;
 
           Log.i("Move map to own position at $newPosition.");
-          emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition));
+          emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition,isNorthButtonVisible: !_isNorthAligned()));
 
-          emit(LoadingMarkersStationMapState(underlyingState: state));
+          emit(LoadingMarkersStationMapState(underlyingState: state,isNorthButtonVisible: !_isNorthAligned()));
           _fetchStations(_position, true);
         } else {
           Log.d("Already at own position at $_position. Skip map move.");
@@ -312,7 +312,7 @@ class StationMapCubit extends Cubit<StationMapState>
     Log.d("Camera position idle at: $_position.");
 
     emit(LoadingMarkersStationMapState(
-        underlyingState: _getUnderlyingState(state)));
+        underlyingState: _getUnderlyingState(state), isNorthButtonVisible: !_isNorthAligned()));
     _fetchStations(_position, false);
   }
 
@@ -333,7 +333,7 @@ class StationMapCubit extends Cubit<StationMapState>
 
     if (state is TooFarZoomedOutStationMapState) {
       if (cameraPosition.zoom >= _minZoom) {
-        emit(EmptyStationMapState());
+        emit(EmptyStationMapState(isNorthButtonVisible: !_isNorthAligned()));
       }
     }
 
@@ -349,7 +349,7 @@ class StationMapCubit extends Cubit<StationMapState>
     StationMapState state = _getUnderlyingState(this.state);
     if (state is MarkersStationMapState) {
       emit(FilterDialogStationMapState(
-          underlyingState: state, filter: state.filter));
+          underlyingState: state, filter: state.filter, isNorthButtonVisible: !_isNorthAligned()));
     }
   }
 
@@ -361,7 +361,7 @@ class StationMapCubit extends Cubit<StationMapState>
         .then((prefs) => prefs.setString("filter_gas", filter.gas));
 
     emit(LoadingMarkersStationMapState(
-        underlyingState: _getUnderlyingState(state)));
+        underlyingState: _getUnderlyingState(state),isNorthButtonVisible: !_isNorthAligned()));
     _fetchStations(_position, true);
   }
 
@@ -370,6 +370,11 @@ class StationMapCubit extends Cubit<StationMapState>
     if (state is FilterDialogStationMapState) {
       emit(_getUnderlyingState(this.state));
     }
+  }
+
+  void onNorthClicked() {
+    _position = _position.copyWith(bearing: 0);
+    emit(MoveToBearingStationMapState(underlyingState: state.copyWith(isNorthButtonVisible: false), bearing: 0, isNorthButtonVisible: false));
   }
 
   Future<LocationModel?> _getOwnPosition(bool forcePermissionRequest) async {
@@ -416,6 +421,8 @@ class StationMapCubit extends Cubit<StationMapState>
     WidgetsBinding.instance.removeObserver(this);
     return super.close();
   }
+
+  bool _isNorthAligned() => _position.bearing == 0;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

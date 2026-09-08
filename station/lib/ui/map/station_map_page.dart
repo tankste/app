@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:map/map_models.dart';
 import 'package:map/ui/generic_map.dart';
 import 'package:settings/ui/settings/settings_page.dart';
@@ -35,6 +36,8 @@ class StationMapPageState extends State<StationMapPage> {
             _mapController?.moveCameraToPosition(state.cameraPosition);
           } else if (state is MoveToZoomedInLoadingStationMapState) {
             _mapController?.moveCameraToPosition(state.cameraPosition);
+          } else if (state is MoveToBearingStationMapState) {
+            _mapController?.moveCameraToBearing(state.bearing);
           }
         }, builder: (context, state) {
           return Scaffold(body: _buildBody(context, state, false));
@@ -51,6 +54,8 @@ class StationMapPageState extends State<StationMapPage> {
       return _buildBody(context, state.underlyingState, true);
     } else if (state is LoadingStationMapState) {
       isLoading = true;
+    } else if( state is MoveToBearingStationMapState) {
+       return _buildBody(context, state.underlyingState, false);
     }
 
     return Stack(children: <Widget>[
@@ -197,41 +202,66 @@ class StationMapPageState extends State<StationMapPage> {
                   width: 64,
                   child: Card(
                       child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
                                         const SettingsPage()));
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.settings,
-                                color: Theme.of(context).primaryColor,
-                              ))),
-                      const Padding(
-                          padding: EdgeInsets.only(left: 8, right: 8),
-                          child: Divider(height: 1)),
-                      InkWell(
-                          onTap: () {
-                            context
-                                .read<StationMapCubit>()
-                                .onMoveToLocationClicked();
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.gps_fixed,
-                                color: Theme.of(context).primaryColor,
-                              ))),
-                    ],
-                  ))))),
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Icon(
+                                    Icons.settings,
+                                    color: Theme
+                                        .of(context)
+                                        .primaryColor,
+                                  ))),
+                          const Padding(
+                              padding: EdgeInsets.only(left: 8, right: 8),
+                              child: Divider(height: 1)),
+                          InkWell(
+                              onTap: () {
+                                context
+                                    .read<StationMapCubit>()
+                                    .onMoveToLocationClicked();
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Icon(
+                                    Icons.gps_fixed,
+                                    color: Theme
+                                        .of(context)
+                                        .primaryColor,
+                                  ))),
+                          state.isNorthButtonVisible ?
+                            const Padding(
+                                padding: EdgeInsets.only(left: 8, right: 8),
+                                child: Divider(height: 1)) : Container(),
+                          state.isNorthButtonVisible ?
+                            InkWell(
+                                onTap: () {
+                                  context
+                                      .read<StationMapCubit>()
+                                      .onNorthClicked();
+                                },
+                                child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child:
+                                    SvgPicture.asset("assets/icons/north.svg",
+                                      package: "core",
+                                      colorFilter: ColorFilter.mode(Theme
+                                          .of(context)
+                                          .primaryColor, BlendMode.srcIn),
+                                    )
+                                )) : Container(),
+                        ],
+                      ))))),
       Positioned(
           bottom: !Platform.isIOS ? 8 : 32,
           // Need more padding to keep "legal" link visible
