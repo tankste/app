@@ -24,8 +24,11 @@ import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
 import 'package:station/ui/price_format.dart';
 
-final CameraPosition initialCameraPosition =
-    CameraPosition(latLng: LatLng(51.2147194, 10.3634281), zoom: 6.0, bearing: 0);
+final CameraPosition initialCameraPosition = CameraPosition(
+  latLng: LatLng(51.2147194, 10.3634281),
+  zoom: 6.0,
+  bearing: 0,
+);
 
 //TODO: continue refactoring
 //TODO: re-build this cubit:
@@ -69,18 +72,30 @@ class StationMapCubit extends Cubit<StationMapState>
 
   void _init() {
     _currencyRepository.getSelected().listen((result) {
-      result.when((currency) {
-        _homeCurrency = currency;
-        _fetchInitGasFilter().then((_) => _moveToInitPosition());
-      }, (error) {
-        emit(ErrorStationMapState(errorDetails: error.toString(), isNorthButtonVisible: !_isNorthAligned()));
-      });
+      result.when(
+        (currency) {
+          _homeCurrency = currency;
+          _fetchInitGasFilter().then((_) => _moveToInitPosition());
+        },
+        (error) {
+          emit(
+            ErrorStationMapState(
+              errorDetails: error.toString(),
+              isNorthButtonVisible: !_isNorthAligned(),
+            ),
+          );
+        },
+      );
     });
   }
 
   //TODO: outsource to repository
   Future<void> _fetchInitGasFilter() async {
-    emit(InitFilterLoadingStationMapState(isNorthButtonVisible: !_isNorthAligned()));
+    emit(
+      InitFilterLoadingStationMapState(
+        isNorthButtonVisible: !_isNorthAligned(),
+      ),
+    );
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gas = prefs.getString("filter_gas") ?? "e5";
     _filter = Filter(gas);
@@ -99,7 +114,11 @@ class StationMapCubit extends Cubit<StationMapState>
     // Zoomed out too far, skip station loading
     if (position.zoom < _minZoom) {
       Log.d("Too far zoomed out. Skip station fetching.");
-      emit(TooFarZoomedOutStationMapState(isNorthButtonVisible: !_isNorthAligned()));
+      emit(
+        TooFarZoomedOutStationMapState(
+          isNorthButtonVisible: !_isNorthAligned(),
+        ),
+      );
       return;
     }
     bool showLabelMarkers = position.zoom >= 12;
@@ -107,20 +126,26 @@ class StationMapCubit extends Cubit<StationMapState>
     if (!force && _lastRequestPosition != null) {
       double movementDistance = _locationRepository.distanceBetween(
         CoordinateModel(
-            latitude: _lastRequestPosition!.latLng.latitude,
-            longitude: _lastRequestPosition!.latLng.longitude),
+          latitude: _lastRequestPosition!.latLng.latitude,
+          longitude: _lastRequestPosition!.latLng.longitude,
+        ),
         CoordinateModel(
-            latitude: position.latLng.latitude,
-            longitude: position.latLng.longitude),
+          latitude: position.latLng.latitude,
+          longitude: position.latLng.longitude,
+        ),
       );
 
       if (movementDistance < 300) {
         Log.d("Movement below 300 meters. Skip station fetching.");
         if (state is MarkersStationMapState) {
-          emit(MarkersStationMapState(
+          emit(
+            MarkersStationMapState(
               stationMarkers: state.stationMarkers,
               isShowingLabelMarkers: state.isShowingLabelMarkers,
-              filter: state.filter, isNorthButtonVisible: !_isNorthAligned()));
+              filter: state.filter,
+              isNorthButtonVisible: !_isNorthAligned(),
+            ),
+          );
         }
         return;
       }
@@ -137,13 +162,13 @@ class StationMapCubit extends Cubit<StationMapState>
     _stationRequest = _markerRepository
         .list([
           CoordinateModel(
-              latitude: position.latLng.latitude - requestBoundsSizeLatitude,
-              longitude:
-                  position.latLng.longitude - requestBoundsSizeLongitude),
+            latitude: position.latLng.latitude - requestBoundsSizeLatitude,
+            longitude: position.latLng.longitude - requestBoundsSizeLongitude,
+          ),
           CoordinateModel(
-              latitude: position.latLng.latitude + requestBoundsSizeLatitude,
-              longitude:
-                  position.latLng.longitude + requestBoundsSizeLongitude),
+            latitude: position.latLng.latitude + requestBoundsSizeLatitude,
+            longitude: position.latLng.longitude + requestBoundsSizeLongitude,
+          ),
         ])
         .first //TODO: use stream benefits
         .then((result) {
@@ -157,29 +182,44 @@ class StationMapCubit extends Cubit<StationMapState>
             return;
           }
 
-          result.when((markers) {
-            Future.wait(markers.map((marker) async => MarkerAnnotation(
-                id:
-                    "${marker.id}-${filter.gas}#${Object.hash(marker.prices, showLabelMarkers ? "label" : "dot")}",
-                marker: marker,
-                icon: await _genMarkerBitmap(
-                    marker, showLabelMarkers)))).then((markers) {
-              if (isClosed) {
-                return;
-              }
+          result.when(
+            (markers) {
+              Future.wait(
+                markers.map(
+                  (marker) async => MarkerAnnotation(
+                    id: "${marker.id}-${filter.gas}#${Object.hash(marker.prices, showLabelMarkers ? "label" : "dot")}",
+                    marker: marker,
+                    icon: await _genMarkerBitmap(marker, showLabelMarkers),
+                  ),
+                ),
+              ).then((markers) {
+                if (isClosed) {
+                  return;
+                }
 
-              _lastRequestTime = DateTime.now();
-              _lastRequestPosition = position;
+                _lastRequestTime = DateTime.now();
+                _lastRequestPosition = position;
 
-              Log.i("Successfully fetched ${markers.length} station markers.");
-              emit(MarkersStationMapState(
-                  stationMarkers: markers,
-                  isShowingLabelMarkers: showLabelMarkers,
-                  filter: _filter!, isNorthButtonVisible: !_isNorthAligned()));
-            });
-          },
-                  (error) =>
-                  emit(ErrorStationMapState(errorDetails: error.toString(),isNorthButtonVisible: !_isNorthAligned())));
+                Log.i(
+                  "Successfully fetched ${markers.length} station markers.",
+                );
+                emit(
+                  MarkersStationMapState(
+                    stationMarkers: markers,
+                    isShowingLabelMarkers: showLabelMarkers,
+                    filter: _filter!,
+                    isNorthButtonVisible: !_isNorthAligned(),
+                  ),
+                );
+              });
+            },
+            (error) => emit(
+              ErrorStationMapState(
+                errorDetails: error.toString(),
+                isNorthButtonVisible: !_isNorthAligned(),
+              ),
+            ),
+          );
         });
   }
 
@@ -196,16 +236,27 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   void onZoomInfoClicked() {
-    CameraPosition zoomedCameraPosition =
-        CameraPosition(latLng: _position.latLng, zoom: 12.5, bearing: _position.bearing);
+    CameraPosition zoomedCameraPosition = CameraPosition(
+      latLng: _position.latLng,
+      zoom: 12.5,
+      bearing: _position.bearing,
+    );
     Log.i("Move by zoom in info at $zoomedCameraPosition.");
 
-    emit(MoveToZoomedInLoadingStationMapState(
-        cameraPosition: zoomedCameraPosition,isNorthButtonVisible: !_isNorthAligned()));
+    emit(
+      MoveToZoomedInLoadingStationMapState(
+        cameraPosition: zoomedCameraPosition,
+        isNorthButtonVisible: !_isNorthAligned(),
+      ),
+    );
   }
 
   void _moveToInitPosition() {
-    emit(InitPositionLoadingStationMapState(isNorthButtonVisible: !_isNorthAligned()));
+    emit(
+      InitPositionLoadingStationMapState(
+        isNorthButtonVisible: !_isNorthAligned(),
+      ),
+    );
     Log.d("Fetch initial position.");
 
     _cameraPositionRepository.getLast().first.then((result) {
@@ -213,78 +264,139 @@ class StationMapCubit extends Cubit<StationMapState>
         return;
       }
 
-      result.when((cameraPosition) {
-        if (cameraPosition != null) {
-          _position = CameraPosition(
+      result.when(
+        (cameraPosition) {
+          if (cameraPosition != null) {
+            _position = CameraPosition(
               latLng: LatLng(cameraPosition.latitude, cameraPosition.longitude),
-              zoom: cameraPosition.zoom, bearing: cameraPosition.bearing);
+              zoom: cameraPosition.zoom,
+              bearing: cameraPosition.bearing,
+            );
 
-          Log.i("Move map initial to last position at $cameraPosition.");
+            Log.i("Move map initial to last position at $cameraPosition.");
 
-          emit(MoveToInitLoadingStationMapState(
-              cameraPosition: CameraPosition(
-                  latLng:
-                      LatLng(cameraPosition.latitude, cameraPosition.longitude),
-                  zoom: cameraPosition.zoom, bearing: cameraPosition.bearing), isNorthButtonVisible: !_isNorthAligned()));
+            emit(
+              MoveToInitLoadingStationMapState(
+                cameraPosition: CameraPosition(
+                  latLng: LatLng(
+                    cameraPosition.latitude,
+                    cameraPosition.longitude,
+                  ),
+                  zoom: cameraPosition.zoom,
+                  bearing: cameraPosition.bearing,
+                ),
+                isNorthButtonVisible: !_isNorthAligned(),
+              ),
+            );
 
-          emit(LoadingInitMarkersStationMapState(isNorthButtonVisible: !_isNorthAligned()));
-          _fetchStations(_position, true);
-        } else {
-          Log.d(
-              "Last position not available. Try to move initial to own position.");
+            emit(
+              LoadingInitMarkersStationMapState(
+                isNorthButtonVisible: !_isNorthAligned(),
+              ),
+            );
+            _fetchStations(_position, true);
+          } else {
+            Log.d(
+              "Last position not available. Try to move initial to own position.",
+            );
 
-          _getOwnPosition(false).then((position) {
-            if (position != null) {
-              CameraPosition newPosition = CameraPosition(
-                  latLng: LatLng(position.coordinate.latitude,
-                      position.coordinate.longitude),
-                  zoom: 12.5, bearing: _position.bearing);
+            _getOwnPosition(false).then((position) {
+              if (position != null) {
+                CameraPosition newPosition = CameraPosition(
+                  latLng: LatLng(
+                    position.coordinate.latitude,
+                    position.coordinate.longitude,
+                  ),
+                  zoom: 12.5,
+                  bearing: _position.bearing,
+                );
 
-              if (newPosition != _position) {
-                _position = newPosition;
+                if (newPosition != _position) {
+                  _position = newPosition;
 
-                Log.i("Move map initial to own position at $newPosition.");
+                  Log.i("Move map initial to own position at $newPosition.");
 
-                emit(MoveToInitLoadingStationMapState(
-                    cameraPosition: newPosition,isNorthButtonVisible: !_isNorthAligned()));
+                  emit(
+                    MoveToInitLoadingStationMapState(
+                      cameraPosition: newPosition,
+                      isNorthButtonVisible: !_isNorthAligned(),
+                    ),
+                  );
 
-                emit(LoadingInitMarkersStationMapState(isNorthButtonVisible: !_isNorthAligned()));
-                _fetchStations(_position, true);
+                  emit(
+                    LoadingInitMarkersStationMapState(
+                      isNorthButtonVisible: !_isNorthAligned(),
+                    ),
+                  );
+                  _fetchStations(_position, true);
+                } else {
+                  Log.d(
+                    "Already at own position at $_position. Skip map move.",
+                  );
+                  emit(state);
+                }
               } else {
-                Log.d("Already at own position at $_position. Skip map move.");
-                emit(state);
+                Log.d(
+                  "Position not available. Fallback to initial too far zoomed out state.",
+                );
+                emit(
+                  TooFarZoomedOutStationMapState(
+                    isNorthButtonVisible: !_isNorthAligned(),
+                  ),
+                );
               }
-            } else {
-              Log.d(
-                  "Position not available. Fallback to initial too far zoomed out state.");
-              emit(TooFarZoomedOutStationMapState(isNorthButtonVisible: !_isNorthAligned()));
-            }
-          });
-        }
-      }, (error) => emit(ErrorStationMapState(errorDetails: error.toString(),isNorthButtonVisible: !_isNorthAligned())));
+            });
+          }
+        },
+        (error) => emit(
+          ErrorStationMapState(
+            errorDetails: error.toString(),
+            isNorthButtonVisible: !_isNorthAligned(),
+          ),
+        ),
+      );
     });
   }
 
   void _moveToOwnLocation() {
     StationMapState state = _getUnderlyingState(this.state);
-    emit(FindOwnPositionLoadingStationMapState(underlyingState: state,isNorthButtonVisible: !_isNorthAligned()));
+    emit(
+      FindOwnPositionLoadingStationMapState(
+        underlyingState: state,
+        isNorthButtonVisible: !_isNorthAligned(),
+      ),
+    );
 
     Log.d("Fetch own position.");
 
     _getOwnPosition(true).then((position) {
       if (position != null) {
         CameraPosition newPosition = CameraPosition(
-            latLng: LatLng(
-                position.coordinate.latitude, position.coordinate.longitude),
-            zoom: 12.5, bearing: _position.bearing);
+          latLng: LatLng(
+            position.coordinate.latitude,
+            position.coordinate.longitude,
+          ),
+          zoom: 12.5,
+          bearing: _position.bearing,
+        );
 
         if (newPosition != _position) {
           _position = newPosition;
 
           Log.i("Move map to own position at $newPosition.");
-          emit(MoveToOwnLoadingStationMapState(cameraPosition: newPosition,isNorthButtonVisible: !_isNorthAligned()));
+          emit(
+            MoveToOwnLoadingStationMapState(
+              cameraPosition: newPosition,
+              isNorthButtonVisible: !_isNorthAligned(),
+            ),
+          );
 
-          emit(LoadingMarkersStationMapState(underlyingState: state,isNorthButtonVisible: !_isNorthAligned()));
+          emit(
+            LoadingMarkersStationMapState(
+              underlyingState: state,
+              isNorthButtonVisible: !_isNorthAligned(),
+            ),
+          );
           _fetchStations(_position, true);
         } else {
           Log.d("Already at own position at $_position. Skip map move.");
@@ -302,17 +414,22 @@ class StationMapCubit extends Cubit<StationMapState>
       InitFilterLoadingStationMapState,
       InitPositionLoadingStationMapState,
       MoveToInitLoadingStationMapState,
-      LoadingInitMarkersStationMapState
+      LoadingInitMarkersStationMapState,
     ].contains(state.runtimeType)) {
       Log.d(
-          "Initial movement (${state.runtimeType}). Ignore camera idle at $_position.");
+        "Initial movement (${state.runtimeType}). Ignore camera idle at $_position.",
+      );
       return;
     }
 
     Log.d("Camera position idle at: $_position.");
 
-    emit(LoadingMarkersStationMapState(
-        underlyingState: _getUnderlyingState(state), isNorthButtonVisible: !_isNorthAligned()));
+    emit(
+      LoadingMarkersStationMapState(
+        underlyingState: _getUnderlyingState(state),
+        isNorthButtonVisible: !_isNorthAligned(),
+      ),
+    );
     _fetchStations(_position, false);
   }
 
@@ -321,10 +438,11 @@ class StationMapCubit extends Cubit<StationMapState>
       InitFilterLoadingStationMapState,
       InitPositionLoadingStationMapState,
       MoveToInitLoadingStationMapState,
-      LoadingInitMarkersStationMapState
+      LoadingInitMarkersStationMapState,
     ].contains(state.runtimeType)) {
       Log.d(
-          "Initial movement (${state.runtimeType}). Ignore camera idle at $_position.");
+        "Initial movement (${state.runtimeType}). Ignore camera idle at $_position.",
+      );
       return;
     }
 
@@ -337,19 +455,26 @@ class StationMapCubit extends Cubit<StationMapState>
       }
     }
 
-    _cameraPositionRepository.updateLast(CameraPositionModel(
+    _cameraPositionRepository.updateLast(
+      CameraPositionModel(
         latitude: cameraPosition.latLng.latitude,
         longitude: cameraPosition.latLng.longitude,
         zoom: cameraPosition.zoom,
-      bearing: cameraPosition.bearing,
-    ));
+        bearing: cameraPosition.bearing,
+      ),
+    );
   }
 
   void onFilterClicked() {
     StationMapState state = _getUnderlyingState(this.state);
     if (state is MarkersStationMapState) {
-      emit(FilterDialogStationMapState(
-          underlyingState: state, filter: state.filter, isNorthButtonVisible: !_isNorthAligned()));
+      emit(
+        FilterDialogStationMapState(
+          underlyingState: state,
+          filter: state.filter,
+          isNorthButtonVisible: !_isNorthAligned(),
+        ),
+      );
     }
   }
 
@@ -357,11 +482,16 @@ class StationMapCubit extends Cubit<StationMapState>
     _filter = filter;
 
     //TODO: outsource to repository
-    SharedPreferences.getInstance()
-        .then((prefs) => prefs.setString("filter_gas", filter.gas));
+    SharedPreferences.getInstance().then(
+      (prefs) => prefs.setString("filter_gas", filter.gas),
+    );
 
-    emit(LoadingMarkersStationMapState(
-        underlyingState: _getUnderlyingState(state),isNorthButtonVisible: !_isNorthAligned()));
+    emit(
+      LoadingMarkersStationMapState(
+        underlyingState: _getUnderlyingState(state),
+        isNorthButtonVisible: !_isNorthAligned(),
+      ),
+    );
     _fetchStations(_position, true);
   }
 
@@ -374,14 +504,21 @@ class StationMapCubit extends Cubit<StationMapState>
 
   void onNorthClicked() {
     _position = _position.copyWith(bearing: 0);
-    emit(MoveToBearingStationMapState(underlyingState: state.copyWith(isNorthButtonVisible: false), bearing: 0, isNorthButtonVisible: false));
+    emit(
+      MoveToBearingStationMapState(
+        underlyingState: state.copyWith(isNorthButtonVisible: false),
+        bearing: 0,
+        isNorthButtonVisible: false,
+      ),
+    );
   }
 
   Future<LocationModel?> _getOwnPosition(bool forcePermissionRequest) async {
     bool hasPermissions =
-        (await _locationRepository.requestPermission(forcePermissionRequest))
-                .tryGetSuccess() ??
-            false;
+        (await _locationRepository.requestPermission(
+          forcePermissionRequest,
+        )).tryGetSuccess() ??
+        false;
     if (!hasPermissions) {
       return null;
     }
@@ -404,12 +541,16 @@ class StationMapCubit extends Cubit<StationMapState>
     int firstAppStartMilliseconds = prefs.getInt("first_app_start") ?? -1;
     if (firstAppStartMilliseconds == -1) {
       await prefs.setInt(
-          "first_app_start", DateTime.now().millisecondsSinceEpoch);
+        "first_app_start",
+        DateTime.now().millisecondsSinceEpoch,
+      );
     } else {
-      DateTime firstAppStart =
-          DateTime.fromMillisecondsSinceEpoch(firstAppStartMilliseconds);
-      DateTime thresholdDate =
-          firstAppStart.add(_reviewAfterFirstAppStartDuration);
+      DateTime firstAppStart = DateTime.fromMillisecondsSinceEpoch(
+        firstAppStartMilliseconds,
+      );
+      DateTime thresholdDate = firstAppStart.add(
+        _reviewAfterFirstAppStartDuration,
+      );
       if (DateTime.now().isAfter(thresholdDate)) {
         _reviewHelper.requestReview();
       }
@@ -428,8 +569,9 @@ class StationMapCubit extends Cubit<StationMapState>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       if (_lastRequestTime != null) {
-        DateTime thresholdDate =
-            _lastRequestTime!.add(_refreshAfterBackgroundDuration);
+        DateTime thresholdDate = _lastRequestTime!.add(
+          _refreshAfterBackgroundDuration,
+        );
         if (DateTime.now().isAfter(thresholdDate)) {
           _fetchStations(_position, true);
         }
@@ -438,7 +580,9 @@ class StationMapCubit extends Cubit<StationMapState>
   }
 
   Future<ByteData> _genMarkerBitmap(
-      MarkerModel marker, bool isShowingLabelMarkers) {
+    MarkerModel marker,
+    bool isShowingLabelMarkers,
+  ) {
     if (isShowingLabelMarkers) {
       return _genLabelMarkerBitmap(marker);
     } else {
@@ -449,14 +593,17 @@ class StationMapCubit extends Cubit<StationMapState>
   Future<ByteData> _genDotMarkerBitmap(MarkerModel marker) async {
     MarkerPrice? markerPrice;
     if (_filter?.gas == "e5") {
-      markerPrice = marker.prices
-          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
+      markerPrice = marker.prices.firstWhereOrNull(
+        (p) => p.fuelType == FuelType.petrolSuperE5,
+      );
     } else if (_filter?.gas == "e10") {
-      markerPrice = marker.prices
-          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
+      markerPrice = marker.prices.firstWhereOrNull(
+        (p) => p.fuelType == FuelType.petrolSuperE10,
+      );
     } else if (_filter?.gas == "diesel") {
-      markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);
+      markerPrice = marker.prices.firstWhereOrNull(
+        (p) => p.fuelType == FuelType.diesel,
+      );
     }
 
     String path;
@@ -474,9 +621,9 @@ class StationMapCubit extends Cubit<StationMapState>
         path = 'assets/images/markers/grey.png';
     }
 
-    String resolutionName = await AssetImage(path)
-        .obtainKey(ImageConfiguration.empty)
-        .then((value) => value.name);
+    String resolutionName = await AssetImage(
+      path,
+    ).obtainKey(ImageConfiguration.empty).then((value) => value.name);
 
     return await rootBundle.load(resolutionName);
   }
@@ -484,25 +631,31 @@ class StationMapCubit extends Cubit<StationMapState>
   Future<ByteData> _genLabelMarkerBitmap(MarkerModel marker) async {
     MarkerPrice? markerPrice;
     if (_filter?.gas == "e5") {
-      markerPrice = marker.prices
-          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE5);
+      markerPrice = marker.prices.firstWhereOrNull(
+        (p) => p.fuelType == FuelType.petrolSuperE5,
+      );
     } else if (_filter?.gas == "e10") {
-      markerPrice = marker.prices
-          .firstWhereOrNull((p) => p.fuelType == FuelType.petrolSuperE10);
+      markerPrice = marker.prices.firstWhereOrNull(
+        (p) => p.fuelType == FuelType.petrolSuperE10,
+      );
     } else if (_filter?.gas == "diesel") {
-      markerPrice =
-          marker.prices.firstWhereOrNull((p) => p.fuelType == FuelType.diesel);
+      markerPrice = marker.prices.firstWhereOrNull(
+        (p) => p.fuelType == FuelType.diesel,
+      );
     }
 
     double ratio =
         WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
 
     String priceText = PriceFormat.format(
-        marker.currency.convertTo(markerPrice?.price ?? 0.0,
-                _homeCurrency?.currency ?? CurrencyType.unknown) ??
-            0.0,
-        _homeCurrency ?? CurrencyModel.unknown(),
-        false);
+      marker.currency.convertTo(
+            markerPrice?.price ?? 0.0,
+            _homeCurrency?.currency ?? CurrencyType.unknown,
+          ) ??
+          0.0,
+      _homeCurrency ?? CurrencyModel.unknown(),
+      false,
+    );
     if (marker.currency.currency != _homeCurrency?.currency) {
       priceText = "≈$priceText";
     }
@@ -512,7 +665,7 @@ class StationMapCubit extends Cubit<StationMapState>
     double triangleSize = 8.0 * ratio;
     double width =
         (max(38, 7.6 * priceText.length) + (padding * 1) + (textPadding * 1)) *
-            ratio;
+        ratio;
     double brandFontSize = 8.0 * ratio;
     double priceFontSize = 14.4 * ratio;
 
@@ -523,21 +676,25 @@ class StationMapCubit extends Cubit<StationMapState>
     // Create bar name text
     var brandParagraph =
         (ui.ParagraphBuilder(ui.ParagraphStyle(textAlign: ui.TextAlign.left))
-              ..pushStyle(ui.TextStyle(
-                color: Colors.white70,
-                fontSize: brandFontSize,
+              ..pushStyle(
+                ui.TextStyle(color: Colors.white70, fontSize: brandFontSize),
+              )
+              ..addText(
+                marker.label.length > 8
+                    ? "${marker.label.substring(0, 5)}..."
+                    : marker.label,
               ))
-              ..addText(marker.label.length > 8
-                  ? "${marker.label.substring(0, 5)}..."
-                  : marker.label))
             .build();
 
     var priceParagraph =
         (ui.ParagraphBuilder(ui.ParagraphStyle(textAlign: ui.TextAlign.left))
-              ..pushStyle(ui.TextStyle(
+              ..pushStyle(
+                ui.TextStyle(
                   color: Colors.white,
                   fontSize: priceFontSize,
-                  fontWeight: FontWeight.bold))
+                  fontWeight: FontWeight.bold,
+                ),
+              )
               ..addText(priceText))
             .build();
 
@@ -561,7 +718,8 @@ class StationMapCubit extends Cubit<StationMapState>
         backgroundPaint.color = Colors.grey;
     }
 
-    final labelHeight = padding +
+    final labelHeight =
+        padding +
         textPadding +
         brandParagraph.height +
         priceParagraph.height +
@@ -573,11 +731,17 @@ class StationMapCubit extends Cubit<StationMapState>
     // Create triangle path
     var trianglePath = Path();
     trianglePath.moveTo(
-        width / 2, labelHeight + triangleSize - (1 * ratio)); // Bottom
+      width / 2,
+      labelHeight + triangleSize - (1 * ratio),
+    ); // Bottom
     trianglePath.lineTo(
-        width / 2 - triangleSize, labelHeight - (1 * ratio)); // Top-Left
+      width / 2 - triangleSize,
+      labelHeight - (1 * ratio),
+    ); // Top-Left
     trianglePath.lineTo(
-        width / 2 + triangleSize, labelHeight - (1 * ratio)); // Top-Right
+      width / 2 + triangleSize,
+      labelHeight - (1 * ratio),
+    ); // Top-Right
     trianglePath.close();
 
     // Draw background
@@ -585,16 +749,21 @@ class StationMapCubit extends Cubit<StationMapState>
 
     // Draw text
     canvas.drawParagraph(
-        brandParagraph, Offset(padding + textPadding, padding + textPadding));
-    canvas.drawParagraph(priceParagraph,
-        Offset(padding + textPadding, padding + textPadding + brandFontSize));
+      brandParagraph,
+      Offset(padding + textPadding, padding + textPadding),
+    );
+    canvas.drawParagraph(
+      priceParagraph,
+      Offset(padding + textPadding, padding + textPadding + brandFontSize),
+    );
 
     // Draw trianglePath path
     canvas.drawPath(trianglePath, backgroundPaint);
 
-    final img = await pictureRecorder
-        .endRecording()
-        .toImage(width.toInt(), labelHeight.toInt() + triangleSize.toInt());
+    final img = await pictureRecorder.endRecording().toImage(
+      width.toInt(),
+      labelHeight.toInt() + triangleSize.toInt(),
+    );
 
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     return data!;

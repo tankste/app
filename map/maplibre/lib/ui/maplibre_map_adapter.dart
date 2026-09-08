@@ -11,16 +11,17 @@ class MapLibreMapAdapter extends MapAdapter {
   final String styleUrlLight;
   final String styleUrlDark;
 
-  const MapLibreMapAdapter(
-      {required this.styleUrlLight,
-      required this.styleUrlDark,
-      required super.initialCameraPosition,
-      required super.onMapCreated,
-      super.onCameraIdle,
-      super.onCameraMove,
-      super.markers,
-      super.polylines,
-      super.key});
+  const MapLibreMapAdapter({
+    required this.styleUrlLight,
+    required this.styleUrlDark,
+    required super.initialCameraPosition,
+    required super.onMapCreated,
+    super.onCameraIdle,
+    super.onCameraMove,
+    super.markers,
+    super.polylines,
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => MapLibreMapAdapterState();
@@ -38,10 +39,12 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     super.initState();
 
     _lastCameraPosition = map_libre_maps.CameraPosition(
-        target: map_libre_maps.LatLng(
-            widget.initialCameraPosition.latLng.latitude,
-            widget.initialCameraPosition.latLng.longitude),
-        zoom: widget.initialCameraPosition.zoom);
+      target: map_libre_maps.LatLng(
+        widget.initialCameraPosition.latLng.latitude,
+        widget.initialCameraPosition.latLng.longitude,
+      ),
+      zoom: widget.initialCameraPosition.zoom,
+    );
   }
 
   @override
@@ -55,10 +58,12 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
   Widget build(BuildContext context) {
     return map_libre_maps.MapLibreMap(
       initialCameraPosition: map_libre_maps.CameraPosition(
-          target: map_libre_maps.LatLng(
-              widget.initialCameraPosition.latLng.latitude,
-              widget.initialCameraPosition.latLng.longitude),
-          zoom: widget.initialCameraPosition.zoom),
+        target: map_libre_maps.LatLng(
+          widget.initialCameraPosition.latLng.latitude,
+          widget.initialCameraPosition.latLng.longitude,
+        ),
+        zoom: widget.initialCameraPosition.zoom,
+      ),
       onMapCreated: (mapController) => _mapCreated(mapController),
       onMapIdle: () {
         map_libre_maps.MapLibreMapController? mapController = _mapController;
@@ -79,10 +84,13 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
 
           _lastCameraPosition = mapLibreCameraPosition;
           CameraPosition cameraPosition = CameraPosition(
-              latLng: LatLng(mapLibreCameraPosition.target.latitude,
-                  mapLibreCameraPosition.target.longitude),
-              zoom: mapLibreCameraPosition.zoom,
-            bearing: mapLibreCameraPosition.bearing);
+            latLng: LatLng(
+              mapLibreCameraPosition.target.latitude,
+              mapLibreCameraPosition.target.longitude,
+            ),
+            zoom: mapLibreCameraPosition.zoom,
+            bearing: mapLibreCameraPosition.bearing,
+          );
 
           widget.onCameraMove?.call(cameraPosition);
 
@@ -112,14 +120,18 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     super.didUpdateWidget(oldWidget);
 
     // Convert markers only on changes, to prevent expensive work
-    if (!setEquals(oldWidget.markers.map((m) => m.id).toSet(),
-        widget.markers.map((m) => m.id).toSet())) {
+    if (!setEquals(
+      oldWidget.markers.map((m) => m.id).toSet(),
+      widget.markers.map((m) => m.id).toSet(),
+    )) {
       _updateMarkers();
     }
 
     // Convert lines only on changes, to prevent expensive work
-    if (!setEquals(oldWidget.polylines.map((p) => p.id).toSet(),
-        widget.polylines.map((p) => p.id).toSet())) {
+    if (!setEquals(
+      oldWidget.polylines.map((p) => p.id).toSet(),
+      widget.polylines.map((p) => p.id).toSet(),
+    )) {
       _updatePolylines();
     }
   }
@@ -129,8 +141,9 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
     widget.onMapCreated(MapLibreMapController(mapController));
 
     mapController.onSymbolTapped.add((symbol) {
-      Marker? marker = widget.markers
-          .firstWhereOrNull((m) => m.id == symbol.data?["markerId"]);
+      Marker? marker = widget.markers.firstWhereOrNull(
+        (m) => m.id == symbol.data?["markerId"],
+      );
       marker?.onTap?.call();
     });
 
@@ -159,16 +172,19 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
       await mapController
           .addImage("${marker.id}-image", marker.icon!.buffer.asUint8List())
           .then((_) {
-        return mapController.addSymbol(
-          map_libre_maps.SymbolOptions(
-            geometry: map_libre_maps.LatLng(
-                marker.latLng.latitude, marker.latLng.longitude),
-            iconImage: "${marker.id}-image",
-            iconAnchor: "bottom",
-          ),
-          {"markerId": marker.id},
-        );
-      }).then((symbol) => _symbols.add(symbol));
+            return mapController.addSymbol(
+              map_libre_maps.SymbolOptions(
+                geometry: map_libre_maps.LatLng(
+                  marker.latLng.latitude,
+                  marker.latLng.longitude,
+                ),
+                iconImage: "${marker.id}-image",
+                iconAnchor: "bottom",
+              ),
+              {"markerId": marker.id},
+            );
+          })
+          .then((symbol) => _symbols.add(symbol));
     }
   }
 
@@ -188,14 +204,20 @@ class MapLibreMapAdapterState extends State<MapLibreMapAdapter> {
 
     for (var polyline in widget.polylines) {
       await mapController
-          .addLine(map_libre_maps.LineOptions(
-            lineColor: polyline.color.toHexStringRGB(),
-            lineWidth: polyline.width.toDouble(),
-            geometry: polyline.points
-                .map((latLng) =>
-                    map_libre_maps.LatLng(latLng.latitude, latLng.longitude))
-                .toList(),
-          ))
+          .addLine(
+            map_libre_maps.LineOptions(
+              lineColor: polyline.color.toHexStringRGB(),
+              lineWidth: polyline.width.toDouble(),
+              geometry: polyline.points
+                  .map(
+                    (latLng) => map_libre_maps.LatLng(
+                      latLng.latitude,
+                      latLng.longitude,
+                    ),
+                  )
+                  .toList(),
+            ),
+          )
           .then((line) => _lines.add(line));
     }
   }
@@ -217,31 +239,46 @@ class MapLibreMapController extends MapController {
       return;
     }
 
-    childController.animateCamera(map_libre_maps.CameraUpdate.newCameraPosition(
-      map_libre_maps.CameraPosition(
-        target: map_libre_maps.LatLng(
-            position.latLng.latitude, position.latLng.longitude),
-        bearing: position.bearing,
-        zoom: position.zoom,
-      )));
+    childController.animateCamera(
+      map_libre_maps.CameraUpdate.newCameraPosition(
+        map_libre_maps.CameraPosition(
+          target: map_libre_maps.LatLng(
+            position.latLng.latitude,
+            position.latLng.longitude,
+          ),
+          bearing: position.bearing,
+          zoom: position.zoom,
+        ),
+      ),
+    );
   }
 
   @override
   void moveCameraToBounds(LatLngBounds bounds, double padding) {
-    childController.animateCamera(map_libre_maps.CameraUpdate.newLatLngBounds(
+    childController.animateCamera(
+      map_libre_maps.CameraUpdate.newLatLngBounds(
         map_libre_maps.LatLngBounds(
-            northeast: map_libre_maps.LatLng(
-                bounds.northEast.latitude, bounds.northEast.longitude),
-            southwest: map_libre_maps.LatLng(
-                bounds.southWest.latitude, bounds.southWest.longitude)),
+          northeast: map_libre_maps.LatLng(
+            bounds.northEast.latitude,
+            bounds.northEast.longitude,
+          ),
+          southwest: map_libre_maps.LatLng(
+            bounds.southWest.latitude,
+            bounds.southWest.longitude,
+          ),
+        ),
         top: padding,
         bottom: padding,
         left: padding,
-        right: padding));
+        right: padding,
+      ),
+    );
   }
 
   @override
   void moveCameraToBearing(double bearing) {
-    childController.animateCamera(map_libre_maps.CameraUpdate.bearingTo(bearing));
+    childController.animateCamera(
+      map_libre_maps.CameraUpdate.bearingTo(bearing),
+    );
   }
 }

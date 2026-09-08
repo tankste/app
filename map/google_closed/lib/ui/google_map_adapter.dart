@@ -6,14 +6,15 @@ import 'package:map_core/map_models.dart';
 import 'package:map_core/ui/map_adapter.dart';
 
 class GoogleMapAdapter extends MapAdapter {
-  const GoogleMapAdapter(
-      {required super.initialCameraPosition,
-      required super.onMapCreated,
-      super.onCameraIdle,
-      super.onCameraMove,
-      super.markers,
-      super.polylines,
-      super.key});
+  const GoogleMapAdapter({
+    required super.initialCameraPosition,
+    required super.onMapCreated,
+    super.onCameraIdle,
+    super.onCameraMove,
+    super.markers,
+    super.polylines,
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => GoogleMapAdapterState();
@@ -32,9 +33,12 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
     super.initState();
 
     _lastPosition = google_maps.CameraPosition(
-        target: google_maps.LatLng(widget.initialCameraPosition.latLng.latitude,
-            widget.initialCameraPosition.latLng.longitude),
-        zoom: widget.initialCameraPosition.zoom);
+      target: google_maps.LatLng(
+        widget.initialCameraPosition.latLng.latitude,
+        widget.initialCameraPosition.latLng.longitude,
+      ),
+      zoom: widget.initialCameraPosition.zoom,
+    );
   }
 
   @override
@@ -50,20 +54,25 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
     return google_maps.GoogleMap(
       style: mapStyle,
       initialCameraPosition: google_maps.CameraPosition(
-          target: google_maps.LatLng(
-              widget.initialCameraPosition.latLng.latitude,
-              widget.initialCameraPosition.latLng.longitude),
-          zoom: widget.initialCameraPosition.zoom),
+        target: google_maps.LatLng(
+          widget.initialCameraPosition.latLng.latitude,
+          widget.initialCameraPosition.latLng.longitude,
+        ),
+        zoom: widget.initialCameraPosition.zoom,
+      ),
       onMapCreated: (mapController) => _mapCreated(mapController),
       onCameraIdle: () {
         google_maps.GoogleMapController? mapController = _mapController;
         google_maps.CameraPosition? lastPosition = _lastPosition;
         if (mapController != null && lastPosition != null) {
           CameraPosition cameraPosition = CameraPosition(
-              latLng: LatLng(
-                  lastPosition.target.latitude, lastPosition.target.longitude),
-              zoom: lastPosition.zoom,
-              bearing: lastPosition.bearing);
+            latLng: LatLng(
+              lastPosition.target.latitude,
+              lastPosition.target.longitude,
+            ),
+            zoom: lastPosition.zoom,
+            bearing: lastPosition.bearing,
+          );
 
           widget.onCameraMove?.call(cameraPosition);
         }
@@ -76,14 +85,19 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
       },
       markers: _markers,
       polylines: widget.polylines
-          .map((p) => google_maps.Polyline(
+          .map(
+            (p) => google_maps.Polyline(
               polylineId: google_maps.PolylineId(p.id),
               points: p.points
-                  .map((latLng) =>
-                      google_maps.LatLng(latLng.latitude, latLng.longitude))
+                  .map(
+                    (latLng) =>
+                        google_maps.LatLng(latLng.latitude, latLng.longitude),
+                  )
                   .toList(),
               color: p.color,
-              width: p.width))
+              width: p.width,
+            ),
+          )
           .toSet(),
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
@@ -99,8 +113,10 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
     _loadTheme();
 
     // Convert markers only on changes, to prevent expensive work
-    if (!setEquals(oldWidget.markers.map((m) => m.id).toSet(),
-        widget.markers.map((m) => m.id).toSet())) {
+    if (!setEquals(
+      oldWidget.markers.map((m) => m.id).toSet(),
+      widget.markers.map((m) => m.id).toSet(),
+    )) {
       _convertMarkers();
     }
   }
@@ -124,25 +140,34 @@ class GoogleMapAdapterState extends State<GoogleMapAdapter> {
       path = "assets/google_maps/styles/dark.json";
     }
 
-    rootBundle.loadString(path).then((value) => setState(() {
-          mapStyle = value;
-        }));
+    rootBundle
+        .loadString(path)
+        .then(
+          (value) => setState(() {
+            mapStyle = value;
+          }),
+        );
   }
 
   Future _convertMarkers() async {
     Set<google_maps.Marker> markers = widget.markers
-        .map((m) => google_maps.Marker(
+        .map(
+          (m) => google_maps.Marker(
             markerId: google_maps.MarkerId(m.id),
             icon: m.icon != null
                 ? google_maps.BitmapDescriptor.bytes(
                     m.icon!.buffer.asUint8List(),
                     imagePixelRatio: MediaQuery.of(context).devicePixelRatio,
-                    bitmapScaling: google_maps.MapBitmapScaling.auto)
+                    bitmapScaling: google_maps.MapBitmapScaling.auto,
+                  )
                 : google_maps.BitmapDescriptor.defaultMarkerWithHue(
-                    google_maps.BitmapDescriptor.hueAzure),
+                    google_maps.BitmapDescriptor.hueAzure,
+                  ),
             position: google_maps.LatLng(m.latLng.latitude, m.latLng.longitude),
             consumeTapEvents: true,
-            onTap: () => m.onTap?.call()))
+            onTap: () => m.onTap?.call(),
+          ),
+        )
         .toSet();
 
     setState(() {
@@ -163,22 +188,37 @@ class GoogleMapController extends MapController {
 
   @override
   void moveCameraToPosition(CameraPosition position) {
-    childController.animateCamera(google_maps.CameraUpdate.newCameraPosition(
+    childController.animateCamera(
+      google_maps.CameraUpdate.newCameraPosition(
         google_maps.CameraPosition(
-            target: google_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
-            zoom: position.zoom,
-            bearing: position.bearing)));
+          target: google_maps.LatLng(
+            position.latLng.latitude,
+            position.latLng.longitude,
+          ),
+          zoom: position.zoom,
+          bearing: position.bearing,
+        ),
+      ),
+    );
   }
 
   @override
   void moveCameraToBounds(LatLngBounds bounds, double padding) {
-    childController.animateCamera(google_maps.CameraUpdate.newLatLngBounds(
+    childController.animateCamera(
+      google_maps.CameraUpdate.newLatLngBounds(
         google_maps.LatLngBounds(
-            northeast: google_maps.LatLng(
-                bounds.northEast.latitude, bounds.northEast.longitude),
-            southwest: google_maps.LatLng(
-                bounds.southWest.latitude, bounds.southWest.longitude)),
-        padding));
+          northeast: google_maps.LatLng(
+            bounds.northEast.latitude,
+            bounds.northEast.longitude,
+          ),
+          southwest: google_maps.LatLng(
+            bounds.southWest.latitude,
+            bounds.southWest.longitude,
+          ),
+        ),
+        padding,
+      ),
+    );
   }
 
   @override
@@ -188,10 +228,14 @@ class GoogleMapController extends MapController {
       return;
     }
 
-    childController.animateCamera(google_maps.CameraUpdate.newCameraPosition(
+    childController.animateCamera(
+      google_maps.CameraUpdate.newCameraPosition(
         google_maps.CameraPosition(
-            target: lastPosition.target,
-            zoom: lastPosition.zoom,
-            bearing: bearing)));
+          target: lastPosition.target,
+          zoom: lastPosition.zoom,
+          bearing: bearing,
+        ),
+      ),
+    );
   }
 }
