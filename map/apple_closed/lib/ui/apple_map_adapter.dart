@@ -134,9 +134,11 @@ class AppleMapController extends MapController {
 
   @override
   void moveCameraToPosition(CameraPosition position) {
-    childController.animateCamera(apple_maps.CameraUpdate.newLatLngZoom(
-        apple_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
-        position.zoom));
+    childController.animateCamera(apple_maps.CameraUpdate.newCameraPosition(
+        apple_maps.CameraPosition(
+            target: apple_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
+            zoom: position.zoom,
+            heading: position.bearing)));
   }
 
   @override

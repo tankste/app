@@ -217,10 +217,13 @@ class MapLibreMapController extends MapController {
       return;
     }
 
-    childController.animateCamera(map_libre_maps.CameraUpdate.newLatLngZoom(
-        map_libre_maps.LatLng(
+    childController.animateCamera(map_libre_maps.CameraUpdate.newCameraPosition(
+      map_libre_maps.CameraPosition(
+        target: map_libre_maps.LatLng(
             position.latLng.latitude, position.latLng.longitude),
-        position.zoom));
+        bearing: position.bearing,
+        zoom: position.zoom,
+      )));
   }
 
   @override

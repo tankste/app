@@ -163,9 +163,11 @@ class GoogleMapController extends MapController {
 
   @override
   void moveCameraToPosition(CameraPosition position) {
-    childController.animateCamera(google_maps.CameraUpdate.newLatLngZoom(
-        google_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
-        position.zoom));
+    childController.animateCamera(google_maps.CameraUpdate.newCameraPosition(
+        google_maps.CameraPosition(
+            target: google_maps.LatLng(position.latLng.latitude, position.latLng.longitude),
+            zoom: position.zoom,
+            bearing: position.bearing)));
   }
 
   @override
