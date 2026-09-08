@@ -239,27 +239,42 @@ class StationMapPageState extends State<StationMapPage> {
                                         .of(context)
                                         .primaryColor,
                                   ))),
-                          state.isNorthButtonVisible ?
-                            const Padding(
-                                padding: EdgeInsets.only(left: 8, right: 8),
-                                child: Divider(height: 1)) : Container(),
-                          state.isNorthButtonVisible ?
-                            InkWell(
-                                onTap: () {
-                                  context
-                                      .read<StationMapCubit>()
-                                      .onNorthClicked();
-                                },
-                                child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child:
-                                    SvgPicture.asset("assets/icons/north.svg",
-                                      package: "core",
-                                      colorFilter: ColorFilter.mode(Theme
-                                          .of(context)
-                                          .primaryColor, BlendMode.srcIn),
-                                    )
-                                )) : Container(),
+                          AnimatedSize(
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  child: state.isNorthButtonVisible
+                                      ? Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 8, right: 8),
+                                                child: Divider(height: 1)),
+                                            InkWell(
+                                                onTap: () {
+                                                  context
+                                                      .read<StationMapCubit>()
+                                                      .onNorthClicked();
+                                                },
+                                                child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    child: SvgPicture.asset(
+                                                      "assets/icons/north.svg",
+                                                      package: "core",
+                                                      colorFilter: ColorFilter.mode(
+                                                          Theme.of(context)
+                                                              .primaryColor,
+                                                          BlendMode.srcIn),
+                                                    ))),
+                                          ],
+                                        )
+                                      : const SizedBox(height: 0))),
                         ],
                       ))))),
       Positioned(
