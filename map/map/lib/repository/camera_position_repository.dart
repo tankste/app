@@ -41,13 +41,14 @@ class LocalCameraPositionRepository extends CameraPositionRepository {
       double? longitude =
           preferences.getDouble('camera_position_last_longitude');
       double? zoom = preferences.getDouble('camera_position_last_zoom');
+      double bearing = preferences.getDouble('camera_position_last_bearing') ?? 0.0;
 
       if (latitude == null || longitude == null || zoom == null) {
         return Result.success(null);
       }
 
       CameraPositionModel cameraPosition = CameraPositionModel(
-          latitude: latitude, longitude: longitude, zoom: zoom);
+          latitude: latitude, longitude: longitude, zoom: zoom, bearing: bearing);
       return Result.success(cameraPosition);
     } on Exception catch (e) {
       Log.exception(e);
@@ -78,6 +79,8 @@ class LocalCameraPositionRepository extends CameraPositionRepository {
           'camera_position_last_longitude', cameraPosition.longitude);
       await preferences.setDouble(
           'camera_position_last_zoom', cameraPosition.zoom);
+      await preferences.setDouble(
+          'camera_position_last_bearing', cameraPosition.bearing);
       return Result.success(cameraPosition);
     } on Exception catch (e) {
       Log.exception(e);
@@ -103,6 +106,7 @@ class LocalCameraPositionRepository extends CameraPositionRepository {
       await preferences.remove('camera_position_last_latitude');
       await preferences.remove('camera_position_last_longitude');
       await preferences.remove('camera_position_last_zoom');
+      await preferences.remove('camera_position_last_bearing');
       return const Result.success(null);
     } on Exception catch (e) {
       Log.exception(e);

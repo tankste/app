@@ -180,7 +180,7 @@ class PreviewMapState extends State<PreviewMap> {
 
     return GenericMap(
       initialCameraPosition:
-          CameraPosition(latLng: toLatLng(widget.target), zoom: 13),
+          CameraPosition(latLng: toLatLng(widget.target), zoom: 13, bearing: 0),
       polylines: _genPolylines(widget.routePoints),
       markers: _genMarkers(),
       onMapCreated: (controller) {

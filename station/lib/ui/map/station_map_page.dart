@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:map/map_models.dart';
 import 'package:map/ui/generic_map.dart';
 import 'package:settings/ui/settings/settings_page.dart';
@@ -26,23 +27,31 @@ class StationMapPageState extends State<StationMapPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => StationMapCubit(),
-        child: BlocConsumer<StationMapCubit, StationMapState>(
-            listener: (context, state) {
+      create: (context) => StationMapCubit(),
+      child: BlocConsumer<StationMapCubit, StationMapState>(
+        listener: (context, state) {
           if (state is MoveToInitLoadingStationMapState) {
             _mapController?.moveCameraToPosition(state.cameraPosition);
           } else if (state is MoveToOwnLoadingStationMapState) {
             _mapController?.moveCameraToPosition(state.cameraPosition);
           } else if (state is MoveToZoomedInLoadingStationMapState) {
             _mapController?.moveCameraToPosition(state.cameraPosition);
+          } else if (state is MoveToBearingStationMapState) {
+            _mapController?.moveCameraToBearing(state.bearing);
           }
-        }, builder: (context, state) {
+        },
+        builder: (context, state) {
           return Scaffold(body: _buildBody(context, state, false));
-        }));
+        },
+      ),
+    );
   }
 
   Widget _buildBody(
-      BuildContext context, StationMapState state, bool isLoading) {
+    BuildContext context,
+    StationMapState state,
+    bool isLoading,
+  ) {
     if (state is FindOwnPositionLoadingStationMapState) {
       return _buildBody(context, state.underlyingState, true);
     } else if (state is MoveToZoomedInLoadingStationMapState) {
@@ -51,10 +60,13 @@ class StationMapPageState extends State<StationMapPage> {
       return _buildBody(context, state.underlyingState, true);
     } else if (state is LoadingStationMapState) {
       isLoading = true;
+    } else if (state is MoveToBearingStationMapState) {
+      return _buildBody(context, state.underlyingState, false);
     }
 
-    return Stack(children: <Widget>[
-      Container(
+    return Stack(
+      children: <Widget>[
+        Container(
           color: Theme.of(context).colorScheme.surface,
           child: GenericMap(
             initialCameraPosition: initialCameraPosition,
@@ -78,208 +90,305 @@ class StationMapPageState extends State<StationMapPage> {
             markers: state is MarkersStationMapState
                 ? _genMarkers(context, state)
                 : {},
-          )),
-      isLoading
-          ? const SafeArea(child: LinearProgressIndicator())
-          : Container(),
-      Positioned(
+          ),
+        ),
+        isLoading
+            ? const SafeArea(child: LinearProgressIndicator())
+            : Container(),
+        Positioned(
           top: 8,
           left: 8,
-          child: SafeArea(
-              child: MembershipMapItem(key: membershipItemKey))),
-      state is TooFarZoomedOutStationMapState
-          ? Positioned(
-              top: 8,
-              left: 80,
-              right: 80,
-              child: SafeArea(
+          child: SafeArea(child: MembershipMapItem(key: membershipItemKey)),
+        ),
+        state is TooFarZoomedOutStationMapState
+            ? Positioned(
+                top: 8,
+                left: 80,
+                right: 80,
+                child: SafeArea(
                   child: Center(
-                      child: InkWell(
-                          onTap: () {
-                            context.read<StationMapCubit>().onZoomInfoClicked();
-                          },
-                          child: Card(
-                            color: Theme.of(context).primaryColor,
-                            child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 16),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.search,
-                                        size: 14,
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.light
-                                            ? Colors.white
-                                            : Colors.black),
-                                    Flexible(
-                                        child: Padding(
-                                      padding: EdgeInsets.only(left: 8),
-                                      child: Text(
-                                          tr('station.map.too_far_zoomed_out'),
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Theme.of(context)
-                                                          .brightness ==
-                                                      Brightness.light
-                                                  ? Colors.white
-                                                  : Colors.black)),
-                                    ))
-                                  ],
-                                )),
-                          )))))
-          : Container(),
-      state is ErrorStationMapState
-          ? Positioned(
-              top: 8,
-              left: 8,
-              right: 80,
-              child: SafeArea(
+                    child: InkWell(
+                      onTap: () {
+                        context.read<StationMapCubit>().onZoomInfoClicked();
+                      },
+                      child: Card(
+                        color: Theme.of(context).primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.search,
+                                size: 14,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Text(
+                                    tr('station.map.too_far_zoomed_out'),
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.light
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+        state is ErrorStationMapState
+            ? Positioned(
+                top: 8,
+                left: 8,
+                right: 80,
+                child: SafeArea(
                   child: Card(
-                      child: Padding(
-                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(tr('generic.error.title'),
-                        style: Theme.of(context).textTheme.bodyLarge),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(tr('generic.error.long'),
-                            style: Theme.of(context).textTheme.bodyMedium)),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 16,
+                        left: 16,
+                        right: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Spacer(),
-                          TextButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                            tr('generic.error.details.title')),
-                                        content: Text(state.errorDetails ?? ""),
-                                        actions: <Widget>[
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(true),
-                                              child: Text(tr('generic.ok'))),
-                                        ],
-                                      );
-                                    });
-                              },
-                              child: Text(tr('generic.error.details.show'))),
+                          Text(
+                            tr('generic.error.title'),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                           Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: ElevatedButton(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              tr('generic.error.long'),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Row(
+                              children: [
+                                const Spacer(),
+                                TextButton(
                                   onPressed: () {
-                                    context
-                                        .read<StationMapCubit>()
-                                        .onRetryClicked();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            tr('generic.error.details.title'),
+                                          ),
+                                          content: Text(
+                                            state.errorDetails ?? "",
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                              ).pop(true),
+                                              child: Text(tr('generic.ok')),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
-                                  child: Text(tr('generic.retry.short'))))
+                                  child: Text(tr('generic.error.details.show')),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      context
+                                          .read<StationMapCubit>()
+                                          .onRetryClicked();
+                                    },
+                                    child: Text(tr('generic.retry.short')),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              ))))
-          : Container(),
-      Positioned(
+              )
+            : Container(),
+        Positioned(
           top: 8,
           right: 8,
           child: SafeArea(
-              child: SizedBox(
-                  width: 64,
-                  child: Card(
-                      child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsPage()));
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.settings,
-                                color: Theme.of(context).primaryColor,
-                              ))),
-                      const Padding(
-                          padding: EdgeInsets.only(left: 8, right: 8),
-                          child: Divider(height: 1)),
-                      InkWell(
-                          onTap: () {
-                            context
-                                .read<StationMapCubit>()
-                                .onMoveToLocationClicked();
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.gps_fixed,
-                                color: Theme.of(context).primaryColor,
-                              ))),
-                    ],
-                  ))))),
-      Positioned(
+            child: SizedBox(
+              width: 64,
+              child: Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsPage(),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Icon(
+                          Icons.settings,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8, right: 8),
+                      child: Divider(height: 1),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        context
+                            .read<StationMapCubit>()
+                            .onMoveToLocationClicked();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Icon(
+                          Icons.gps_fixed,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      alignment: Alignment.topLeft,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: state.isNorthButtonVisible
+                            ? Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 8, right: 8),
+                                    child: Divider(height: 1),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      context
+                                          .read<StationMapCubit>()
+                                          .onNorthClicked();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: SvgPicture.asset(
+                                        "assets/icons/north.svg",
+                                        package: "core",
+                                        colorFilter: ColorFilter.mode(
+                                          Theme.of(context).primaryColor,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(height: 0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
           bottom: !Platform.isIOS ? 8 : 32,
           // Need more padding to keep "legal" link visible
           right: 8,
           child: SafeArea(
-              child: SizedBox(
-                  width: 64,
-                  child: Card(
-                      child: InkWell(
-                          onTap: () {
-                            context.read<StationMapCubit>().onFilterClicked();
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Icon(
-                                Icons.tune,
-                                color: Theme.of(context).primaryColor,
-                              ))))))),
-      state is FilterDialogStationMapState
-          ? FilterDialog(
-              currentFilter: state.filter,
-              onSubmit: (filter) {
-                context.read<StationMapCubit>().onFilterSaved(filter);
-              },
-              onCancel: () {
-                context.read<StationMapCubit>().onCancelFilterSettings();
-              })
-          : Container(),
-    ]);
+            child: SizedBox(
+              width: 64,
+              child: Card(
+                child: InkWell(
+                  onTap: () {
+                    context.read<StationMapCubit>().onFilterClicked();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Icon(
+                      Icons.tune,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        state is FilterDialogStationMapState
+            ? FilterDialog(
+                currentFilter: state.filter,
+                onSubmit: (filter) {
+                  context.read<StationMapCubit>().onFilterSaved(filter);
+                },
+                onCancel: () {
+                  context.read<StationMapCubit>().onCancelFilterSettings();
+                },
+              )
+            : Container(),
+      ],
+    );
   }
 
   Set<Marker> _genMarkers(BuildContext context, MarkersStationMapState state) {
     List<Marker> markers = state.stationMarkers
-        .map((annotation) => Marker(
+        .map(
+          (annotation) => Marker(
             id: annotation.id,
-            latLng: LatLng(annotation.marker.coordinate.latitude,
-                annotation.marker.coordinate.longitude),
+            latLng: LatLng(
+              annotation.marker.coordinate.latitude,
+              annotation.marker.coordinate.longitude,
+            ),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => StationDetailsPage(
-                            stationId: annotation.marker.stationId,
-                            markerLabel: annotation.marker.label,
-                            activeGasPriceFilter: state.filter.gas,
-                          )));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StationDetailsPage(
+                    stationId: annotation.marker.stationId,
+                    markerLabel: annotation.marker.label,
+                    activeGasPriceFilter: state.filter.gas,
+                  ),
+                ),
+              );
             },
-            icon: annotation.icon))
+            icon: annotation.icon,
+          ),
+        )
         .toList();
     return markers.toSet();
   }
