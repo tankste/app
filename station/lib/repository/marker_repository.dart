@@ -15,7 +15,10 @@ import 'package:station/repository/dto/marker_dto.dart';
 
 abstract class MarkerRepository {
   Stream<Result<List<MarkerModel>, Exception>> list(
-      List<CoordinateModel> coordinates);
+    List<CoordinateModel> coordinates,
+  );
+
+  Stream<Result<MarkerModel, Exception>> get(int stationId);
 }
 
 class TanksteWebMarkerRepository extends MarkerRepository {
@@ -26,8 +29,11 @@ class TanksteWebMarkerRepository extends MarkerRepository {
   late ConfigRepository _configRepository;
   late DeveloperSettingsRepository _developerSettingsRepository;
 
-  factory TanksteWebMarkerRepository(CurrencyRepository currencyRepository,
-      ConfigRepository configRepository, DeveloperSettingsRepository developerSettingsRepository) {
+  factory TanksteWebMarkerRepository(
+    CurrencyRepository currencyRepository,
+    ConfigRepository configRepository,
+    DeveloperSettingsRepository developerSettingsRepository,
+  ) {
     _instance._currencyRepository = currencyRepository;
     _instance._configRepository = configRepository;
     _instance._developerSettingsRepository = developerSettingsRepository;
@@ -38,20 +44,23 @@ class TanksteWebMarkerRepository extends MarkerRepository {
 
   @override
   Stream<Result<List<MarkerModel>, Exception>> list(
-      List<CoordinateModel> coordinates) {
+    List<CoordinateModel> coordinates,
+  ) {
     //TODO: cache stream
     //TODO: re-fetch after delayed time, to show the newest prices
     return _listAsync(coordinates).asStream();
   }
 
   Future<Result<List<MarkerModel>, Exception>> _listAsync(
-      List<CoordinateModel> coordinates) async {
+    List<CoordinateModel> coordinates,
+  ) async {
     try {
-      List<CurrencyModel> currencies =
-          (await _currencyRepository.list().first).tryGetSuccess()!;
+      List<CurrencyModel> currencies = (await _currencyRepository.list().first)
+          .tryGetSuccess()!;
 
-      Result<ConfigModel, Exception> configResult =
-          await _configRepository.get().first;
+      Result<ConfigModel, Exception> configResult = await _configRepository
+          .get()
+          .first;
       if (configResult.isError()) {
         Exception error = configResult.tryGetError()!;
         Log.exception(error);
@@ -64,14 +73,18 @@ class TanksteWebMarkerRepository extends MarkerRepository {
           .join("&");
 
       String nextGenerationQuery = "";
-      DeveloperSettingsModel developerSettings = await _developerSettingsRepository.get().first;
+      DeveloperSettingsModel developerSettings =
+          await _developerSettingsRepository.get().first;
       if (developerSettings.isFeatureEnabled(Feature.nextGenerationMarkers)) {
         nextGenerationQuery = "&nextGeneration=true";
       }
 
-      Uri url = Uri.parse('${config.apiBaseUrl}/markers?$boundQuery$nextGenerationQuery');
-      http.Response response = await http
-          .get(url); //TODO: add `, headers: await _apiRepository.getHeaders()`
+      Uri url = Uri.parse(
+        '${config.apiBaseUrl}/markers?$boundQuery$nextGenerationQuery',
+      );
+      http.Response response = await http.get(
+        url,
+      ); //TODO: add `, headers: await _apiRepository.getHeaders()`
       if (response.statusCode >= 200 && response.statusCode <= 299) {
         List<dynamic> jsonResponse =
             json.decode(response.body) as List<dynamic>;
@@ -82,6 +95,59 @@ class TanksteWebMarkerRepository extends MarkerRepository {
             .toList();
 
         return Result.success(markers);
+      } else {
+        Exception error = Exception("API Error!\n\n${response.body}");
+        Log.exception(error);
+        return Result.error(error);
+      }
+    } on Exception catch (e) {
+      Log.exception(e);
+      return Result.error(e);
+    }
+  }
+
+  @override
+  Stream<Result<MarkerModel, Exception>> get(int stationId) {
+    //TODO: cache stream
+    //TODO: re-fetch after delayed time, to show the newest prices
+    return _getAsync(stationId).asStream();
+  }
+
+  Future<Result<MarkerModel, Exception>> _getAsync(int stationId) async {
+    try {
+      List<CurrencyModel> currencies = (await _currencyRepository.list().first)
+          .tryGetSuccess()!;
+
+      Result<ConfigModel, Exception> configResult = await _configRepository
+          .get()
+          .first;
+      if (configResult.isError()) {
+        Exception error = configResult.tryGetError()!;
+        Log.exception(error);
+        return Result.error(error);
+      }
+      ConfigModel config = configResult.tryGetSuccess()!;
+
+      String nextGenerationQuery = "";
+      DeveloperSettingsModel developerSettings =
+          await _developerSettingsRepository.get().first;
+      if (developerSettings.isFeatureEnabled(Feature.nextGenerationMarkers)) {
+        nextGenerationQuery = "nextGeneration=true";
+      }
+
+      Uri url = Uri.parse(
+        '${config.apiBaseUrl}/stations/${stationId}/marker?$nextGenerationQuery',
+      );
+      http.Response response = await http.get(
+        url,
+      ); //TODO: add `, headers: await _apiRepository.getHeaders()`
+      if (response.statusCode >= 200 && response.statusCode <= 299) {
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
+        MarkerModel marker = MarkerDto.fromJson(
+          jsonResponse,
+        ).toModel(currencies);
+
+        return Result.success(marker);
       } else {
         Exception error = Exception("API Error!\n\n${response.body}");
         Log.exception(error);
