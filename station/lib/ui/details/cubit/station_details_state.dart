@@ -25,6 +25,7 @@ class DetailStationDetailsState extends StationDetailsState {
   final List<OpenTime> openTimes;
   final String openTimesOriginIconUrl;
   final List<Origin> origins;
+  final bool isFavorite;
 
   final String? internalId;
   final String? externalId;
@@ -40,6 +41,7 @@ class DetailStationDetailsState extends StationDetailsState {
       required this.origins,
       required this.internalId,
       required this.externalId,
+      required this.isFavorite,
       required super.title});
 }
 

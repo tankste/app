@@ -33,6 +33,14 @@ class StationDetailsPage extends StatelessWidget {
                   appBar: AppBar(
                     title: Text(state.title),
                     actions: [
+                      state is DetailStationDetailsState ?
+                      IconButton(
+                          onPressed: () {
+                            context.read<StationDetailsCubit>().onFavoriteClicked();
+                          },
+                          icon: Icon(state.isFavorite ? Icons.star : Icons
+                              .star_border))
+                          : Container(),
                       IconButton(
                           onPressed: () {
                             Navigator.push(
@@ -52,6 +60,7 @@ class StationDetailsPage extends StatelessWidget {
     if (state is LoadingStationDetailsState) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is ErrorStationDetailsState) {
+      //TODO: outsource to own widget
       return Center(
           child: Column(children: [
         const Spacer(),

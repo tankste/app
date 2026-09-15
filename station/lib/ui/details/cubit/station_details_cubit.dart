@@ -10,6 +10,7 @@ import 'package:station/model/open_time.dart';
 import 'package:station/model/price_model.dart';
 import 'package:station/model/station_model.dart';
 import 'package:station/repository/currency_repository.dart';
+import 'package:station/repository/favorite_repository.dart';
 import 'package:station/repository/open_time_repository.dart';
 import 'package:station/repository/origin_repository.dart';
 import 'package:station/repository/price_repository.dart';
@@ -39,95 +40,162 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
   final OriginRepository _originRepository =
       StationModuleFactory.createOriginRepository();
 
+  final FavoriteStationRepository _favoriteStationRepository =
+      StationModuleFactory.createFavoriteStationRepository();
+
   final DeveloperSettingsRepository _developerSettingsRepository =
       SettingsModuleFactory.createDeveloperSettingsRepository();
 
   StationDetailsCubit(
-      this.stationId, this.markerLabel, this.activeGasPriceFilter)
-      : super(LoadingStationDetailsState(title: markerLabel)) {
+    this.stationId,
+    this.markerLabel,
+    this.activeGasPriceFilter,
+  ) : super(LoadingStationDetailsState(title: markerLabel)) {
     _fetchStation();
   }
 
   void _fetchStation() {
     emit(LoadingStationDetailsState(title: markerLabel));
 
-    CombineLatestStream.combine6(
-            _currencyRepository.getSelected(),
-            stationRepository.get(stationId),
-            priceRepository.list(stationId),
-            openTimeRepository.list(stationId),
-            _originRepository.list(),
-            _developerSettingsRepository.get(), (homeCurrencyResult,
-                stationResult,
-                priceResult,
-                openTimesResult,
-                originsResult,
-                developerSettings) {
-      return homeCurrencyResult.when((homeCurrency) {
-        return stationResult.when((station) {
-          return priceResult.when((prices) {
-            return openTimesResult.when((openTimes) {
-              return originsResult.when((origins) {
-                return DetailStationDetailsState(
-                  title: station.brand,
-                  coordinate: station.coordinate,
-                  address:
-                      "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
-                  addressOriginIconUrl: origins
-                          .firstWhereOrNull((o) => o.id == station.originId)
-                          ?.iconImageUrl
-                          .toString() ??
-                      "",
-                  prices: prices
-                      .sortedBy<num>((p) => p.fuelType.index)
-                      .map((p) => _genPriceItem(station, homeCurrency, p))
-                      .nonNulls
-                      .toList(growable: false),
-                  lastPriceUpdate: _genPriceUpdate(prices),
-                  openTimes: _genOpenTimeList(openTimes),
-                  openTimesOriginIconUrl: origins
-                          .firstWhereOrNull(
-                              (o) => o.id == openTimes.firstOrNull?.originId)
-                          ?.iconImageUrl
-                          .toString() ??
-                      "",
-                  origins: origins
-                      .where((o) => ([station.originId] +
-                              prices.map((p) => p.originId).toList() +
-                              prices.map((ot) => ot.originId).toList())
-                          .contains(o.id))
-                      .map((o) => Origin(
-                          iconUrl: o.iconImageUrl.toString(),
-                          name: o.name,
-                          websiteUrl: o.websiteUrl.toString()))
-                      .toList(),
-                  internalId: developerSettings
-                          .isFeatureEnabled(Feature.stationMetaInfo)
-                      ? station.id.toString()
-                      : null,
-                  externalId: developerSettings
-                          .isFeatureEnabled(Feature.stationMetaInfo)
-                      ? station.externalId
-                      : null,
+    CombineLatestStream.combine7(
+      _currencyRepository.getSelected(),
+      stationRepository.get(stationId),
+      priceRepository.list(stationId),
+      openTimeRepository.list(stationId),
+      _favoriteStationRepository.exists(stationId),
+      _originRepository.list(),
+      _developerSettingsRepository.get(),
+      (
+        homeCurrencyResult,
+        stationResult,
+        priceResult,
+        openTimesResult,
+        isFavoriteResult,
+        originsResult,
+        developerSettings,
+      ) {
+        return homeCurrencyResult.when(
+          (homeCurrency) {
+            return stationResult.when(
+              (station) {
+                return priceResult.when(
+                  (prices) {
+                    return openTimesResult.when(
+                      (openTimes) {
+                        return isFavoriteResult.when(
+                          (isFavorite) {
+                            return originsResult.when(
+                              (origins) {
+                                return DetailStationDetailsState(
+                                  title: station.brand,
+                                  coordinate: station.coordinate,
+                                  address:
+                                      "${station.address.street} ${station.address.houseNumber}\n${station.address.postCode} ${station.address.city}\n${station.address.country}",
+                                  addressOriginIconUrl:
+                                      origins
+                                          .firstWhereOrNull(
+                                            (o) => o.id == station.originId,
+                                          )
+                                          ?.iconImageUrl
+                                          .toString() ??
+                                      "",
+                                  prices: prices
+                                      .sortedBy<num>((p) => p.fuelType.index)
+                                      .map(
+                                        (p) => _genPriceItem(
+                                          station,
+                                          homeCurrency,
+                                          p,
+                                        ),
+                                      )
+                                      .nonNulls
+                                      .toList(growable: false),
+                                  lastPriceUpdate: _genPriceUpdate(prices),
+                                  openTimes: _genOpenTimeList(openTimes),
+                                  openTimesOriginIconUrl:
+                                      origins
+                                          .firstWhereOrNull(
+                                            (o) =>
+                                                o.id ==
+                                                openTimes.firstOrNull?.originId,
+                                          )
+                                          ?.iconImageUrl
+                                          .toString() ??
+                                      "",
+                                  origins: origins
+                                      .where(
+                                        (o) =>
+                                            ([station.originId] +
+                                                    prices
+                                                        .map((p) => p.originId)
+                                                        .toList() +
+                                                    prices
+                                                        .map(
+                                                          (ot) => ot.originId,
+                                                        )
+                                                        .toList())
+                                                .contains(o.id),
+                                      )
+                                      .map(
+                                        (o) => Origin(
+                                          iconUrl: o.iconImageUrl.toString(),
+                                          name: o.name,
+                                          websiteUrl: o.websiteUrl.toString(),
+                                        ),
+                                      )
+                                      .toList(),
+                                  internalId:
+                                      developerSettings.isFeatureEnabled(
+                                        Feature.stationMetaInfo,
+                                      )
+                                      ? station.id.toString()
+                                      : null,
+                                  externalId:
+                                      developerSettings.isFeatureEnabled(
+                                        Feature.stationMetaInfo,
+                                      )
+                                      ? station.externalId
+                                      : null,
+                                  isFavorite: isFavorite,
+                                );
+                              },
+                              (error) => ErrorStationDetailsState(
+                                errorDetails: error.toString(),
+                                title: markerLabel,
+                              ),
+                            );
+                          },
+                          (error) => ErrorStationDetailsState(
+                            errorDetails: error.toString(),
+                            title: markerLabel,
+                          ),
+                        );
+                      },
+                      (error) => ErrorStationDetailsState(
+                        errorDetails: error.toString(),
+                        title: markerLabel,
+                      ),
+                    );
+                  },
+                  (error) => ErrorStationDetailsState(
+                    errorDetails: error.toString(),
+                    title: markerLabel,
+                  ),
                 );
               },
-                  (error) => ErrorStationDetailsState(
-                      errorDetails: error.toString(), title: markerLabel));
-            },
-                (error) => ErrorStationDetailsState(
-                    errorDetails: error.toString(), title: markerLabel));
-          },
               (error) => ErrorStationDetailsState(
-                  errorDetails: error.toString(), title: markerLabel));
-        },
-            (error) => ErrorStationDetailsState(
-                errorDetails: error.toString(), title: markerLabel));
-      },
+                errorDetails: error.toString(),
+                title: markerLabel,
+              ),
+            );
+          },
           (error) => ErrorStationDetailsState(
-              errorDetails: error.toString(), title: markerLabel));
-    })
-        .first //TODO: use stream benefits
-        .then((state) {
+            errorDetails: error.toString(),
+            title: markerLabel,
+          ),
+        );
+      },
+    ).listen((state) {
       if (isClosed) {
         return;
       }
@@ -142,6 +210,17 @@ class StationDetailsCubit extends Cubit<StationDetailsState> {
 
   void onRefreshAction() {
     _fetchStation();
+  }
+
+  void onFavoriteClicked() {
+    final StationDetailsState state = this.state;
+    if (state is DetailStationDetailsState) {
+      if (state.isFavorite) {
+        _favoriteStationRepository.delete(stationId);
+      } else {
+        _favoriteStationRepository.add(stationId);
+      }
+    }
   }
 
   //TODO: should show not available prices, or hide completely?
