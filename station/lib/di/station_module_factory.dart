@@ -1,6 +1,8 @@
 import 'package:settings/di/settings_module_factory.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:station/repository/config_repository.dart';
 import 'package:station/repository/currency_repository.dart';
+import 'package:station/repository/favorite_repository.dart';
 import 'package:station/repository/marker_repository.dart';
 import 'package:station/repository/open_time_repository.dart';
 import 'package:station/repository/origin_repository.dart';
@@ -43,6 +45,13 @@ class StationModuleFactory {
 
   static CurrencyRepository createCurrencyRepository() {
     return LocalCurrencyRepository();
+  }
+
+  static FavoriteStationRepository createFavoriteStationRepository() {
+    return PreferencesFavoriteStationRepository(
+      createStationRepository(),
+      SharedPreferencesAsync(),
+    );
   }
 
   static ConfigRepository createConfigRepository() {
