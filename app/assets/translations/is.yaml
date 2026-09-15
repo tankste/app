@@ -161,6 +161,9 @@ settings:
 
 station:
   title: Stöð
+  favorites:
+    title: Eftirlæti
+    empty: Engar eftirlætis stöðvar ennþá.
   internal_id: "Innra auðkenni: {}"
   external_id: "Ytri auðkenni: {}"
   gas:

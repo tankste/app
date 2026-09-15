@@ -9,6 +9,7 @@ import 'package:map/ui/generic_map.dart';
 import 'package:settings/ui/settings/settings_page.dart';
 import 'package:sponsor_ui/ui/item/membership_map_item.dart';
 import 'package:station/ui/details/station_details_page.dart';
+import 'package:station/ui/favorites/favorite_list_page.dart';
 import 'package:station/ui/map/cubit/station_map_cubit.dart';
 import 'package:station/ui/map/cubit/station_map_state.dart';
 import 'package:station/ui/map/filter_dialog.dart';
@@ -260,6 +261,30 @@ class StationMapPageState extends State<StationMapPage> {
                         padding: const EdgeInsets.all(16),
                         child: Icon(
                           Icons.settings,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8, right: 8),
+                      child: Divider(height: 1),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (state is MarkersStationMapState) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FavoriteListPage(filter: state.filter.gas),
+                            ),
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Icon(
+                          Icons.star,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),

@@ -161,6 +161,9 @@ settings:
 
 station:
   title: Station
+  favorites:
+    title: Favorites
+    empty: No favorite stations yet.
   internal_id: "Internal ID: {}"
   external_id: "External ID: {}"
   gas:

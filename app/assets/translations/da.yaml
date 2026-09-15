@@ -161,6 +161,9 @@ settings:
 
 station:
   title: Tankstation
+  favorites:
+    title: Favoritter
+    empty: Endnu ingen favoritstationer.
   internal_id: "Intern ID: {}"
   external_id: "Ekstern ID: {}"
   gas:
