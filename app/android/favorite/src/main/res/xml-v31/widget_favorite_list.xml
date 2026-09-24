@@ -1,0 +1,12 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/favorite_widget_description"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minWidth="128dp"
+    android:minHeight="128dp"
+    android:previewLayout="@layout/widget_favorite_list_preview"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="3"
+    android:targetCellHeight="2"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable|configuration_optional" />
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- tankste! colors -->
+    <color name="primary">#9253a4</color>
+    <color name="on_primary">@color/white</color>
+
+    <color name="background">@color/white</color>
+    <color name="on_background">@color/black</color>
+
+    <color name="text">@color/black</color>
+    <color name="text_muted">#5E5E5E</color>
+
+    <color name="divider">#D6D6D6</color>
+
+    <!-- Basic colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+</resources>

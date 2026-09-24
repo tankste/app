@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Widget -->
+    <string name="favorite_widget_description">Viser priser på dine foretrukne tankstationer</string>
+    <string name="favorite_widget_updated">Opdateret: %1$s</string>
+    <string name="favorite_widget_empty_title">Ingen favoritter endnu!</string>
+    <string name="favorite_widget_empty_hint">Tilføj din første favorit på stationsdetaljesiden.</string>
+    <string name="favorite_widget_error_title">Fejl!</string>
+    <string name="favorite_widget_error_hint">Prøv igen ved at trykke på opdateringsknappen.</string>
+</resources>

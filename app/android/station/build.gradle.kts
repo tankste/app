@@ -7,7 +7,7 @@ kotlin {
 }
 
 android {
-    namespace = "app.tankste.core"
+    namespace = "app.tankste.station"
     compileSdk = 37
 
     defaultConfig {
@@ -16,7 +16,14 @@ android {
 }
 
 dependencies {
-    api("app.tankste:client-currency:0.1.0")
+    implementation(project(":core"))
+
+    api("app.tankste:client-station:0.1.0")
+
+    // Flutter's preferences plugins
+    implementation(project(":shared_preferences_android"))
+
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     // Koin - https://github.com/InsertKoinIO/koin
     implementation("io.insert-koin:koin-core:4.2.2")

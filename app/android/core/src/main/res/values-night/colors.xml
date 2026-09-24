@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- tankste! colors -->
+    <color name="primary">#BD97C8</color>
+    <color name="on_primary">@color/black</color>
+
+    <color name="background">#1F1F1F</color>
+    <color name="on_background">@color/black</color>
+
+    <color name="text">@color/white</color>
+    <color name="text_muted">#B3B3B3</color>
+
+</resources>

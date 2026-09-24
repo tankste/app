@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Fuel -->
+    <string name="fuel_label_unknown">Unknown</string>
+    <string name="fuel_label_petrol">Petrol</string>
+    <string name="fuel_label_petrol_super_e5">Super E5</string>
+    <string name="fuel_label_petrol_super_e10">Super E10</string>
+    <string name="fuel_label_petrol_super_plus">Super Plus</string>
+    <string name="fuel_label_petrol_super_e5_additive">Super E5 Additive</string>
+    <string name="fuel_label_petrol_super_e10_additive">Super E10 Additive</string>
+    <string name="fuel_label_petrol_super_plus_additive">Super Plus Additive</string>
+    <string name="fuel_label_diesel">Diesel</string>
+    <string name="fuel_label_diesel_hvo100">Diesel HVO100</string>
+    <string name="fuel_label_diesel_additive">Diesel Additive</string>
+    <string name="fuel_label_diesel_hvo100_additive">Diesel HVO100 Additive</string>
+    <string name="fuel_label_diesel_truck">Diesel Truck</string>
+    <string name="fuel_label_diesel_hvo100_truck">Diesel HVO100 Truck</string>
+    <string name="fuel_label_lpg">LPG</string>
+    <string name="fuel_label_adblue">AdBlue</string>
+
+</resources>

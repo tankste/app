@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Widget -->
+    <string name="favorite_widget_description">Displays prices of your favorite gas stations</string>
+    <string name="favorite_widget_updated">Updated: %1$s</string>
+    <string name="favorite_widget_empty_title">No favorites yet!</string>
+    <string name="favorite_widget_empty_hint">Add your first favorite in the station details page.</string>
+    <string name="favorite_widget_error_title">Error!</string>
+    <string name="favorite_widget_error_hint">Please try again by tapping the refresh button.</string>
+</resources>

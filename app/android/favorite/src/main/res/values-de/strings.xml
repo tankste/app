@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Widget -->
+    <string name="favorite_widget_description">Zeigt Preise ihrer Favoriten Tankstellen an</string>
+    <string name="favorite_widget_updated">Aktualisiert: %1$s</string>
+    <string name="favorite_widget_empty_title">Noch keine Favoriten!</string>
+    <string name="favorite_widget_empty_hint">Füge deinen ersten Favoriten auf der Tankstellen-Details Seite hinzu.</string>
+    <string name="favorite_widget_error_title">Fehler!</string>
+    <string name="favorite_widget_error_hint">Bitte versuche es erneut, indem du auf den aktualisieren Button tippst.</string>
+</resources>
