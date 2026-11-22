@@ -1,0 +1,238 @@
+app:
+  title:
+    short: "tankste!"
+    full: "tankste! - Jouw app voor brandstofprijzen"
+    slogan: "Jouw app voor brandstofprijzen"
+
+generic:
+  cancel: Annuleren
+  ok: OK
+  edit: Bewerken
+  error:
+    title: Fout
+    details:
+      title: Foutdetails
+      show: Details weergeven
+    short: Er is iets misgegaan!
+    long: Er is iets misgegaan. Controleer je internetverbinding en probeer het opnieuw.
+  retry:
+    short: Opnieuw proberen
+    long: Probeer het opnieuw
+  name: Naam
+  save: Opslaan
+  unknown: Onbekend
+  date:
+    time:
+      format: "HH:mm"
+      clock: "{}"
+    date_time:
+      format: "dd-MM-yyyy, HH:mm"
+    date:
+      weekday: "EEE"
+      dayMonth: "dd-MM"
+  units:
+    kilometers:
+      short: "{} km"
+    hour:
+      long: "{} uur"
+    hours:
+      long: "{} uur"
+    minute:
+      long: "{} minuut"
+    minutes:
+      long: "{} minuten"
+  send: Verzenden
+  system_default: Systeemstandaard
+  currency:
+    default: eur
+    eur:
+      label: Euro
+    dkk:
+      label: Deense kroon
+    isk:
+      label: IJslandse kroon
+
+sponsor:
+  become:
+    title: "Word supporter van tankste!"
+  membership:
+    title: "Bedankt voor je steun!"
+  teaser: "Dankzij jouw steun kunnen we..."
+  points:
+    1: "Meer brandstoftypes toevoegen"
+    2: "Nieuwe landen toevoegen"
+    3: "Nieuwe tankstations toevoegen"
+    4: "In de toekomst nieuwe functies ontwikkelen"
+    5: "De app blijvend advertentievrij houden"
+    6: "Dataminers blijvend weren"
+  note: "Let op: aan het afsluiten van een abonnement zijn geen voordelen verbonden. De tankste!-app biedt voor iedereen dezelfde functies, ongeacht betaling. Een bijdrage is vrijwillig."
+  product:
+    month:
+      by: " / maand"
+    year:
+      by: " / jaar"
+  symbol_option: "Supporterssymbool op de kaart weergeven"
+  bought: "Het is gelukt. Hartelijk bedankt! Jouw steun helpt de toekomst van het tankste!-project veilig te stellen."
+  error: "Producten konden niet worden geladen."
+
+settings:
+  title: Instellingen
+  item_error: Er is iets misgegaan! Tik om het opnieuw te proberen.
+  app:
+    title: App
+    design:
+      title: Vormgeving
+      light: Licht
+      dark: Donker
+    map_provider:
+      title: Kaartaanbieder
+      tankste: tankste!
+      google_maps: Google Maps
+      apple_maps: Apple Kaarten
+    navigation_map:
+      title: Navigatie starten met…
+    currency:
+      title: Valuta op startscherm
+    configuration:
+      title: "Geavanceerde instellingen"
+      invalid_url: "Voer een geldige URL in."
+  open_source:
+    title: Steun ons
+    sponsor:
+      title: Doneren
+      description: Word supporter van tankste!
+    translation:
+      title: Vertalen
+      description: Vertaal tankste! naar jouw taal
+    source_code:
+      title: Broncode
+      description: Fork ons op GitHub
+  contact:
+    title: Contact
+    website:
+      title: Website
+      description: tankste.app
+    email:
+      title: E-mail
+      description: "hey@tankste.app"
+    instagram:
+      title: Instagram
+      description: "@tankste.app"
+    twitter:
+      title: Twitter
+      description: "@tankste_app"
+  legal:
+    title: Juridisch
+    data_source:
+      title: Gegevensbronnen
+    terms:
+      title: Gebruiksvoorwaarden
+    privacy:
+      title: Privacybeleid
+  developer:
+    title: Ontwikkelaar
+    developer_mode:
+      title: Ontwikkelaarsmodus
+      description: Ontwikkelaarsmodus uitschakelen
+      enabled: Ontwikkelaarsmodus ingeschakeld
+    feature_flags:
+      title: Experimentele functies
+      description: Experimentele functies inschakelen
+    clear_cache:
+      title: Cache wissen
+      description: Alle cachegegevens verwijderen
+      success: Cache is gewist
+  support:
+    title: Ondersteuning
+    log_enabled:
+      title: Logboeken verzamelen
+      description: Lokale logboekregistratie beheren
+    view_logs:
+      title: Logboeken
+      description: Recente logboeken bekijken
+  about:
+    title: Over
+    status:
+      title: Status
+    version:
+      title: Versie
+  footer:
+    note: Gemaakt met {} en {} in {}.
+
+station:
+  title: Tankstation
+  internal_id: "Interne ID: {}"
+  external_id: "Externe ID: {}"
+  gas:
+    label: Brandstoftype
+    petrol: Benzine
+    e5: Super E5
+    e10: Super E10
+    petrol_super_plus: Super Plus
+    petrol_shell_power: Shell V-Power Racing
+    petrol_aral_ultimate: Aral Ultimate
+    diesel: Diesel
+    diesel_hvo100: Diesel HVO100
+    diesel_truck: Truckdiesel
+    diesel_shel_power: Shell V-Power Diesel
+    diesel_aral_ultimate: Aral Ultimate Diesel
+    lpg: Autogas
+  map:
+    too_far_zoomed_out: "Je bent te ver uitgezoomd. Zoom verder in."
+  open_times:
+    title: Openingstijden
+    monday: Maandag
+    tuesday: Dinsdag
+    wednesday: Woensdag
+    thursday: Donderdag
+    friday: Vrijdag
+    saturday: Zaterdag
+    sunday: Zondag
+    public_holiday: Feestdag
+  prices:
+    title: Brandstofprijzen
+    last_price_changes_at: "Laatste prijswijziging: {}"
+  price_history:
+    title: "Prijsverloop"
+    date_range:
+      day: "24 uur"
+      week: "7 dagen"
+      two_weeks: "14 dagen"
+      month: "30 dagen"
+    empty: "Er zijn nog geen prijsgegevens beschikbaar. Kom over een paar dagen terug."
+  data_source:
+    title: Gegevensbron
+
+report:
+  title: "Onjuiste gegevens melden"
+  open_times:
+    title: Nu geopend?
+    open: Geopend
+    closed: Gesloten
+  availability:
+    title: Beschikbaarheid
+    available: Beschikbaar
+    temporarily_closed: "Tijdelijk gesloten"
+    permanently_closed: "Permanent gesloten"
+  general:
+    title: Algemeen
+    name: Naam
+    brand: "Merk (bedrijfsnaam)"
+  address:
+    title: Adres
+    street: Straat
+    house_number: Huisnummer
+    post_code: Postcode
+    city: Plaats
+    country: Land
+  location:
+    title: Locatie
+    latitude: Breedtegraad
+    longitude: Lengtegraad
+  misc:
+    title: "Overig"
+    comment:
+      label: Opmerkingen
+      hint: "Laat ons weten wat er mis is bij dit tankstation."
+  form:
+    sent: "Bericht succesvol verzonden."
